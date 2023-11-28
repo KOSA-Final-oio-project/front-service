@@ -1,6 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
-import Home from '@/pages/Home.vue'
+import Home from '@/pages/Home.vue';
 // import ChatList from '@/pages/ChatList.vue'
 // import Chats from '@/pages/Chats.vue'
 
@@ -10,7 +10,7 @@ const router = createRouter({
     routes: [
         { path: '/', component: Home },
         // { path: '/login', component: Login },
-    ]
-})
+    ],
+});
 
 export default router;
