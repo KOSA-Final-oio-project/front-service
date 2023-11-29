@@ -1,12 +1,13 @@
 <template>
-    <Main />
+    <ChatRoom />
 </template>
 
 <script>
-import Main from './components/Main.vue';
+import ChatRoom from './components/Chat/ChatRoom.vue';
+
 export default {
-    name: 'oio',
-    components: { Main },
+    name: 'App',
+    components: { ChatRoom },
 };
 </script>
 
