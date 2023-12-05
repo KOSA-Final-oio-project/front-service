@@ -4,11 +4,13 @@
         <div>
             <h2>{{ room.name }}</h2>
         </div>
+
         <!-- 채팅 영역 -->
         <div class="input-group">
             <div class="input-group-prepend">
                 <label class="input-group-text">내용</label>
             </div>
+
             <!-- 채팅 입력창 -->
             <input
                 type="text"
@@ -16,6 +18,7 @@
                 v-model="message"
                 @keypress.enter="sendMessage"
             />
+
             <!-- 보내기 버튼 -->
             <div class="input-group-append">
                 <button
@@ -57,17 +60,32 @@ export default {
     },
 
     created() {
+        console.log(
+            '>>>>>>>>>>>>>>>>>>>>>>>>>> ChatRoomDetail component created',
+        );
+
         this.roomId = localStorage.getItem('wschat.roomId');
         this.sender = localStorage.getItem('wschat.sender');
+
         this.findRoom();
         this.connectWebSocket();
     },
 
     methods: {
         findRoom() {
-            axios.get('/chat/room/' + this.roomId).then(response => {
-                this.room = response.data;
-            });
+            console.log(this.$backURL + '/chat/room/' + this.roomId);
+
+            axios
+                .get(this.$backURL + '/chat/room/' + this.roomId)
+                .then(response => {
+                    this.room = response.data;
+                })
+                .catch(error => {
+                    alert(
+                        '채팅방 조회에 실패했습니다. 오류 원인은: ' +
+                            error.message,
+                    );
+                });
         },
 
         sendMessage() {
@@ -94,7 +112,7 @@ export default {
 
         connectWebSocket() {
             const vm = this;
-            const sock = new SockJS('/ws-stomp');
+            const sock = new SockJS(this.$backURL + '/ws-stomp');
             const ws = Stomp.over(sock);
 
             ws.connect(
@@ -117,9 +135,7 @@ export default {
                         }),
                     );
                 },
-                function (error) {
-                    // Error handling and reconnection logic
-                },
+                function (error) {},
             );
 
             this.ws = ws;

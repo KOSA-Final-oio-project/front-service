@@ -27,7 +27,7 @@
                     type="button"
                     @click="createRoom"
                 >
-                    채팅방 개설
+                    채팅하기
                 </button>
             </div>
         </div>
@@ -93,7 +93,6 @@ export default {
             alert('요청 URL은: ' + this.$backURL + '/chat/room', roomData);
 
             axios
-                // .get(this.$backURL + '/chat/room?name=aaa') //, roomData)
                 .post(this.$backURL + '/chat/room/' + this.roomName)
                 .then(response => {
                     alert(response.data.name + '방 개설에 성공하였습니다.');
@@ -114,11 +113,18 @@ export default {
         enterRoom(roomId) {
             const sender = prompt('대화명을 입력해 주세요.');
 
+            // sender null일때 처리해줘야 함
+
+            console.log('enterRoom called with roomId:', roomId);
+
+            alert('입력한 대화명은: ' + sender + '입니다.');
+
             if (sender) {
                 localStorage.setItem('wschat.sender', sender);
                 localStorage.setItem('wschat.roomId', roomId);
-                location.href = `/chat/room/enter/${roomId}`;
             }
+
+            this.$router.push({ name: 'ChatRoomEnter', params: { roomId } });
         },
     },
 };

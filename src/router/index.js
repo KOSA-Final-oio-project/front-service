@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import ChatRoom from '@/components/Chat/ChatRoom.vue';
+import ChatRoomList from '@/components/Chat/ChatRoomList.vue';
 import ChatRoomDetail from '@/components/Chat/ChatRoomDetail.vue';
 
 const router = createRouter({
@@ -8,13 +8,18 @@ const router = createRouter({
 
     routes: [
         {
-            path: '/chat', // ChatRoom 컴포넌트가 열리는 경로
-            name: 'ChatRoom',
-            component: ChatRoom,
+            path: '/chat', // ChatRoomList 컴포넌트가 열리는 경로
+            name: 'ChatRoomList',
+            component: ChatRoomList,
         },
+        // {
+        //     path: '/chat/room',
+        //     name: 'ChatRoomDetail',
+        //     component: ChatRoomDetail,
+        // },
         {
-            path: '/chat/room', // ChatRoomDetail 컴포넌트가 열리는 경로
-            name: 'ChatRoomDetail',
+            path: '/chat/room/enter/:roomId',
+            name: 'ChatRoomEnter',
             component: ChatRoomDetail,
         },
     ],
