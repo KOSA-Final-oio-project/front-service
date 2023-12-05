@@ -32,12 +32,25 @@
         </div>
         <ul class="list-group">
             <!-- 메시지 내역들 출력 -->
-            <li
+            <!-- <li
                 class="list-group-item"
                 v-for="message in messages"
                 :key="message.id"
             >
-                {{ message.sender }} - {{ message.message }}
+                {{ message.sender }}: {{ message.message }}
+            </li> -->
+            <!-- 메시지 내역들 출력 -->
+            <li
+                v-for="message in messages"
+                :key="message.id"
+                :class="[
+                    'list-group-item',
+                    message.sender === sender ? 'sent' : 'received',
+                ]"
+            >
+                <div class="message-content">
+                    {{ message.sender }}: {{ message.message }}
+                </div>
             </li>
         </ul>
     </div>
@@ -104,10 +117,6 @@ export default {
                         function (message) {
                             var receive = JSON.parse(message.body);
                             refer.receiveMessage(receive);
-
-                            console.log(
-                                '>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + receive,
-                            );
                         },
                     );
                     // 전송
@@ -157,7 +166,36 @@ export default {
 </script>
 
 <style scoped>
-[v-cloak] {
-    display: none;
+.list-group-item {
+    /* 공통 스타일 */
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+    display: flex;
+    align-items: center;
+}
+
+.sent {
+    /* 현재 사용자가 보낸 메시지 */
+    background-color: #dcf8c6;
+    margin-left: auto;
+    margin-right: 0;
+    justify-content: flex-end;
+}
+
+.received {
+    /* 다른 사용자가 보낸 메시지 */
+    background-color: #e6e6e6;
+    margin-left: 0;
+    margin-right: auto;
+    justify-content: flex-start;
+}
+
+.message-content {
+    max-width: 100%;
+    overflow-wrap: break-word;
 }
 </style>
