@@ -89,41 +89,11 @@ export default {
                 });
         },
 
-        // 메시지 발신
-        sendMessage() {
-            const messageData = {
-                messageType: 'TALK',
-                roomId: this.roomId,
-                sender: this.sender,
-                message: this.message,
-            };
-
-            console.log('Sending message: ', messageData);
-
-            this.ws.send('/pub/chat/message', {}, JSON.stringify(messageData));
-            this.message = '';
-        },
-
-        // 메시지 수신
-        receiveMessage(receive) {
-            this.messages.unshift({
-                messageType: receive.type,
-                sender: receive.type == 'ENTER' ? '[알림]' : receive.sender,
-                message: receive.message,
-            });
-        },
-
         // 웹소켓 연결
         connectWebSocket() {
             const refer = this; // Vue 인스턴스 참조를 변수에 저장
             const sock = new SockJS(this.$backURL + '/ws-stomp');
             const ws = Stomp.over(sock, { protocols: ['v1.2'] }); // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
-
-            const messageData = {
-                messageType: 'ENTER',
-                roomId: this.roomId,
-                sender: this.sender,
-            };
 
             ws.connect(
                 {},
@@ -134,17 +104,21 @@ export default {
                         function (message) {
                             var receive = JSON.parse(message.body);
                             refer.receiveMessage(receive);
+
+                            console.log(
+                                '>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + receive,
+                            );
                         },
                     );
                     // 전송
-                    refer.ws.send(
+                    ws.send(
                         '/pub/chat/message',
-                        { 'content-type': 'application/json' },
-                        JSON.stringify(messageData),
-                        console.log(
-                            '>>>>>>>>>>>>>>>>>>>>>>>>>>>>' +
-                                JSON.stringify(messageData),
-                        ),
+                        // {},
+                        JSON.stringify({
+                            messageType: 'ENTER',
+                            roomId: refer.roomId,
+                            sender: refer.sender,
+                        }),
                     );
                 },
                 function (error) {
@@ -153,6 +127,30 @@ export default {
             );
 
             refer.ws = ws;
+        },
+
+        // 메시지 발신
+        sendMessage() {
+            this.ws.send(
+                '/pub/chat/message',
+                // {},
+                JSON.stringify({
+                    messageType: 'TALK',
+                    roomId: this.roomId,
+                    sender: this.sender,
+                    message: this.message,
+                }),
+            );
+            this.message = '';
+        },
+
+        // 메시지 수신
+        receiveMessage(receive) {
+            this.messages.unshift({
+                messageType: receive.type,
+                sender: receive.type == 'ENTER' ? '[알림]' : receive.sender,
+                message: receive.message,
+            });
         },
     },
 };

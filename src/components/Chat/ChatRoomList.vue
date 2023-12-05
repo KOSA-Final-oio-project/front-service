@@ -85,12 +85,11 @@ export default {
                 return;
             }
 
-            const roomData = {
-                name: this.roomName,
-            };
+            // const roomData = {
+            //     name: this.roomName,
+            // };
 
             alert('입력한 방 제목은: ' + this.roomName);
-            alert('요청 URL은: ' + this.$backURL + '/chat/room', roomData);
 
             axios
                 .post(this.$backURL + '/chat/room/' + this.roomName)
