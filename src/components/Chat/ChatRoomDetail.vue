@@ -2,7 +2,7 @@
     <div class="container" v-cloak>
         <!-- 채팅방 이름 -->
         <div>
-            <h2>{{ room.name }}</h2>
+            <h2>채팅방 이름: {{ room.name }}</h2>
         </div>
 
         <!-- 채팅 영역 -->
@@ -61,7 +61,7 @@ export default {
 
     created() {
         console.log(
-            '>>>>>>>>>>>>>>>>>>>>>>>>>> ChatRoomDetail component created',
+            '>>>>>>>>>>>>>>>>>>>>>>>>>> ChatRoomDetail component created! :-)',
         );
 
         this.roomId = localStorage.getItem('wschat.roomId');
@@ -72,6 +72,7 @@ export default {
     },
 
     methods: {
+        // 방 조회
         findRoom() {
             console.log(this.$backURL + '/chat/room/' + this.roomId);
 
@@ -88,57 +89,70 @@ export default {
                 });
         },
 
+        // 메시지 발신
         sendMessage() {
-            this.ws.send(
-                '/pub/chat/message',
-                {},
-                JSON.stringify({
-                    type: 'TALK',
-                    roomId: this.roomId,
-                    sender: this.sender,
-                    message: this.message,
-                }),
-            );
+            const messageData = {
+                messageType: 'TALK',
+                roomId: this.roomId,
+                sender: this.sender,
+                message: this.message,
+            };
+
+            console.log('Sending message: ', messageData);
+
+            this.ws.send('/pub/chat/message', {}, JSON.stringify(messageData));
             this.message = '';
         },
 
-        recvMessage(recv) {
+        // 메시지 수신
+        receiveMessage(receive) {
             this.messages.unshift({
-                type: recv.type,
-                sender: recv.type == 'ENTER' ? '[알림]' : recv.sender,
-                message: recv.message,
+                messageType: receive.type,
+                sender: receive.type == 'ENTER' ? '[알림]' : receive.sender,
+                message: receive.message,
             });
         },
 
+        // 웹소켓 연결
         connectWebSocket() {
-            const vm = this;
+            const refer = this; // Vue 인스턴스 참조를 변수에 저장
             const sock = new SockJS(this.$backURL + '/ws-stomp');
-            const ws = Stomp.over(sock);
+            const ws = Stomp.over(sock, { protocols: ['v1.2'] }); // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
+
+            const messageData = {
+                messageType: 'ENTER',
+                roomId: this.roomId,
+                sender: this.sender,
+            };
 
             ws.connect(
                 {},
                 function (frame) {
+                    // 구독
                     ws.subscribe(
-                        '/sub/chat/room/' + vm.roomId,
+                        '/sub/chat/room/' + refer.roomId,
                         function (message) {
-                            var recv = JSON.parse(message.body);
-                            vm.recvMessage(recv);
+                            var receive = JSON.parse(message.body);
+                            refer.receiveMessage(receive);
                         },
                     );
-                    ws.send(
+                    // 전송
+                    refer.ws.send(
                         '/pub/chat/message',
-                        {},
-                        JSON.stringify({
-                            type: 'ENTER',
-                            roomId: vm.roomId,
-                            sender: vm.sender,
-                        }),
+                        { 'content-type': 'application/json' },
+                        JSON.stringify(messageData),
+                        console.log(
+                            '>>>>>>>>>>>>>>>>>>>>>>>>>>>>' +
+                                JSON.stringify(messageData),
+                        ),
                     );
                 },
-                function (error) {},
+                function (error) {
+                    alert('엉엉엉엉엉ㅠㅠㅠㅠㅠㅠㅠㅠㅠ');
+                },
             );
 
-            this.ws = ws;
+            refer.ws = ws;
         },
     },
 };

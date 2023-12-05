@@ -95,7 +95,7 @@ export default {
             axios
                 .post(this.$backURL + '/chat/room/' + this.roomName)
                 .then(response => {
-                    alert(response.data.name + '방 개설에 성공하였습니다.');
+                    alert(response.data.name + ' 방 개설에 성공하였습니다.');
 
                     this.roomName = '';
                     this.findAllRoom(); // 채팅방 목록 다시 불러옴
