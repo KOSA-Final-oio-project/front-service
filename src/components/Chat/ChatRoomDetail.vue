@@ -23,7 +23,7 @@
                             message.sender === sender ? 'sent' : 'received',
                         ]"
                     >
-                        <div class="message-content">
+                        <div class="message-content" ref="messageContent">
                             <div class="text">{{ message.message }}</div>
                             <div class="timestamp">{{ message.timestamp }}</div>
                         </div>
@@ -167,7 +167,7 @@ export default {
         // 스크롤 하단 고정
         scrollToBottom() {
             this.$nextTick(() => {
-                const container = this.$refs.messagesContainer;
+                const container = this.$refs.messageContent;
 
                 if (container) {
                     container.scrollTop = container.scrollHeight;
