@@ -11,7 +11,7 @@
             <div class="chat-header">{{ chatStartDate }}</div>
 
             <!-- 채팅 내역들 스크롤 가능하게 -->
-            <div class="messages-container" ref="messagesContainer">
+            <div class="messages-container">
                 <ul class="list-group">
                     <!-- 메시지 내역들 출력 -->
                     <!-- 현재 채팅을 보내는 사람은 오른쪽으로 정렬할 수 있도록 (말풍선 위치 구분) -->
@@ -149,7 +149,6 @@ export default {
                 }),
             );
             this.message = '';
-            this.scrollToBottom();
         },
 
         // 메시지 수신
@@ -159,19 +158,6 @@ export default {
                 sender: receive.type == 'ENTER' ? '[알림]' : receive.sender,
                 message: receive.message,
                 timestamp: new Date().toLocaleTimeString(),
-            });
-
-            this.scrollToBottom();
-        },
-
-        // 스크롤 하단 고정
-        scrollToBottom() {
-            this.$nextTick(() => {
-                const container = this.$refs.messageContent;
-
-                if (container) {
-                    container.scrollTop = container.scrollHeight;
-                }
             });
         },
     },
