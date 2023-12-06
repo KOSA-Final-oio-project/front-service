@@ -1,16 +1,39 @@
 <template>
     <div class="container" v-cloak>
         <!-- 채팅방 이름 -->
-        <div>
-            <h2>채팅방 이름: {{ room.name }}</h2>
+        <div class="chat-name">
+            <h2>{{ room.name }}</h2>
         </div>
 
         <!-- 채팅 영역 -->
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <label class="input-group-text">내용</label>
-            </div>
+        <div class="chat-main">
+            <!-- 채팅 날짜 -->
+            <div class="chat-header">{{ chatStartDate }}</div>
 
+            <!-- 채팅 내역들 스크롤 가능하게 -->
+            <div class="messages-container" ref="messagesContainer">
+                <ul class="list-group">
+                    <!-- 메시지 내역들 출력 -->
+                    <!-- 현재 채팅을 보내는 사람은 오른쪽으로 정렬할 수 있도록 (말풍선 위치 구분) -->
+                    <li
+                        v-for="message in messages"
+                        :key="message.id"
+                        :class="[
+                            'list-group-item',
+                            message.sender === sender ? 'sent' : 'received',
+                        ]"
+                    >
+                        <div class="message-content">
+                            <div class="text">{{ message.message }}</div>
+                            <div class="timestamp">{{ message.timestamp }}</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 채팅 입력 영역 -->
+        <div class="input-group">
             <!-- 채팅 입력창 -->
             <input
                 type="text"
@@ -19,40 +42,17 @@
                 @keypress.enter="sendMessage"
             />
 
-            <!-- 보내기 버튼 -->
+            <!-- 전송 버튼 -->
             <div class="input-group-append">
                 <button
                     class="btn btn-primary"
                     type="button"
                     @click="sendMessage"
                 >
-                    보내기
+                    전송
                 </button>
             </div>
         </div>
-        <ul class="list-group">
-            <!-- 메시지 내역들 출력 -->
-            <!-- <li
-                class="list-group-item"
-                v-for="message in messages"
-                :key="message.id"
-            >
-                {{ message.sender }}: {{ message.message }}
-            </li> -->
-            <!-- 메시지 내역들 출력 -->
-            <li
-                v-for="message in messages"
-                :key="message.id"
-                :class="[
-                    'list-group-item',
-                    message.sender === sender ? 'sent' : 'received',
-                ]"
-            >
-                <div class="message-content">
-                    {{ message.sender }}: {{ message.message }}
-                </div>
-            </li>
-        </ul>
     </div>
 </template>
 
@@ -122,7 +122,6 @@ export default {
                     // 전송
                     ws.send(
                         '/pub/chat/message',
-                        // {},
                         JSON.stringify({
                             messageType: 'ENTER',
                             roomId: refer.roomId,
@@ -142,7 +141,6 @@ export default {
         sendMessage() {
             this.ws.send(
                 '/pub/chat/message',
-                // {},
                 JSON.stringify({
                     messageType: 'TALK',
                     roomId: this.roomId,
@@ -151,14 +149,29 @@ export default {
                 }),
             );
             this.message = '';
+            this.scrollToBottom();
         },
 
         // 메시지 수신
         receiveMessage(receive) {
-            this.messages.unshift({
+            this.messages.push({
                 messageType: receive.type,
                 sender: receive.type == 'ENTER' ? '[알림]' : receive.sender,
                 message: receive.message,
+                timestamp: new Date().toLocaleTimeString(),
+            });
+
+            this.scrollToBottom();
+        },
+
+        // 스크롤 하단 고정
+        scrollToBottom() {
+            this.$nextTick(() => {
+                const container = this.$refs.messagesContainer;
+
+                if (container) {
+                    container.scrollTop = container.scrollHeight;
+                }
             });
         },
     },
@@ -166,8 +179,23 @@ export default {
 </script>
 
 <style scoped>
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* 채팅방 제목 */
+.chat-name {
+    margin-top: 50px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* 채팅창 공통 스타일 */
 .list-group-item {
-    /* 공통 스타일 */
     border: none;
     border-radius: 20px;
     padding: 10px 20px;
@@ -178,24 +206,79 @@ export default {
     align-items: center;
 }
 
+/* 현재 사용자가 보낸 메시지 */
 .sent {
-    /* 현재 사용자가 보낸 메시지 */
-    background-color: #dcf8c6;
+    background-color: #18b7be;
     margin-left: auto;
     margin-right: 0;
     justify-content: flex-end;
+    font-weight: 500;
+    color: #072a40;
 }
 
+/* 다른 사용자가 보낸 메시지 */
 .received {
-    /* 다른 사용자가 보낸 메시지 */
-    background-color: #e6e6e6;
+    background-color: #f9f7f0;
     margin-left: 0;
     margin-right: auto;
     justify-content: flex-start;
+    font-weight: 500;
+    color: #072a40;
 }
 
+/* 메시지 내용 */
 .message-content {
     max-width: 100%;
-    overflow-wrap: break-word;
+    overflow-wrap: break-word; /* 단어 기준으로 줄바꿈 */
+}
+
+/* 전송 버튼 */
+.btn btn-primary {
+    background-color: #18b7be;
+}
+
+/* ---------------------- */
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.chat-header {
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.chat-main {
+    overflow-y: auto;
+    flex-grow: 1;
+    margin-bottom: 60px;
+}
+
+.messages-container {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.input-group {
+    padding: 0 15px;
+    margin-bottom: 30px;
+    box-sizing: border-box;
+}
+
+/* 채팅 전송 시간 */
+.timestamp {
+    font-size: 0.75em;
+    text-align: right;
+}
+
+.sender {
+    font-weight: bold;
+}
+
+.text {
+    margin: 5px 0;
 }
 </style>
