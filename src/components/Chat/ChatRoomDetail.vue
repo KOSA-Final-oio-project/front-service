@@ -6,7 +6,7 @@
         </div>
 
         <!-- 채팅 영역 -->
-        <div class="chat-main">
+        <div class="chat-main" ref="chatMain">
             <!-- 채팅 날짜 -->
             <div class="chat-header">{{ chatStartDate }}</div>
 
@@ -23,6 +23,7 @@
                             message.sender === sender ? 'sent' : 'received',
                         ]"
                     >
+                        <!-- 메시지 내용 -->
                         <div class="message-content" ref="messageContent">
                             <div class="text">{{ message.message }}</div>
                             <div class="timestamp">{{ message.timestamp }}</div>
@@ -159,17 +160,24 @@ export default {
                 message: receive.message,
                 timestamp: new Date().toLocaleTimeString(),
             });
+
+            // 스크롤바가 최신 메시지 따라갈 수 있도록
+            this.$nextTick(() => {
+                const chatContainer = this.$refs.chatMain;
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            });
         },
     },
 };
 </script>
 
 <style scoped>
+/* 채팅 전체 영역 감싸는 div */
 .container {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+    height: 100vh; /* 높이 100% */
+    display: flex; /* 내부 요소들을 수직정렬 */
+    flex-direction: column; /* 내부 요소들을 수직정렬 */
+    overflow: hidden; /* 컨테이너 밖으로 내용 못나감 */
 }
 
 /* 채팅방 제목 */
@@ -186,10 +194,10 @@ export default {
     border-radius: 20px;
     padding: 10px 20px;
     margin-bottom: 10px;
-    max-width: 80%;
-    word-wrap: break-word;
-    display: flex;
-    align-items: center;
+    max-width: 80%; /* 긴 메시지가 화면 안넘어가게 */
+    word-wrap: break-word; /* 줄바꿈 - 단어 기준 */
+    display: flex; /* 수평 중앙 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
 }
 
 /* 현재 사용자가 보낸 메시지 */
@@ -215,23 +223,21 @@ export default {
 /* 메시지 내용 */
 .message-content {
     max-width: 100%;
-    overflow-wrap: break-word; /* 단어 기준으로 줄바꿈 */
 }
 
 /* 전송 버튼 */
-.btn btn-primary {
+.btn.btn-primary {
     background-color: #18b7be;
+    border-color: #18b7be;
 }
-
-/* ---------------------- */
 
 .chat-container {
     display: flex;
     flex-direction: column;
     height: 100%;
-    overflow-y: auto;
 }
 
+/* 채팅 시작 날짜 */
 .chat-header {
     text-align: center;
     font-size: 1.2em;
@@ -245,7 +251,6 @@ export default {
 
 .messages-container {
     flex-grow: 1;
-    overflow-y: auto;
 }
 
 .input-group {
