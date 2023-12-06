@@ -6,14 +6,15 @@
         </div>
 
         <!-- 채팅 영역 -->
+        <!-- 채팅 내역들 스크롤 가능하게 -->
         <div class="chat-main" ref="chatMain">
             <!-- 채팅 날짜 -->
             <div class="chat-header">{{ chatStartDate }}</div>
 
-            <!-- 채팅 내역들 스크롤 가능하게 -->
+            <!-- 메시지 내역들 출력 -->
             <div class="messages-container">
+                <!-- 메시지 리스트 그룹 -->
                 <ul class="list-group">
-                    <!-- 메시지 내역들 출력 -->
                     <!-- 현재 채팅을 보내는 사람은 오른쪽으로 정렬할 수 있도록 (말풍선 위치 구분) -->
                     <li
                         v-for="message in messages"
@@ -154,11 +155,15 @@ export default {
 
         // 메시지 수신
         receiveMessage(receive) {
+            const timestamp = new Date().toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+            });
             this.messages.push({
                 messageType: receive.type,
                 sender: receive.type == 'ENTER' ? '[알림]' : receive.sender,
                 message: receive.message,
-                timestamp: new Date().toLocaleTimeString(),
+                timestamp: timestamp,
             });
 
             // 스크롤바가 최신 메시지 따라갈 수 있도록
@@ -188,7 +193,7 @@ export default {
     font-weight: bold;
 }
 
-/* 채팅창 공통 스타일 */
+/* 채팅창 말풍선 공통 스타일 */
 .list-group-item {
     border: none;
     border-radius: 20px;
@@ -231,28 +236,29 @@ export default {
     border-color: #18b7be;
 }
 
-.chat-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
 /* 채팅 시작 날짜 */
 .chat-header {
     text-align: center;
     font-size: 1.2em;
 }
 
+/* 채팅 메시지가 실제로 표시되는 영역 div */
+/* 채팅 메시지만 */
 .chat-main {
-    overflow-y: auto;
+    overflow-y: auto; /* 스크롤 가능하게 설정 */
     flex-grow: 1;
     margin-bottom: 60px;
 }
 
+/* 채팅 메시지 리스트를 감싸는 컨테이너 */
 .messages-container {
+    /* 스크롤바랑 간격 띄우려고 */
+    padding-right: 25px;
+    /* 가능한 모든 공간을 차지하도록 설정 */
     flex-grow: 1;
 }
 
+/* 입력창 */
 .input-group {
     padding: 0 15px;
     margin-bottom: 30px;
@@ -265,10 +271,7 @@ export default {
     text-align: right;
 }
 
-.sender {
-    font-weight: bold;
-}
-
+/* 텍스트 기본 스타일 */
 .text {
     margin: 5px 0;
 }
