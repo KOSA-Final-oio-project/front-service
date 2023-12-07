@@ -155,6 +155,7 @@ export default {
 
         // 메시지 수신
         receiveMessage(receive) {
+            // 시간 표시할 때 ms 잘라주기
             const timestamp = new Date().toLocaleTimeString([], {
                 hour: '2-digit',
                 minute: '2-digit',

@@ -2,23 +2,20 @@
     <div class="container" v-cloak>
         <!-- 타이틀 -->
         <div class="row">
-            <div class="col-md-12">
+            <div class="chat-list-title">
                 <h3>채팅방 리스트</h3>
             </div>
         </div>
 
         <!-- 방 생성 -->
         <div class="input-group">
-            <!-- 방제목 타이틀 -->
-            <div class="input-group-prepend">
-                <label class="input-group-text">방제목</label>
-            </div>
             <!-- 방제목 입력창 -->
             <input
                 type="text"
                 class="form-control"
                 v-model="roomName"
                 @keyup.enter="createRoom"
+                placeholder="생성하실 채팅방의 제목을 입력해주세요."
             />
             <!-- 채팅방 개설 버튼 -->
             <div class="input-group-append">
@@ -40,7 +37,8 @@
                 :key="item.roomId"
                 @click="enterRoom(item.roomId)"
             >
-                {{ item.name }}
+                <!-- {{ item.name }} -->
+                {{ item.name }} - {{ formatDate(item.createdAt) }}
             </li>
         </ul>
     </div>
@@ -67,7 +65,7 @@ export default {
             axios
                 .get(this.$backURL + '/chat/rooms')
                 .then(response => {
-                    this.chatRooms = response.data;
+                    this.chatRooms = response.data.reverse();
                 })
                 .catch(error => {
                     console.error(
@@ -84,10 +82,6 @@ export default {
                 alert('방 제목을 입력해 주십시요.');
                 return;
             }
-
-            // const roomData = {
-            //     name: this.roomName,
-            // };
 
             alert('입력한 방 제목은: ' + this.roomName);
 
@@ -112,11 +106,18 @@ export default {
         enterRoom(roomId) {
             const sender = prompt('대화명을 입력해 주세요.');
 
-            // sender null일때 처리해줘야 함
+            // 대화명 입력해야만! => 나중에 JWT 토큰으로 받아와서 하기
+            if (!sender) {
+                alert('대화명을 입력해주세요!');
+                return; // 함수 실행 종료
+            } else {
+                alert('입력한 대화명은: ' + sender + '입니다.');
+            }
 
-            console.log('enterRoom called with roomId:', roomId);
-
-            alert('입력한 대화명은: ' + sender + '입니다.');
+            console.log(
+                '>>>>>>>>>>>>>>> enterRoom called with roomId:',
+                roomId,
+            );
 
             if (sender) {
                 localStorage.setItem('wschat.sender', sender);
@@ -124,6 +125,18 @@ export default {
             }
 
             this.$router.push({ name: 'ChatRoomEnter', params: { roomId } });
+        },
+
+        // 채팅방 생성 시각 표시
+        formatDate(dateString) {
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+            };
+            return new Date(dateString).toLocaleDateString(undefined, options);
         },
     },
 };
@@ -133,5 +146,15 @@ export default {
 /* v-cloak = 초기 렌더링 시에 잠시 숨겨진 상태로 표시될 요소들을 관리 */
 [v-cloak] {
     display: none;
+}
+
+/* 채팅방 리스트 타이틀 */
+.chat-list-title {
+    text-align: center;
+    padding: 30px 0px 30px 0px;
+}
+
+.input-group {
+    margin-bottom: 20px;
 }
 </style>
