@@ -7,40 +7,49 @@
             </div>
         </div>
 
-        <!-- 방 생성 -->
-        <div class="input-group">
-            <!-- 방제목 입력창 -->
-            <input
-                type="text"
-                class="form-control"
-                v-model="roomName"
-                @keyup.enter="createRoom"
-                placeholder="생성하실 채팅방의 제목을 입력해주세요."
-            />
-            <!-- 채팅방 개설 버튼 -->
-            <div class="input-group-append">
-                <button
-                    class="btn btn-primary"
-                    type="button"
-                    @click="createRoom"
-                >
-                    채팅하기
-                </button>
+        <!-- 방 생성과 방 리스트가 수직 정렬되도록 flex 컨테이너를 적용 -->
+        <div class="input-and-list-container">
+            <!-- 방 생성 -->
+            <div class="input-group">
+                <!-- 방제목 입력창 -->
+                <input
+                    type="text"
+                    class="form-control"
+                    v-model="roomName"
+                    @keyup.enter="createRoom"
+                    placeholder="생성하실 채팅방의 제목을 입력해주세요."
+                />
+                <!-- 채팅방 개설 버튼 -->
+                <div class="input-group-append">
+                    <button
+                        class="btn btn-primary"
+                        type="button"
+                        @click="createRoom"
+                    >
+                        채팅하기
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <!-- 방 리스트 출력 -->
-        <ul class="list-group">
-            <li
-                class="list-group-item list-group-item-action"
-                v-for="item in chatRooms"
-                :key="item.roomId"
-                @click="enterRoom(item.roomId)"
-            >
-                <!-- {{ item.name }} -->
-                {{ item.name }} - {{ formatDate(item.createdAt) }}
-            </li>
-        </ul>
+            <!-- 방 리스트 출력 -->
+            <ul class="list-group">
+                <li
+                    class="list-group-item list-group-item-action"
+                    v-for="item in chatRooms"
+                    :key="item.roomId"
+                    @click="enterRoom(item.roomId)"
+                >
+                    <!-- 채팅방 제목 -->
+                    <span class="chat-room-name">{{ item.name }}</span>
+
+                    <!-- 채팅방 생성일자 -->
+                    생성일자:&nbsp;
+                    <span class="chat-room-date">{{
+                        formatDate(item.createDate)
+                    }}</span>
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
@@ -65,7 +74,9 @@ export default {
             axios
                 .get(this.$backURL + '/chat/rooms')
                 .then(response => {
-                    this.chatRooms = response.data.reverse();
+                    this.chatRooms = response.data;
+                    //역순 정렬 .reverse()
+                    console.log(response.data); // 서버 응답 확인
                 })
                 .catch(error => {
                     console.error(
@@ -88,7 +99,11 @@ export default {
             axios
                 .post(this.$backURL + '/chat/room/' + this.roomName)
                 .then(response => {
-                    alert(response.data.name + ' 방 개설에 성공하였습니다.');
+                    alert(
+                        ' "' +
+                            response.data.name +
+                            '" 방 개설에 성공하였습니다.',
+                    );
 
                     this.roomName = '';
                     this.findAllRoom(); // 채팅방 목록 다시 불러옴
@@ -127,16 +142,15 @@ export default {
             this.$router.push({ name: 'ChatRoomEnter', params: { roomId } });
         },
 
-        // 채팅방 생성 시각 표시
+        // 채팅방 생성 일자 날짜 형식을 변환
         formatDate(dateString) {
-            const options = {
+            const date = new Date(dateString);
+
+            return date.toLocaleDateString('ko-KR', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-            };
-            return new Date(dateString).toLocaleDateString(undefined, options);
+            });
         },
     },
 };
@@ -154,7 +168,19 @@ export default {
     padding: 30px 0px 30px 0px;
 }
 
-.input-group {
-    margin-bottom: 20px;
+/* 채팅방 개별 리스트 */
+.list-group-item {
+    margin-top: 20px;
+    display: flex;
+}
+
+/* 채팅방 이름 스타일 */
+.chat-room-name {
+    flex-grow: 1; /* 왼쪽으로 정렬되도록 공간 차지 */
+}
+
+/* 채팅방 생성 일자 스타일 */
+.chat-room-date {
+    flex-shrink: 0; /* 오른쪽으로 정렬되도록 공간을 유지 */
 }
 </style>

@@ -27,7 +27,7 @@
                         <!-- 메시지 내용 -->
                         <div class="message-content" ref="messageContent">
                             <div class="text">{{ message.message }}</div>
-                            <div class="timestamp">{{ message.timestamp }}</div>
+                            <div class="sendDate">{{ message.sendDate }}</div>
                         </div>
                     </li>
                 </ul>
@@ -70,6 +70,7 @@ export default {
             room: {},
             sender: '',
             message: '',
+            sendDate: '',
             messages: [],
         };
     },
@@ -121,6 +122,9 @@ export default {
                             refer.receiveMessage(receive);
                         },
                     );
+
+                    // 전송할 때 시간도 같이 보내기
+                    const sendDate = new Date().toISOString();
                     // 전송
                     ws.send(
                         '/pub/chat/message',
@@ -128,6 +132,7 @@ export default {
                             messageType: 'ENTER',
                             roomId: refer.roomId,
                             sender: refer.sender,
+                            sendDate: sendDate,
                         }),
                     );
                 },
@@ -141,6 +146,9 @@ export default {
 
         // 메시지 발신
         sendMessage() {
+            // 현재 시간을 ISO 형식으로 설정
+            const sendDate = new Date().toISOString();
+
             this.ws.send(
                 '/pub/chat/message',
                 JSON.stringify({
@@ -148,6 +156,7 @@ export default {
                     roomId: this.roomId,
                     sender: this.sender,
                     message: this.message,
+                    sendDate: sendDate,
                 }),
             );
             this.message = '';
@@ -155,22 +164,30 @@ export default {
 
         // 메시지 수신
         receiveMessage(receive) {
-            // 시간 표시할 때 ms 잘라주기
-            const timestamp = new Date().toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-            });
+            const formattedSendDate = this.formatTime(receive.sendDate);
+
             this.messages.push({
                 messageType: receive.type,
                 sender: receive.type == 'ENTER' ? '[알림]' : receive.sender,
                 message: receive.message,
-                timestamp: timestamp,
+                sendDate: formattedSendDate,
             });
 
             // 스크롤바가 최신 메시지 따라갈 수 있도록
             this.$nextTick(() => {
                 const chatContainer = this.$refs.chatMain;
                 chatContainer.scrollTop = chatContainer.scrollHeight;
+            });
+        },
+
+        // 시간 포매팅 함수
+        formatTime(dateString) {
+            const date = new Date(dateString);
+
+            return date.toLocaleTimeString('ko-KR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                // second: '2-digit',
             });
         },
     },
@@ -228,6 +245,9 @@ export default {
 
 /* 메시지 내용 */
 .message-content {
+    display: flex; /* 수평 정렬을 위해 flex 컨테이너로 설정 */
+    justify-content: space-between; /* 메시지와 시간 사이에 공간을 최대한 배분 */
+    align-items: center; /* 수직 중앙 정렬 */
     max-width: 100%;
 }
 
@@ -267,13 +287,16 @@ export default {
 }
 
 /* 채팅 전송 시간 */
-.timestamp {
+.sendDate {
+    margin-left: 10px; /* 시간과 메시지 사이의 간격 조정 */
+    white-space: nowrap; /* 시간을 한 줄로 표시 */
     font-size: 0.75em;
-    text-align: right;
+    /* text-align: right; */
 }
 
 /* 텍스트 기본 스타일 */
 .text {
-    margin: 5px 0;
+    margin-left: auto; /* 메시지 내용을 왼쪽으로 밀기 */
+    /* margin: 5px 0; */
 }
 </style>
