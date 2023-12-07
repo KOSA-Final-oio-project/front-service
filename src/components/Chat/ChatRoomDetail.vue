@@ -15,38 +15,31 @@
             <div class="messages-container">
                 <!-- 메시지 리스트 그룹 -->
                 <ul class="list-group">
-                    <!-- 현재 채팅을 보내는 사람은 오른쪽으로 정렬할 수 있도록 (말풍선 위치 구분) -->
-                    <!-- <li
-                        v-for="message in messages"
-                        :key="message.id"
-                        :class="[
-                            'list-group-item',
-                            message.sender === sender ? 'sent' : 'received',
-                        ]"
-                    > -->
-                    <!-- 메시지 내용 -->
-                    <!-- <div class="message-content" ref="messageContent">
-                            <div class="text">{{ message.message }}</div>
-                            <div class="sendDate">{{ message.sendDate }}</div>
-                        </div>
-                    </li> -->
                     <li
                         v-for="message in messages"
                         :key="message.id"
-                        class="sent-container"
+                        :class="{
+                            'sent-container': message.sender === sender,
+                            'received-container': message.sender !== sender,
+                        }"
                     >
+                        <!-- 보낸 메시지의 시간 -->
                         <div v-if="message.sender === sender" class="sendDate">
                             {{ message.sendDate }}
                         </div>
+
+                        <!-- 메시지 말풍선 -->
                         <div
-                            class="message-content"
                             :class="{
+                                'list-group-item': true,
                                 sent: message.sender === sender,
                                 received: message.sender !== sender,
                             }"
                         >
-                            <div class="text">{{ message.message }}</div>
+                            {{ message.message }}
                         </div>
+
+                        <!-- 받은 메시지의 시간 -->
                         <div v-if="message.sender !== sender" class="sendDate">
                             {{ message.sendDate }}
                         </div>
@@ -240,7 +233,7 @@ export default {
     border-radius: 20px;
     padding: 10px 20px;
     margin-bottom: 10px;
-    max-width: 80%; /* 긴 메시지가 화면 안넘어가게 */
+    max-width: 70%; /* 긴 메시지가 화면 안넘어가게 */
     word-wrap: break-word; /* 줄바꿈 - 단어 기준 */
     display: flex; /* 수평 중앙 정렬 */
     align-items: center; /* 수평 중앙 정렬 */
@@ -258,14 +251,38 @@ export default {
     margin-left: 10px; /* 시간과 메시지 사이 간격 */
 }
 
+/* 메시지 아이템을 감싸는 컨테이너 */
+.sent-container {
+    display: flex; /* 내부 아이템들을 수평으로 정렬 */
+    align-items: center; /* 아이템들을 수직 중앙에 정렬 */
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    margin-bottom: 10px; /* 메시지 간 간격 */
+}
+
 /* 다른 사용자가 보낸 메시지 */
 .received {
-    background-color: #f9f7f0;
-    margin-left: 0;
-    margin-right: auto;
-    justify-content: flex-start;
-    font-weight: 500;
-    color: #072a40;
+    margin-left: 10px; /* 시간과 메시지 사이 간격 */
+    background-color: #f9f7f0; /* 받은 메시지 말풍선 색상 */
+    margin-right: 10px; /* 시간과 메시지 사이 간격 */
+    border-radius: 18px; /* 둥근 모서리 */
+    padding: 10px 20px; /* 말풍선 내부 패딩 */
+    max-width: 80%; /* 말풍선 최대 너비 */
+}
+
+/* 받은 메시지와 시간 컨테이너 */
+.received-container {
+    display: flex;
+    align-items: center; /* 시간과 말풍선을 수직 중앙 정렬 */
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    margin-bottom: 10px; /* 메시지 간 간격 */
+}
+
+/* 받은 메시지와 시간 컨테이너 */
+.received-container {
+    display: flex;
+    align-items: center; /* 시간과 말풍선을 수직 중앙 정렬 */
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    margin-bottom: 10px; /* 메시지 간 간격 */
 }
 
 /* 메시지 내용 */
@@ -298,27 +315,21 @@ export default {
     flex-grow: 1;
 }
 
-/* 메시지 아이템을 감싸는 컨테이너 */
-.sent-container {
-    display: flex; /* 내부 아이템들을 수평으로 정렬 */
-    align-items: center; /* 아이템들을 수직 중앙에 정렬 */
-    justify-content: flex-end; /* 오른쪽 정렬 */
-    margin-bottom: 10px; /* 메시지 간 간격 */
-}
-
 /* 채팅 전송 시간 */
 .sendDate {
-    margin-left: 10px; /* 시간과 메시지 사이의 간격 조정 */
+    /* 시간과 메시지 사이의 간격 조정 */
+    /* margin-left: 10px; */
+    margin-top: auto;
     /* 시간을 한 줄로 표시 */
     white-space: nowrap;
     font-size: 0.75em;
-    order: 1; /* 시간을 말풍선 왼쪽으로 정렬 (flex 컨테이너 내에서) */
+    /* order: 1;  */
 }
 
 /* 텍스트 기본 스타일 */
 .text {
     margin-left: auto; /* 메시지 내용을 왼쪽으로 밀기 */
-    /* margin: 5px 0; */
+    margin: 5px 0;
 }
 
 /* ========= 입력창 영역 ========= */
