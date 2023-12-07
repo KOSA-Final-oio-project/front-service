@@ -90,6 +90,8 @@ export default {
     },
 
     created() {
+        localStorage.setItem('sender', '홍식시치');
+
         console.log(
             '>>>>>>>>>>>>>>>>>>>>>>>>>> ChatRoomDetail component created! :-)',
         );
@@ -127,7 +129,7 @@ export default {
 
             ws.connect(
                 {},
-                function (frame) {
+                function () {
                     // 구독
                     ws.subscribe(
                         '/sub/chat/room/' + refer.roomId,
@@ -151,7 +153,7 @@ export default {
                     );
                 },
                 function (error) {
-                    alert('엉엉엉엉엉ㅠㅠㅠㅠㅠㅠㅠㅠㅠ');
+                    alert(error.message);
                 },
             );
 
@@ -337,7 +339,7 @@ export default {
 
 /* 전송 버튼 */
 .btn.btn-primary {
-    background-color: #18b7be;
-    border-color: #18b7be;
+    background-color: #178ca4;
+    border-color: #178ca4;
 }
 </style>
