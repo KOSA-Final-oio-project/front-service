@@ -16,18 +16,39 @@
                 <!-- 메시지 리스트 그룹 -->
                 <ul class="list-group">
                     <!-- 현재 채팅을 보내는 사람은 오른쪽으로 정렬할 수 있도록 (말풍선 위치 구분) -->
-                    <li
+                    <!-- <li
                         v-for="message in messages"
                         :key="message.id"
                         :class="[
                             'list-group-item',
                             message.sender === sender ? 'sent' : 'received',
                         ]"
-                    >
-                        <!-- 메시지 내용 -->
-                        <div class="message-content" ref="messageContent">
+                    > -->
+                    <!-- 메시지 내용 -->
+                    <!-- <div class="message-content" ref="messageContent">
                             <div class="text">{{ message.message }}</div>
                             <div class="sendDate">{{ message.sendDate }}</div>
+                        </div>
+                    </li> -->
+                    <li
+                        v-for="message in messages"
+                        :key="message.id"
+                        class="sent-container"
+                    >
+                        <div v-if="message.sender === sender" class="sendDate">
+                            {{ message.sendDate }}
+                        </div>
+                        <div
+                            class="message-content"
+                            :class="{
+                                sent: message.sender === sender,
+                                received: message.sender !== sender,
+                            }"
+                        >
+                            <div class="text">{{ message.message }}</div>
+                        </div>
+                        <div v-if="message.sender !== sender" class="sendDate">
+                            {{ message.sendDate }}
                         </div>
                     </li>
                 </ul>
@@ -211,6 +232,8 @@ export default {
     font-weight: bold;
 }
 
+/* ========= 채팅 영역 ========= */
+
 /* 채팅창 말풍선 공통 스타일 */
 .list-group-item {
     border: none;
@@ -231,6 +254,8 @@ export default {
     justify-content: flex-end;
     font-weight: 500;
     color: #072a40;
+    order: 2; /* 말풍선을 오른쪽으로 정렬 (flex 컨테이너 내에서) */
+    margin-left: 10px; /* 시간과 메시지 사이 간격 */
 }
 
 /* 다른 사용자가 보낸 메시지 */
@@ -249,12 +274,6 @@ export default {
     justify-content: space-between; /* 메시지와 시간 사이에 공간을 최대한 배분 */
     align-items: center; /* 수직 중앙 정렬 */
     max-width: 100%;
-}
-
-/* 전송 버튼 */
-.btn.btn-primary {
-    background-color: #18b7be;
-    border-color: #18b7be;
 }
 
 /* 채팅 시작 날짜 */
@@ -279,6 +298,31 @@ export default {
     flex-grow: 1;
 }
 
+/* 메시지 아이템을 감싸는 컨테이너 */
+.sent-container {
+    display: flex; /* 내부 아이템들을 수평으로 정렬 */
+    align-items: center; /* 아이템들을 수직 중앙에 정렬 */
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    margin-bottom: 10px; /* 메시지 간 간격 */
+}
+
+/* 채팅 전송 시간 */
+.sendDate {
+    margin-left: 10px; /* 시간과 메시지 사이의 간격 조정 */
+    /* 시간을 한 줄로 표시 */
+    white-space: nowrap;
+    font-size: 0.75em;
+    order: 1; /* 시간을 말풍선 왼쪽으로 정렬 (flex 컨테이너 내에서) */
+}
+
+/* 텍스트 기본 스타일 */
+.text {
+    margin-left: auto; /* 메시지 내용을 왼쪽으로 밀기 */
+    /* margin: 5px 0; */
+}
+
+/* ========= 입력창 영역 ========= */
+
 /* 입력창 */
 .input-group {
     padding: 0 15px;
@@ -286,17 +330,9 @@ export default {
     box-sizing: border-box;
 }
 
-/* 채팅 전송 시간 */
-.sendDate {
-    margin-left: 10px; /* 시간과 메시지 사이의 간격 조정 */
-    white-space: nowrap; /* 시간을 한 줄로 표시 */
-    font-size: 0.75em;
-    /* text-align: right; */
-}
-
-/* 텍스트 기본 스타일 */
-.text {
-    margin-left: auto; /* 메시지 내용을 왼쪽으로 밀기 */
-    /* margin: 5px 0; */
+/* 전송 버튼 */
+.btn.btn-primary {
+    background-color: #18b7be;
+    border-color: #18b7be;
 }
 </style>
