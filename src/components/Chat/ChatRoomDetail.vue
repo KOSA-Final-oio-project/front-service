@@ -2,7 +2,7 @@
     <div class="container" v-cloak>
         <!-- 채팅방 이름 -->
         <div class="chat-name">
-            <h2>{{ room.name }}</h2>
+            <h2>✉️ {{ room.name }} ✉️</h2>
         </div>
 
         <!-- 채팅 영역 -->
@@ -160,6 +160,12 @@ export default {
 
         // 메시지 발신
         sendMessage() {
+            // 입력창 비어있으면 전송 X
+            if (!this.message.trim()) {
+                alert('내용을 입력해주세요.');
+                return;
+            }
+
             // 현재 시간을 ISO 형식으로 설정
             const sendDate = new Date().toISOString();
 
@@ -230,17 +236,15 @@ export default {
 /* 채팅창 말풍선 공통 스타일 */
 .list-group-item {
     border: none;
-    border-radius: 20px;
     padding: 10px 20px;
-    margin-bottom: 10px;
-    max-width: 70%; /* 긴 메시지가 화면 안넘어가게 */
+    margin-bottom: 15px;
     word-wrap: break-word; /* 줄바꿈 - 단어 기준 */
-    display: flex; /* 수평 중앙 정렬 */
-    align-items: center; /* 수평 중앙 정렬 */
 }
 
 /* 현재 사용자가 보낸 메시지 */
 .sent {
+    max-width: 70%; /* 긴 메시지가 화면 안넘어가게 */
+    border-radius: 20px; /* 말풍선 상단 보더 */
     background-color: #18b7be;
     margin-left: auto;
     margin-right: 0;
@@ -253,36 +257,28 @@ export default {
 
 /* 메시지 아이템을 감싸는 컨테이너 */
 .sent-container {
+    border-radius: 20px; /* 말풍선 하단 보더만 맞춰짐.. 머지 */
     display: flex; /* 내부 아이템들을 수평으로 정렬 */
     align-items: center; /* 아이템들을 수직 중앙에 정렬 */
     justify-content: flex-end; /* 오른쪽 정렬 */
-    margin-bottom: 10px; /* 메시지 간 간격 */
 }
 
 /* 다른 사용자가 보낸 메시지 */
 .received {
-    margin-left: 10px; /* 시간과 메시지 사이 간격 */
+    border-radius: 20px; /* 말풍선 상단 보더 */
     background-color: #f9f7f0; /* 받은 메시지 말풍선 색상 */
     margin-right: 10px; /* 시간과 메시지 사이 간격 */
     border-radius: 18px; /* 둥근 모서리 */
-    padding: 10px 20px; /* 말풍선 내부 패딩 */
-    max-width: 80%; /* 말풍선 최대 너비 */
 }
 
-/* 받은 메시지와 시간 컨테이너 */
+/* 받은 메시지 컨테이너 */
 .received-container {
+    max-width: 70%; /* 긴 메시지가 화면 안넘어가게 */
+    border-radius: 20px; /* 말풍선 하단 보더만 맞춰짐.. 머지 */
     display: flex;
     align-items: center; /* 시간과 말풍선을 수직 중앙 정렬 */
     justify-content: flex-start; /* 왼쪽 정렬 */
-    margin-bottom: 10px; /* 메시지 간 간격 */
-}
-
-/* 받은 메시지와 시간 컨테이너 */
-.received-container {
-    display: flex;
-    align-items: center; /* 시간과 말풍선을 수직 중앙 정렬 */
-    justify-content: flex-start; /* 왼쪽 정렬 */
-    margin-bottom: 10px; /* 메시지 간 간격 */
+    margin-bottom: 10px; /* 수신 & 발신 메시지 간 간격 */
 }
 
 /* 메시지 내용 */
@@ -317,13 +313,11 @@ export default {
 
 /* 채팅 전송 시간 */
 .sendDate {
-    /* 시간과 메시지 사이의 간격 조정 */
-    /* margin-left: 10px; */
     margin-top: auto;
+    margin-bottom: 15px;
     /* 시간을 한 줄로 표시 */
     white-space: nowrap;
     font-size: 0.75em;
-    /* order: 1;  */
 }
 
 /* 텍스트 기본 스타일 */
