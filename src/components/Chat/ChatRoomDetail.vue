@@ -1,14 +1,38 @@
 <template>
     <div class="container" v-cloak>
-        <!-- 채팅방 이름 -->
-        <div class="chat-name">
-            <h2>✉️ {{ room.name }} ✉️</h2>
+        <div class="chat-header-container">
+            <!-- 채팅방 이름 -->
+            <div class="chat-name">
+                <h2>✉️ {{ room.name }} ✉️</h2>
+            </div>
+
+            <!-- rentStartDate & rendEndDate  -->
+            <!-- 2023-12-16 12:00 -->
+            <div class="deal-start-btn">
+                <button
+                    class="btn deal-start-btn"
+                    type="button"
+                    @click="openDateSelectionPopup"
+                >
+                    거래하기
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-product-container">
+            <div class="product-img">사진</div>
+            <div class="product-info">
+                <p>상품명</p>
+                <p>상품가격</p>
+                <p>대여상태</p>
+            </div>
         </div>
 
         <!-- 채팅 영역 -->
         <!-- 채팅 내역들 스크롤 가능하게 -->
         <div class="chat-main" ref="chatMain">
             <!-- 채팅 날짜 -->
+            <!-- 아직 안함!!!!!!!!!!!!! -->
             <div class="chat-header">{{ chatStartDate }}</div>
 
             <!-- 메시지 내역들 출력 -->
@@ -86,11 +110,12 @@ export default {
             message: '',
             sendDate: '',
             messages: [],
+            chatStartDate: '',
         };
     },
 
     created() {
-        localStorage.setItem('sender', '홍식시치');
+        // localStorage.setItem('wschat.sender', '홍식시치');
 
         console.log(
             '>>>>>>>>>>>>>>>>>>>>>>>>>> ChatRoomDetail component created! :-)',
@@ -98,6 +123,9 @@ export default {
 
         this.roomId = localStorage.getItem('wschat.roomId');
         this.sender = localStorage.getItem('wschat.sender');
+
+        // 채팅 시작 날짜
+        // this.chatStartDate = new Date().toLocaleString(); // 시간 자르기!!!!
 
         this.findRoom();
         this.connectWebSocket();
@@ -212,6 +240,31 @@ export default {
                 // second: '2-digit',
             });
         },
+
+        // 달력 뉴 팝업창
+        openDateSelectionPopup() {
+            // 팝업창 크기 설정
+            const popupWidth = 500;
+            const popupHeight = 620;
+            // 팝업창 위치 설정
+            const left = screen.width / 2 - popupWidth / 2;
+            const top = screen.height / 2 - popupHeight / 2;
+
+            // Datepicker 컴포넌트가 포함된 페이지로 팝업창 열기
+            const popup = window.open(
+                '/chat/date', // Datepicker 컴포넌트가 있는 경로
+                'DateSelectionPopup',
+                `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`,
+            );
+
+            if (popup) {
+                popup.focus();
+            } else {
+                alert('팝업창이 차단되었습니다. 팝업 차단을 해제해주세요.');
+            }
+        },
+
+        startRend() {},
     },
 };
 </script>
@@ -225,12 +278,44 @@ export default {
     overflow: hidden; /* 컨테이너 밖으로 내용 못나감 */
 }
 
+/* ========= 채팅 헤더 영역 ========= */
+
+.chat-header-container {
+    display: flex;
+    justify-content: space-between; /* 아이템들을 양쪽 끝에 배치 */
+    align-items: center;
+    width: 100%; /* 컨테이너의 전체 너비 */
+}
+
 /* 채팅방 제목 */
 .chat-name {
     margin-top: 50px;
     margin-bottom: 30px;
     text-align: center;
     font-weight: bold;
+    flex-grow: 1; /* 중앙에 위치하도록 공간 확장 */
+}
+
+/* 거래하기 버튼 */
+.btn.deal-start-btn {
+    color: white;
+    font-weight: bold;
+    border-radius: 30px;
+    background-color: #178ca4;
+    margin-right: 20px;
+}
+
+/* ========= 상품 정보 영역 ========= */
+
+/* 상품 정보 */
+.chat-product-container {
+    border: solid black 1px;
+    margin-bottom: 40px;
+    width: 80%;
+    /* max-width: 600px; */
+    margin: 0 auto 40px; /* 위 아래 여백은 0, 좌우는 자동으로 설정하여 중앙 정렬 */
+    border: solid black 1px;
+    align-self: center; /* Flexbox 아이템을 가로 방향으로 중앙에 배치 */
 }
 
 /* ========= 채팅 영역 ========= */

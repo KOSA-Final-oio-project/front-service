@@ -59,6 +59,7 @@ import axios from 'axios';
 export default {
     data() {
         return {
+            email: '',
             roomName: '',
             chatRooms: [],
         };
@@ -72,6 +73,7 @@ export default {
         // 모든 채팅방의 목록 가져옴
         findAllRoom() {
             axios
+                // .get(this.$backURL + '/chat/rooms' + this.email)
                 .get(this.$backURL + '/chat/rooms')
                 .then(response => {
                     this.chatRooms = response.data;
