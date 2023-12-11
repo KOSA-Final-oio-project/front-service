@@ -9,17 +9,17 @@ const router = createRouter({
 
     routes: [
         {
-            path: '/chat', // ChatRoomList 컴포넌트가 열리는 경로
+            path: '/chat-service/chat', // ChatRoomList 컴포넌트가 열리는 경로
             name: 'ChatRoomList',
             component: ChatRoomList,
         },
         {
-            path: '/chat/room/enter/:roomId', // ChatRoomDetail 컴포넌트가 열리는 경로
+            path: '/chat-service/chat/room/enter/:roomId', // ChatRoomDetail 컴포넌트가 열리는 경로
             name: 'ChatRoomEnter',
             component: ChatRoomDetail,
         },
         {
-            path: '/chat/date', // SelectDatePopup 컴포넌트가 열리는 경로
+            path: '/chat-service/chat/date', // SelectDatePopup 컴포넌트가 열리는 경로
             name: 'SelectDatePopup',
             component: SelectDatePopup,
         },
