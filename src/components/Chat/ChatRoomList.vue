@@ -62,6 +62,7 @@ export default {
             email: '',
             roomName: '',
             chatRooms: [],
+            // 읽음처리
         };
     },
 
@@ -73,8 +74,7 @@ export default {
         // 모든 채팅방의 목록 가져옴
         findAllRoom() {
             axios
-                // .get(this.$backURL + '/chat/rooms' + this.email)
-                .get(this.$backURL + '/chat/rooms')
+                .get(this.$backURL + '/chat-service/chat/rooms')
                 .then(response => {
                     this.chatRooms = response.data;
                     //역순 정렬 .reverse()
@@ -88,6 +88,23 @@ export default {
                 });
         },
 
+        // 해당 이메일로 생성된 채팅방의 목록을 가져옴
+        // findRoomByEamil() {
+        //     axios
+        //         .get(this.$backURL + '/chat/rooms/' + this.email)
+        //         .then(response => {
+        //             this.chatRooms = response.data;
+        //             //역순 정렬 .reverse()
+        //             console.log(response.data); // 서버 응답 확인
+        //         })
+        //         .catch(error => {
+        //             console.error(
+        //                 '방을 찾는데 실패했습니다. 오류 원인은: ',
+        //                 error,
+        //             );
+        //         });
+        // },
+
         // 새 채팅방을 생성
         createRoom() {
             // 방 제목 입력 X
@@ -99,7 +116,9 @@ export default {
             alert('입력한 방 제목은: ' + this.roomName);
 
             axios
-                .post(this.$backURL + '/chat/room/' + this.roomName)
+                .post(
+                    this.$backURL + '/chat-service/chat/room/' + this.roomName,
+                )
                 .then(response => {
                     alert(
                         ' "' +

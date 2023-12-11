@@ -80,6 +80,7 @@
                 class="form-control"
                 v-model="message"
                 @keypress.enter="sendMessage"
+                placeholder="메시지를 입력해주세요."
             />
 
             <!-- 전송 버튼 -->
@@ -115,7 +116,7 @@ export default {
     },
 
     created() {
-        // localStorage.setItem('wschat.sender', '홍식시치');
+        // localStorage.setItem('wschat.sender', 'sengna@gmail.com');
 
         console.log(
             '>>>>>>>>>>>>>>>>>>>>>>>>>> ChatRoomDetail component created! :-)',
@@ -131,13 +132,20 @@ export default {
         this.connectWebSocket();
     },
 
+    beforeUnmount() {
+        window.removeEventListener('beforeunload', this.closeWebSocket);
+        this.closeWebSocket();
+    },
+
     methods: {
         // 방 조회
         findRoom() {
-            console.log(this.$backURL + '/chat/room/' + this.roomId);
+            console.log(
+                this.$backURL + '/chat-service/chat/room/' + this.roomId,
+            );
 
             axios
-                .get(this.$backURL + '/chat/room/' + this.roomId)
+                .get(this.$backURL + '/chat-service/chat/room/' + this.roomId)
                 .then(response => {
                     this.room = response.data;
                 })
@@ -152,7 +160,7 @@ export default {
         // 웹소켓 연결
         connectWebSocket() {
             const refer = this; // Vue 인스턴스 참조를 변수에 저장
-            const sock = new SockJS(this.$backURL + '/ws-stomp');
+            const sock = new SockJS(this.$backURL + '/chat-service/ws-stomp');
             const ws = Stomp.over(sock, { protocols: ['v1.2'] }); // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
 
             ws.connect(
@@ -186,6 +194,26 @@ export default {
             );
 
             refer.ws = ws;
+        },
+
+        // 웹소켓 닫히는
+        closeWebSocket() {
+            const sendDate = new Date().toISOString();
+
+            // QUIT 메시지 전송
+            this.ws.send(
+                '/pub/chat/message',
+                JSON.stringify({
+                    messageType: 'QUIT',
+                    roomId: this.roomId,
+                    sender: this.sender,
+                    sendDate: sendDate,
+                }),
+            );
+
+            if (this.ws) {
+                this.ws.disconnect();
+            }
         },
 
         // 메시지 발신
@@ -252,7 +280,7 @@ export default {
 
             // Datepicker 컴포넌트가 포함된 페이지로 팝업창 열기
             const popup = window.open(
-                '/chat/date', // Datepicker 컴포넌트가 있는 경로
+                '/chat-service/chat/date', // Datepicker 컴포넌트가 있는 경로
                 'DateSelectionPopup',
                 `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`,
             );
@@ -263,8 +291,17 @@ export default {
                 alert('팝업창이 차단되었습니다. 팝업 차단을 해제해주세요.');
             }
         },
+    },
 
-        startRend() {},
+    // 라우터 떠날 때 호출
+    beforeRouteLeave(to, from, next) {
+        // if (to.name !== 'DateSelectionPopup') {
+        //     this.closeWebSocket();
+        // }
+        if (to.path !== 'http://localhost:5173/chat-service/chat/date') {
+            this.closeWebSocket();
+        }
+        next();
     },
 };
 </script>

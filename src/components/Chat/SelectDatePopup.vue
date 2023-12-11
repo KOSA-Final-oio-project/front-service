@@ -97,6 +97,7 @@ export default {
     margin-bottom: 0.5rem;
 }
 
+/* 달력 컨테이너 */
 .date-pick-container {
     text-align: center;
 }
@@ -110,7 +111,7 @@ export default {
     margin-bottom: 20px;
 }
 
-/*  */
+/* 날짜 정보 */
 .selected-info {
     text-align: center;
     margin-top: 5px;
