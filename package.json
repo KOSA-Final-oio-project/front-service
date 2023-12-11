@@ -3,13 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0 --port 5173",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^7.3.0",
     "axios": "^1.6.2",
     "bootstrap": "^5.3.2",
     "sockjs-client": "^1.6.1",
