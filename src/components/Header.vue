@@ -12,7 +12,7 @@
     <div class="icons"><font-awesome-icon :icon="['fas', 'user-plus']" /><span>join</span></div>
     <div class="icons"><font-awesome-icon :icon="['fas', 'right-to-bracket']" /><span>login</span></div>
     <div class="icons"><font-awesome-icon :icon="['fas', 'user']" /><span>my</span></div>
-    <div class="icons"><font-awesome-icon :icon="['fas', 'bag-shopping']" />0</div>
+    <div class="icons"><font-awesome-icon :icon="['fas', 'bag-shopping']" /><span>0</span></div>
   </div>
 
 </div>
@@ -31,8 +31,12 @@ export default {
 }
 </script>
 <style scoped>
-.header-container{
-  height: auto;
+.header-container {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  background-color: white; /* Add background color if needed */
 }
 .icons-container{
   display: flex;

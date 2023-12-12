@@ -1,7 +1,5 @@
 <template>
     <Main/>
-    <section></section>
-    <router-view></router-view>
 </template>
 
 <script>
