@@ -17,17 +17,10 @@ module.exports = {
     },
     rules: {
         'prettier/prettier': [
-            'error',
-            {
-                singleQuote: true,
-                semi: true,
-                tabWidth: 4,
-                trailingComma: 'all',
-                printWidth: 80,
-                bracketSpacing: true,
-                arrowParens: 'avoid',
-                endOfLine: 'auto',
-            },
+            "error",
+        {
+          "endOfLine": "auto"
+        }
         ],
     },
 };
