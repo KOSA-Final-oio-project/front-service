@@ -51,6 +51,7 @@ export default {
         return {
             date: [new Date(), null],
             minDate: new Date(),
+            datePickerConfig: {},
         };
     },
 
@@ -77,33 +78,54 @@ export default {
             return new Date(dateValue).toLocaleDateString('ko-KR', options);
         },
 
+        // {
+        //     "ownerNickname" : "아무개",
+        //     "borrowerNickname" : "김학윤",
+        //     "rentStartDate" : "2023-12-12 11:00",
+        //     "rentEndDate" : "2023-12-15 12:00"
+        // }
+
         // 백엔드로 보낼 데이터 포매팅
-        formatDateForRent() {},
+        formatDateForRent(dateValue) {
+            if (!dateValue) return '';
+            const date = new Date(dateValue);
+            return date.toISOString().slice(0, 16).replace('T', ' ');
+        },
 
         // 거래 시작 메서드
         startRent() {
-            // 날짜 데이터 포맷팅
-            const rentStartDate = this.formatDate(this.date[0]);
-            const rentEndDate = this.formatDate(this.date[1]);
+            // 날짜 데이터 포맷팅 (YYYY-MM-DD HH:mm 형식)
+            const rentStartDate = this.formatDateForRent(this.date[0]);
+            const rentEndDate = this.formatDateForRent(this.date[1]);
 
-            console.log('rentStartDate: ' + rentStartDate);
-            console.log('rentEndDate: ' + rentEndDate);
+            console.log(rentStartDate);
+            console.log(rentEndDate);
 
-            //     // 백엔드로 전송할 데이터 구성
-            //     const dataToSend = {
-            //         rentStartDate,
-            //         rentEndDate,
-            //     };
+            // 대여자 및 소유자 닉네임 임시로
+            const ownerNickname = '아무개';
+            const borrowerNickname = '김학윤';
 
-            //     // 백엔드로 데이터 전송
-            //     axios
-            //         .post('', dataToSend)
-            //         .then(response => {
-            //             console.log('Response:', response);
-            //         })
-            //         .catch(error => {
-            //             console.error('Error:', error);
-            //         });
+            // 백엔드로 전송할 데이터 구성
+            const rentData = {
+                ownerNickname,
+                borrowerNickname,
+                rentStartDate,
+                rentEndDate,
+            };
+
+            console.log(rentData);
+
+            // 백엔드로 데이터 전송
+            // axios
+            //     .post('백엔드 API', rentData)
+            //     .then(response => {
+            //         // 성공시 로직
+            //         console.log('거래 시작 데이터 전송 성공:', response);
+            //     })
+            //     .catch(error => {
+            //         // 실패시 로직
+            //         console.error('거래 시작 데이터 전송 실패:', error);
+            //     });
         },
     },
 };
