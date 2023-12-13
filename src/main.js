@@ -25,7 +25,7 @@ app.component('VueDatePicker', VueDatePicker)
 app.component('font-awesome-icon', FontAwesomeIcon)
 
 // 전역변수 설정
-app.config.globalProperties.$backURL = 'http://localhost:9797/chat-service'
+app.config.globalProperties.$backURL = 'http://localhost:9797'
 
 // 앱 마운트
 app.mount('#app')
