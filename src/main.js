@@ -1,5 +1,5 @@
 if (typeof global === 'undefined') {
-    window.global = window
+  window.global = window
 }
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
