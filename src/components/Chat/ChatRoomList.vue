@@ -62,12 +62,14 @@ export default {
             email: '',
             roomName: '',
             chatRooms: [],
-            // 읽음처리
         };
     },
 
     created() {
-        this.findAllRoom();
+        // this.findAllRoom();
+        // ---------------
+        this.email = this.getCurrentUserEmail(); // 현재 사용자의 이메일 가져오기
+        this.findRoomByEamil(); // 해당 이메일의 채팅방 목록을 불러옴
     },
 
     methods: {
@@ -88,22 +90,27 @@ export default {
                 });
         },
 
+        // // email 가져오기
+        getCurrentUserEmail() {
+            return 'sengna@oio.com'; // 임시
+        },
+
         // 해당 이메일로 생성된 채팅방의 목록을 가져옴
-        // findRoomByEamil() {
-        //     axios
-        //         .get(this.$backURL + '/chat/rooms/' + this.email)
-        //         .then(response => {
-        //             this.chatRooms = response.data;
-        //             //역순 정렬 .reverse()
-        //             console.log(response.data); // 서버 응답 확인
-        //         })
-        //         .catch(error => {
-        //             console.error(
-        //                 '방을 찾는데 실패했습니다. 오류 원인은: ',
-        //                 error,
-        //             );
-        //         });
-        // },
+        findRoomByEamil() {
+            // alert('현재 이메일은: ' + this.email);
+            axios
+                .get(this.$backURL + '/chat-service/chat/rooms/' + this.email)
+                .then(response => {
+                    this.chatRooms = response.data;
+                    console.log(response.data); // 서버 응답 확인
+                })
+                .catch(error => {
+                    console.error(
+                        '방을 찾는데 실패했습니다. 오류 원인은:',
+                        error,
+                    );
+                });
+        },
 
         // 새 채팅방을 생성
         createRoom() {

@@ -24,19 +24,21 @@
 
     <!-- 시작&종료 날짜 및 시간 확인용 -->
     <div class="selected-info">
-        <span class="selected-start">시작: {{ startDate }}</span>
+        <span class="selected-start">시작: {{ rentStartDate }}</span>
         <span class="tilde">~</span>
-        <span class="selected-end">종료: {{ endDate }}</span>
+        <span class="selected-end">종료: {{ rentEndDate }}</span>
     </div>
 
     <!-- 대여시작 버튼 -->
     <div class="button-container">
-        <button class="start-btn" type="submit">대여시작</button>
+        <button class="start-btn" type="submit" @click="startRent">
+            대여시작
+        </button>
     </div>
 </template>
 
 <script>
-// import { ref } from 'vue';
+import axios from 'axios';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
@@ -44,21 +46,25 @@ export default {
     components: {
         VueDatePicker,
     },
+
     data() {
         return {
             date: [new Date(), null],
             minDate: new Date(),
         };
     },
+
     computed: {
-        startDate() {
+        rentStartDate() {
             return this.formatDate(this.date[0]);
         },
-        endDate() {
+        rentEndDate() {
             return this.formatDate(this.date[1]);
         },
     },
+
     methods: {
+        // 프론트에서 보여줄 데이터 포매팅
         formatDate(dateValue) {
             if (!dateValue) return '날짜를 선택해주세요';
             const options = {
@@ -69,6 +75,35 @@ export default {
                 minute: '2-digit',
             };
             return new Date(dateValue).toLocaleDateString('ko-KR', options);
+        },
+
+        // 백엔드로 보낼 데이터 포매팅
+        formatDateForRent() {},
+
+        // 거래 시작 메서드
+        startRent() {
+            // 날짜 데이터 포맷팅
+            const rentStartDate = this.formatDate(this.date[0]);
+            const rentEndDate = this.formatDate(this.date[1]);
+
+            console.log('rentStartDate: ' + rentStartDate);
+            console.log('rentEndDate: ' + rentEndDate);
+
+            //     // 백엔드로 전송할 데이터 구성
+            //     const dataToSend = {
+            //         rentStartDate,
+            //         rentEndDate,
+            //     };
+
+            //     // 백엔드로 데이터 전송
+            //     axios
+            //         .post('', dataToSend)
+            //         .then(response => {
+            //             console.log('Response:', response);
+            //         })
+            //         .catch(error => {
+            //             console.error('Error:', error);
+            //         });
         },
     },
 };

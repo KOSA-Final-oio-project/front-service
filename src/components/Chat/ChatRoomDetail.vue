@@ -125,10 +125,8 @@ export default {
         this.roomId = localStorage.getItem('wschat.roomId');
         this.sender = localStorage.getItem('wschat.sender');
 
-        // 채팅 시작 날짜
-        // this.chatStartDate = new Date().toLocaleString(); // 시간 자르기!!!!
-
         this.findRoom();
+        this.findChatRoomLogs();
         this.connectWebSocket();
     },
 
@@ -153,6 +151,32 @@ export default {
                     alert(
                         '채팅방 조회에 실패했습니다. 오류 원인은: ' +
                             error.message,
+                    );
+                });
+        },
+
+        // 채팅방 로그 불러오기
+        findChatRoomLogs() {
+            axios
+                .get(
+                    this.$backURL +
+                        '/chat-service/chat/room/enter/' +
+                        this.roomId,
+                )
+                .then(response => {
+                    // 서버로부터 받은 데이터가 배열인지 확인
+                    if (Array.isArray(response.data)) {
+                        this.messages = response.data; // 가져온 채팅 로그를 messages에 저장
+                    } else {
+                        console.error(
+                            '>>>>>>>>>>> Received data is not an array',
+                        );
+                    }
+                })
+                .catch(error => {
+                    console.error(
+                        '채팅 로그를 불러오는데 실패했습니다: ',
+                        error,
                     );
                 });
         },
@@ -295,9 +319,6 @@ export default {
 
     // 라우터 떠날 때 호출
     beforeRouteLeave(to, from, next) {
-        // if (to.name !== 'DateSelectionPopup') {
-        //     this.closeWebSocket();
-        // }
         if (to.path !== 'http://localhost:5173/chat-service/chat/date') {
             this.closeWebSocket();
         }
