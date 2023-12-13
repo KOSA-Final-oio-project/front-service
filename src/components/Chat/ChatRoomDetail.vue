@@ -63,6 +63,12 @@
                             {{ message.message }}
                         </div>
 
+                        <!-- 읽음 표시 -->
+                        <div class="read-sign">
+                            1
+                            <!-- {{ message.isRead }} -->
+                        </div>
+
                         <!-- 받은 메시지의 시간 -->
                         <div v-if="message.sender !== sender" class="sendDate">
                             {{ message.sendDate }}
@@ -116,8 +122,6 @@ export default {
     },
 
     created() {
-        // localStorage.setItem('wschat.sender', 'sengna@gmail.com');
-
         console.log(
             '>>>>>>>>>>>>>>>>>>>>>>>>>> ChatRoomDetail component created! :-)',
         );
@@ -164,9 +168,17 @@ export default {
                         this.roomId,
                 )
                 .then(response => {
-                    // 서버로부터 받은 데이터가 배열인지 확인
+                    // 채팅 내역 가져올 때 배열 형태로 가져오는지 확인
                     if (Array.isArray(response.data)) {
-                        this.messages = response.data; // 가져온 채팅 로그를 messages에 저장
+                        // 각 메시지의 sendDate를 포매팅
+                        this.messages = response.data.map(message => {
+                            // 가져온 채팅 로그를 messages에 저장
+                            return {
+                                ...message, // message 객체의 모든 속성을 새로운 객체에 복사
+                                // 이후 sendDate만 포맷된 걸로 덮어씌워줌
+                                sendDate: this.formatTime(message.sendDate),
+                            };
+                        });
                     } else {
                         console.error(
                             '>>>>>>>>>>> Received data is not an array',
@@ -289,7 +301,7 @@ export default {
             return date.toLocaleTimeString('ko-KR', {
                 hour: '2-digit',
                 minute: '2-digit',
-                // second: '2-digit',
+                hour12: true,
             });
         },
 
@@ -454,6 +466,10 @@ export default {
     padding-right: 25px;
     /* 가능한 모든 공간을 차지하도록 설정 */
     flex-grow: 1;
+}
+
+/* 채팅 읽음 표시 */
+.read-sign {
 }
 
 /* 채팅 전송 시간 */
