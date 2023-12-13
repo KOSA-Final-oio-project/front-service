@@ -9,11 +9,7 @@
             <!-- rentStartDate & rendEndDate  -->
             <!-- 2023-12-16 12:00 -->
             <div class="deal-start-btn">
-                <button
-                    class="btn deal-start-btn"
-                    type="button"
-                    @click="openDateSelectionPopup"
-                >
+                <button class="btn deal-start-btn" type="button" @click="openDateSelectionPopup">
                     거래하기
                 </button>
             </div>
@@ -44,7 +40,7 @@
                         :key="message.id"
                         :class="{
                             'sent-container': message.sender === sender,
-                            'received-container': message.sender !== sender,
+                            'received-container': message.sender !== sender
                         }"
                     >
                         <!-- 보낸 메시지의 시간 -->
@@ -57,7 +53,7 @@
                             :class="{
                                 'list-group-item': true,
                                 sent: message.sender === sender,
-                                received: message.sender !== sender,
+                                received: message.sender !== sender
                             }"
                         >
                             {{ message.message }}
@@ -91,22 +87,16 @@
 
             <!-- 전송 버튼 -->
             <div class="input-group-append">
-                <button
-                    class="btn btn-primary"
-                    type="button"
-                    @click="sendMessage"
-                >
-                    전송
-                </button>
+                <button class="btn btn-primary" type="button" @click="sendMessage">전송</button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import axios from 'axios';
-import SockJS from 'sockjs-client';
-import Stomp from 'webstomp-client';
+import axios from 'axios'
+import SockJS from 'sockjs-client'
+import Stomp from 'webstomp-client'
 
 export default {
     data() {
@@ -117,102 +107,83 @@ export default {
             message: '',
             sendDate: '',
             messages: [],
-            chatStartDate: '',
-        };
+            chatStartDate: ''
+        }
     },
 
     created() {
-        console.log(
-            '>>>>>>>>>>>>>>>>>>>>>>>>>> ChatRoomDetail component created! :-)',
-        );
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> ChatRoomDetail component created! :-)')
 
-        this.roomId = localStorage.getItem('wschat.roomId');
-        this.sender = localStorage.getItem('wschat.sender');
+        this.roomId = localStorage.getItem('wschat.roomId')
+        this.sender = localStorage.getItem('wschat.sender')
 
-        this.findRoom();
-        this.findChatRoomLogs();
-        this.connectWebSocket();
+        this.findRoom()
+        this.findChatRoomLogs()
+        this.connectWebSocket()
     },
 
     beforeUnmount() {
-        window.removeEventListener('beforeunload', this.closeWebSocket);
-        this.closeWebSocket();
+        window.removeEventListener('beforeunload', this.closeWebSocket)
+        this.closeWebSocket()
     },
 
     methods: {
         // 방 조회
         findRoom() {
-            console.log(
-                this.$backURL + '/chat-service/chat/room/' + this.roomId,
-            );
+            console.log(this.$backURL + '/chat-service/chat/room/' + this.roomId)
 
             axios
                 .get(this.$backURL + '/chat-service/chat/room/' + this.roomId)
-                .then(response => {
-                    this.room = response.data;
+                .then((response) => {
+                    this.room = response.data
                 })
-                .catch(error => {
-                    alert(
-                        '채팅방 조회에 실패했습니다. 오류 원인은: ' +
-                            error.message,
-                    );
-                });
+                .catch((error) => {
+                    alert('채팅방 조회에 실패했습니다. 오류 원인은: ' + error.message)
+                })
         },
 
         // 채팅방 로그 불러오기
         findChatRoomLogs() {
             axios
-                .get(
-                    this.$backURL +
-                        '/chat-service/chat/room/enter/' +
-                        this.roomId,
-                )
-                .then(response => {
+                .get(this.$backURL + '/chat-service/chat/room/enter/' + this.roomId)
+                .then((response) => {
                     // 채팅 내역 가져올 때 배열 형태로 가져오는지 확인
                     if (Array.isArray(response.data)) {
                         // 각 메시지의 sendDate를 포매팅
-                        this.messages = response.data.map(message => {
+                        this.messages = response.data.map((message) => {
                             // 가져온 채팅 로그를 messages에 저장
                             return {
                                 ...message, // message 객체의 모든 속성을 새로운 객체에 복사
                                 // 이후 sendDate만 포맷된 걸로 덮어씌워줌
-                                sendDate: this.formatTime(message.sendDate),
-                            };
-                        });
+                                sendDate: this.formatTime(message.sendDate)
+                            }
+                        })
                     } else {
-                        console.error(
-                            '>>>>>>>>>>> Received data is not an array',
-                        );
+                        console.error('>>>>>>>>>>> Received data is not an array')
                     }
                 })
-                .catch(error => {
-                    console.error(
-                        '채팅 로그를 불러오는데 실패했습니다: ',
-                        error,
-                    );
-                });
+                .catch((error) => {
+                    console.error('채팅 로그를 불러오는데 실패했습니다: ', error)
+                })
         },
 
         // 웹소켓 연결
         connectWebSocket() {
-            const refer = this; // Vue 인스턴스 참조를 변수에 저장
-            const sock = new SockJS(this.$backURL + '/chat-service/ws-stomp');
-            const ws = Stomp.over(sock, { protocols: ['v1.2'] }); // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
+            const refer = this // Vue 인스턴스 참조를 변수에 저장
+            const sock = new SockJS(this.$backURL + '/chat-service/ws-stomp')
+            const ws = Stomp.over(sock, { protocols: ['v1.2'] }) // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
 
             ws.connect(
                 {},
                 function () {
                     // 구독
-                    ws.subscribe(
-                        '/sub/chat/room/' + refer.roomId,
-                        function (message) {
-                            var receive = JSON.parse(message.body);
-                            refer.receiveMessage(receive);
-                        },
-                    );
+                    ws.subscribe('/sub/chat/room/' + refer.roomId, function (message) {
+                        var receive = JSON.parse(message.body)
+                        refer.receiveMessage(receive)
+                    })
 
                     // 전송할 때 시간도 같이 보내기
-                    const sendDate = new Date().toISOString();
+                    const sendDate = new Date().toISOString()
                     // 전송
                     ws.send(
                         '/pub/chat/message',
@@ -220,21 +191,21 @@ export default {
                             messageType: 'ENTER',
                             roomId: refer.roomId,
                             sender: refer.sender,
-                            sendDate: sendDate,
-                        }),
-                    );
+                            sendDate: sendDate
+                        })
+                    )
                 },
                 function (error) {
-                    alert(error.message);
-                },
-            );
+                    alert(error.message)
+                }
+            )
 
-            refer.ws = ws;
+            refer.ws = ws
         },
 
         // 웹소켓 닫히는
         closeWebSocket() {
-            const sendDate = new Date().toISOString();
+            const sendDate = new Date().toISOString()
 
             // QUIT 메시지 전송
             this.ws.send(
@@ -243,12 +214,12 @@ export default {
                     messageType: 'QUIT',
                     roomId: this.roomId,
                     sender: this.sender,
-                    sendDate: sendDate,
-                }),
-            );
+                    sendDate: sendDate
+                })
+            )
 
             if (this.ws) {
-                this.ws.disconnect();
+                this.ws.disconnect()
             }
         },
 
@@ -256,12 +227,12 @@ export default {
         sendMessage() {
             // 입력창 비어있으면 전송 X
             if (!this.message.trim()) {
-                alert('내용을 입력해주세요.');
-                return;
+                alert('내용을 입력해주세요.')
+                return
             }
 
             // 현재 시간을 ISO 형식으로 설정
-            const sendDate = new Date().toISOString();
+            const sendDate = new Date().toISOString()
 
             this.ws.send(
                 '/pub/chat/message',
@@ -270,73 +241,73 @@ export default {
                     roomId: this.roomId,
                     sender: this.sender,
                     message: this.message,
-                    sendDate: sendDate,
-                }),
-            );
-            this.message = '';
+                    sendDate: sendDate
+                })
+            )
+            this.message = ''
         },
 
         // 메시지 수신
         receiveMessage(receive) {
-            const formattedSendDate = this.formatTime(receive.sendDate);
+            const formattedSendDate = this.formatTime(receive.sendDate)
 
             this.messages.push({
                 messageType: receive.type,
                 sender: receive.type == 'ENTER' ? '[알림]' : receive.sender,
                 message: receive.message,
-                sendDate: formattedSendDate,
-            });
+                sendDate: formattedSendDate
+            })
 
             // 스크롤바가 최신 메시지 따라갈 수 있도록
             this.$nextTick(() => {
-                const chatContainer = this.$refs.chatMain;
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            });
+                const chatContainer = this.$refs.chatMain
+                chatContainer.scrollTop = chatContainer.scrollHeight
+            })
         },
 
         // 시간 포매팅 함수
         formatTime(dateString) {
-            const date = new Date(dateString);
+            const date = new Date(dateString)
 
             return date.toLocaleTimeString('ko-KR', {
                 hour: '2-digit',
                 minute: '2-digit',
-                hour12: true,
-            });
+                hour12: true
+            })
         },
 
         // 달력 뉴 팝업창
         openDateSelectionPopup() {
             // 팝업창 크기 설정
-            const popupWidth = 500;
-            const popupHeight = 620;
+            const popupWidth = 500
+            const popupHeight = 620
             // 팝업창 위치 설정
-            const left = screen.width / 2 - popupWidth / 2;
-            const top = screen.height / 2 - popupHeight / 2;
+            const left = screen.width / 2 - popupWidth / 2
+            const top = screen.height / 2 - popupHeight / 2
 
             // Datepicker 컴포넌트가 포함된 페이지로 팝업창 열기
             const popup = window.open(
                 '/chat-service/chat/date', // Datepicker 컴포넌트가 있는 경로
                 'DateSelectionPopup',
-                `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`,
-            );
+                `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`
+            )
 
             if (popup) {
-                popup.focus();
+                popup.focus()
             } else {
-                alert('팝업창이 차단되었습니다. 팝업 차단을 해제해주세요.');
+                alert('팝업창이 차단되었습니다. 팝업 차단을 해제해주세요.')
             }
-        },
+        }
     },
 
     // 라우터 떠날 때 호출
     beforeRouteLeave(to, from, next) {
         if (to.path !== 'http://localhost:5173/chat-service/chat/date') {
-            this.closeWebSocket();
+            this.closeWebSocket()
         }
-        next();
-    },
-};
+        next()
+    }
+}
 </script>
 
 <style scoped>

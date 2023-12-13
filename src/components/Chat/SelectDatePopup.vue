@@ -31,51 +31,49 @@
 
     <!-- 대여시작 버튼 -->
     <div class="button-container">
-        <button class="start-btn" type="submit" @click="startRent">
-            대여시작
-        </button>
+        <button class="start-btn" type="submit" @click="startRent">대여시작</button>
     </div>
 </template>
 
 <script>
-import axios from 'axios';
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
+import axios from 'axios'
+import VueDatePicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
 
 export default {
     components: {
-        VueDatePicker,
+        VueDatePicker
     },
 
     data() {
         return {
             date: [new Date(), null],
             minDate: new Date(),
-            datePickerConfig: {},
-        };
+            datePickerConfig: {}
+        }
     },
 
     computed: {
         rentStartDate() {
-            return this.formatDate(this.date[0]);
+            return this.formatDate(this.date[0])
         },
         rentEndDate() {
-            return this.formatDate(this.date[1]);
-        },
+            return this.formatDate(this.date[1])
+        }
     },
 
     methods: {
         // 프론트에서 보여줄 데이터 포매팅
         formatDate(dateValue) {
-            if (!dateValue) return '날짜를 선택해주세요';
+            if (!dateValue) return '날짜를 선택해주세요'
             const options = {
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
                 hour: '2-digit',
-                minute: '2-digit',
-            };
-            return new Date(dateValue).toLocaleDateString('ko-KR', options);
+                minute: '2-digit'
+            }
+            return new Date(dateValue).toLocaleDateString('ko-KR', options)
         },
 
         // {
@@ -87,33 +85,33 @@ export default {
 
         // 백엔드로 보낼 데이터 포매팅
         formatDateForRent(dateValue) {
-            if (!dateValue) return '';
-            const date = new Date(dateValue);
-            return date.toISOString().slice(0, 16).replace('T', ' ');
+            if (!dateValue) return ''
+            const date = new Date(dateValue)
+            return date.toISOString().slice(0, 16).replace('T', ' ')
         },
 
         // 거래 시작 메서드
         startRent() {
             // 날짜 데이터 포맷팅 (YYYY-MM-DD HH:mm 형식)
-            const rentStartDate = this.formatDateForRent(this.date[0]);
-            const rentEndDate = this.formatDateForRent(this.date[1]);
+            const rentStartDate = this.formatDateForRent(this.date[0])
+            const rentEndDate = this.formatDateForRent(this.date[1])
 
-            console.log(rentStartDate);
-            console.log(rentEndDate);
+            console.log(rentStartDate)
+            console.log(rentEndDate)
 
             // 대여자 및 소유자 닉네임 임시로
-            const ownerNickname = '아무개';
-            const borrowerNickname = '김학윤';
+            const ownerNickname = '아무개'
+            const borrowerNickname = '김학윤'
 
             // 백엔드로 전송할 데이터 구성
             const rentData = {
                 ownerNickname,
                 borrowerNickname,
                 rentStartDate,
-                rentEndDate,
-            };
+                rentEndDate
+            }
 
-            console.log(rentData);
+            console.log(rentData)
 
             // 백엔드로 데이터 전송
             // axios
@@ -126,9 +124,9 @@ export default {
             //         // 실패시 로직
             //         console.error('거래 시작 데이터 전송 실패:', error);
             //     });
-        },
-    },
-};
+        }
+    }
+}
 </script>
 
 <style scoped>

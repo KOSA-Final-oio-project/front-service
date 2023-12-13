@@ -1,16 +1,27 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
 
-import ChatRoomList from '@/components/Chat/ChatRoomList.vue';
-import ChatRoomDetail from '@/components/Chat/ChatRoomDetail.vue';
-import SelectDatePopup from '@/components/Chat/SelectDatePopup.vue';
-import TopView from '@/components/Main/TopView.vue';
-import TopRental from '@/components/Main/TopRental.vue';
-
+import Signup from '@/components/Member/Signup.vue'
+import Login from '@/components/Member/Login.vue'
+import ChatRoomList from '@/components/Chat/ChatRoomList.vue'
+import ChatRoomDetail from '@/components/Chat/ChatRoomDetail.vue'
+import SelectDatePopup from '@/components/Chat/SelectDatePopup.vue'
+import TopView from '@/components/Main/TopView.vue'
+import TopRental from '@/components/Main/TopRental.vue'
 
 const router = createRouter({
     history: createWebHistory(),
 
     routes: [
+        {
+            path: '/member-service/login',
+            name: 'Login',
+            component: Login
+        },
+        {
+            path: '/member-service/signup',
+            name: 'Signup',
+            component: Signup
+        },
         {
             path: '/top-view',
             name: 'TopView',
@@ -24,19 +35,19 @@ const router = createRouter({
         {
             path: '/chat-service/chat', // ChatRoomList 컴포넌트가 열리는 경로
             name: 'ChatRoomList',
-            component: ChatRoomList,
+            component: ChatRoomList
         },
         {
             path: '/chat-service/chat/room/enter/:roomId', // ChatRoomDetail 컴포넌트가 열리는 경로
             name: 'ChatRoomEnter',
-            component: ChatRoomDetail,
+            component: ChatRoomDetail
         },
         {
             path: '/chat-service/chat/date', // SelectDatePopup 컴포넌트가 열리는 경로
             name: 'SelectDatePopup',
-            component: SelectDatePopup,
-        },
-    ],
-});
+            component: SelectDatePopup
+        }
+    ]
+})
 
-export default router;
+export default router
