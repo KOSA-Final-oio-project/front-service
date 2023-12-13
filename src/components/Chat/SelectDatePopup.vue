@@ -24,19 +24,21 @@
 
     <!-- 시작&종료 날짜 및 시간 확인용 -->
     <div class="selected-info">
-        <span class="selected-start">시작: {{ startDate }}</span>
+        <span class="selected-start">시작: {{ rentStartDate }}</span>
         <span class="tilde">~</span>
-        <span class="selected-end">종료: {{ endDate }}</span>
+        <span class="selected-end">종료: {{ rentEndDate }}</span>
     </div>
 
     <!-- 대여시작 버튼 -->
     <div class="button-container">
-        <button class="start-btn" type="submit">대여시작</button>
+        <button class="start-btn" type="submit" @click="startRent">
+            대여시작
+        </button>
     </div>
 </template>
 
 <script>
-// import { ref } from 'vue';
+import axios from 'axios';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
@@ -44,21 +46,26 @@ export default {
     components: {
         VueDatePicker,
     },
+
     data() {
         return {
             date: [new Date(), null],
             minDate: new Date(),
+            datePickerConfig: {},
         };
     },
+
     computed: {
-        startDate() {
+        rentStartDate() {
             return this.formatDate(this.date[0]);
         },
-        endDate() {
+        rentEndDate() {
             return this.formatDate(this.date[1]);
         },
     },
+
     methods: {
+        // 프론트에서 보여줄 데이터 포매팅
         formatDate(dateValue) {
             if (!dateValue) return '날짜를 선택해주세요';
             const options = {
@@ -69,6 +76,56 @@ export default {
                 minute: '2-digit',
             };
             return new Date(dateValue).toLocaleDateString('ko-KR', options);
+        },
+
+        // {
+        //     "ownerNickname" : "아무개",
+        //     "borrowerNickname" : "김학윤",
+        //     "rentStartDate" : "2023-12-12 11:00",
+        //     "rentEndDate" : "2023-12-15 12:00"
+        // }
+
+        // 백엔드로 보낼 데이터 포매팅
+        formatDateForRent(dateValue) {
+            if (!dateValue) return '';
+            const date = new Date(dateValue);
+            return date.toISOString().slice(0, 16).replace('T', ' ');
+        },
+
+        // 거래 시작 메서드
+        startRent() {
+            // 날짜 데이터 포맷팅 (YYYY-MM-DD HH:mm 형식)
+            const rentStartDate = this.formatDateForRent(this.date[0]);
+            const rentEndDate = this.formatDateForRent(this.date[1]);
+
+            console.log(rentStartDate);
+            console.log(rentEndDate);
+
+            // 대여자 및 소유자 닉네임 임시로
+            const ownerNickname = '아무개';
+            const borrowerNickname = '김학윤';
+
+            // 백엔드로 전송할 데이터 구성
+            const rentData = {
+                ownerNickname,
+                borrowerNickname,
+                rentStartDate,
+                rentEndDate,
+            };
+
+            console.log(rentData);
+
+            // 백엔드로 데이터 전송
+            // axios
+            //     .post('백엔드 API', rentData)
+            //     .then(response => {
+            //         // 성공시 로직
+            //         console.log('거래 시작 데이터 전송 성공:', response);
+            //     })
+            //     .catch(error => {
+            //         // 실패시 로직
+            //         console.error('거래 시작 데이터 전송 실패:', error);
+            //     });
         },
     },
 };
@@ -97,6 +154,7 @@ export default {
     margin-bottom: 0.5rem;
 }
 
+/* 달력 컨테이너 */
 .date-pick-container {
     text-align: center;
 }
@@ -110,7 +168,7 @@ export default {
     margin-bottom: 20px;
 }
 
-/*  */
+/* 날짜 정보 */
 .selected-info {
     text-align: center;
     margin-top: 5px;
