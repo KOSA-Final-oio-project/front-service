@@ -103,6 +103,8 @@ export default {
         return {
             roomId: '',
             room: {},
+            roomName: '',
+            email: '',
             sender: '',
             message: '',
             sendDate: '',
@@ -114,6 +116,7 @@ export default {
     created() {
         console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> ChatRoomDetail component created! :-)')
 
+        this.roomName = localStorage.getItem('currentRoomName') || ''
         this.roomId = localStorage.getItem('wschat.roomId')
         this.sender = localStorage.getItem('wschat.sender')
 
@@ -173,6 +176,8 @@ export default {
             const sock = new SockJS(this.$backURL + '/chat-service/ws-stomp')
             const ws = Stomp.over(sock, { protocols: ['v1.2'] }) // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
 
+            const roomData = JSON.parse(localStorage.getItem('roomData'))
+
             ws.connect(
                 {},
                 function () {
@@ -184,14 +189,31 @@ export default {
 
                     // 전송할 때 시간도 같이 보내기
                     const sendDate = new Date().toISOString()
+
                     // 전송
+                    // ws.send(
+                    //     '/pub/chat/message',
+                    //     JSON.stringify({
+                    //         messageType: 'ENTER',
+                    //         roomId: refer.roomId,
+                    //         sender: refer.sender,
+                    //         roomName: refer.roomName,
+                    //         sendDate: sendDate
+                    //     })
+                    // )
+                    // ENTER 메시지 전송
                     ws.send(
                         '/pub/chat/message',
                         JSON.stringify({
                             messageType: 'ENTER',
                             roomId: refer.roomId,
                             sender: refer.sender,
-                            sendDate: sendDate
+                            roomName: roomData.roomName, // 추가된 정보
+                            createDate: roomData.createDate, // 추가된 정보
+                            productName: roomData.productName, // 추가된 정보
+                            productPrice: roomData.productPrice, // 추가된 정보
+                            receiver: roomData.receiver, // 추가된 정보
+                            email: roomData.email // 추가된 정보
                         })
                     )
                 },
@@ -214,6 +236,7 @@ export default {
                     messageType: 'QUIT',
                     roomId: this.roomId,
                     sender: this.sender,
+                    roomName: this.roomName,
                     sendDate: sendDate
                 })
             )
@@ -240,6 +263,7 @@ export default {
                     messageType: 'TALK',
                     roomId: this.roomId,
                     sender: this.sender,
+                    roomName: this.roomName,
                     message: this.message,
                     sendDate: sendDate
                 })
@@ -254,6 +278,7 @@ export default {
             this.messages.push({
                 messageType: receive.type,
                 sender: receive.type == 'ENTER' ? '[알림]' : receive.sender,
+                roomName: receive.name,
                 message: receive.message,
                 sendDate: formattedSendDate
             })
@@ -312,26 +337,6 @@ export default {
 
 <style scoped>
 /* ========= 폰트 설정 ========= */
-/* @font-face {
-    font-family: 'jua';
-    src: url(../../../public/fonts/BMJUA_ttf.ttf);
-}
-@font-face {
-    font-family: 'NanumBarunGothic';
-    src: url(../../../public/fonts/NanumBarunGothic.ttf);
-}
-@font-face {
-    font-family: 'NanumBarunPen';
-    src: url(../../../public/fonts/NanumBarunPen.ttf);
-}
-@font-face {
-    font-family: 'NanumBarunPenBold';
-    src: url(../../../public/fonts/NanumBarunPenBold.ttf);
-}
-@font-face {
-    font-family: 'NotoColorEmoji-Regular';
-    src: url(../../../public/fonts/NotoColorEmoji-Regular.ttf);
-} */
 @font-face {
     font-family: 'NotoSansKR-VariableFont_wght';
     src: url(../../../public/fonts/NotoSansKR-VariableFont_wght.ttf);

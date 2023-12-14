@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import Signup from '@/components/Member/Signup.vue'
 import Login from '@/components/Member/Login.vue'
+import Sample from '@/components/Chat/Sample.vue'
 import ChatRoomList from '@/components/Chat/ChatRoomList.vue'
 import ChatRoomDetail from '@/components/Chat/ChatRoomDetail.vue'
 import SelectDatePopup from '@/components/Chat/SelectDatePopup.vue'
@@ -31,6 +32,11 @@ const router = createRouter({
             path: '/top-rental',
             name: 'TopRental',
             component: TopRental
+        },
+        {
+            path: '/chat-service/', // ChatRoomList 컴포넌트가 열리는 경로
+            name: 'Sample',
+            component: Sample
         },
         {
             path: '/chat-service/chat', // ChatRoomList 컴포넌트가 열리는 경로
