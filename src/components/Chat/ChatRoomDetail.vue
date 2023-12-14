@@ -280,7 +280,7 @@ export default {
         openDateSelectionPopup() {
             // 팝업창 크기 설정
             const popupWidth = 500
-            const popupHeight = 620
+            const popupHeight = 680
             // 팝업창 위치 설정
             const left = screen.width / 2 - popupWidth / 2
             const top = screen.height / 2 - popupHeight / 2
@@ -311,7 +311,37 @@ export default {
 </script>
 
 <style scoped>
-/* 채팅 전체 영역 감싸는 div */
+/* ========= 폰트 설정 ========= */
+/* @font-face {
+    font-family: 'jua';
+    src: url(../../../public/fonts/BMJUA_ttf.ttf);
+}
+@font-face {
+    font-family: 'NanumBarunGothic';
+    src: url(../../../public/fonts/NanumBarunGothic.ttf);
+}
+@font-face {
+    font-family: 'NanumBarunPen';
+    src: url(../../../public/fonts/NanumBarunPen.ttf);
+}
+@font-face {
+    font-family: 'NanumBarunPenBold';
+    src: url(../../../public/fonts/NanumBarunPenBold.ttf);
+}
+@font-face {
+    font-family: 'NotoColorEmoji-Regular';
+    src: url(../../../public/fonts/NotoColorEmoji-Regular.ttf);
+} */
+@font-face {
+    font-family: 'NotoSansKR-VariableFont_wght';
+    src: url(../../../public/fonts/NotoSansKR-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: 'NotoSansKR-VariableFont_wght';
+}
+
+/* ========= 채팅 전체 영역 ========= */
 .container {
     height: 100vh; /* 높이 100% */
     display: flex; /* 내부 요소들을 수직정렬 */

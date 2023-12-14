@@ -52,6 +52,7 @@
                     <label for="nickname">비밀번호 확인</label>
                     <div class="flex-container">
                         <input type="password" id="check-password" v-model="user.checkPassword" />
+                        <!-- 이거 확인 버튼 active 상태 안되게 아예 막아야댐!!!!!!!!!!!! 색깔만 바뀐거임 지금  -->
                         <button
                             class="confirm-btn"
                             @click="confirmPassword"

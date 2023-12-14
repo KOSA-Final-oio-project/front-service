@@ -130,6 +130,15 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+    font-family: 'NotoSansKR-VariableFont_wght';
+    src: url(../../../public/fonts/NotoSansKR-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: 'NotoSansKR-VariableFont_wght';
+}
+
 /* 거래하기 타이틀 */
 .title {
     font-size: 25px;

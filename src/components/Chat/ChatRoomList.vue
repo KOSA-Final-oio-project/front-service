@@ -161,7 +161,17 @@ export default {
 </script>
 
 <style scoped>
-/* v-cloak = 초기 렌더링 시에 잠시 숨겨진 상태로 표시될 요소들을 관리 */
+/* ========= 폰트 설정 ========= */
+@font-face {
+    font-family: 'NotoSansKR-VariableFont_wght';
+    src: url(../../../public/fonts/NotoSansKR-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: 'NotoSansKR-VariableFont_wght';
+}
+
+/* ========= v-cloak = 초기 렌더링 시에 잠시 숨겨진 상태로 표시될 요소들을 관리 ========= */
 [v-cloak] {
     display: none;
 }
