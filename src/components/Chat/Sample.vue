@@ -1,6 +1,7 @@
 <template>
     <div>
         <!-- 채팅하기 버튼 -->
+        <!-- 이미 채팅 내역 있는 앤지 아닌지 확인하기 -->
         <button @click="createRoom">채팅하기</button>
     </div>
 </template>
@@ -13,6 +14,7 @@ export default {
         return {
             productName: '',
             productPrice: '',
+            productStatus: '',
             receiver: '',
             sender: '',
             roomName: ''
@@ -23,16 +25,27 @@ export default {
         getProductInfo() {
             this.productName = '감자'
             this.productPrice = '1000원'
+            this.productStatus = '대여대기'
         },
 
         getReceiverEmail() {
+            // this.receiver = 'test1@oio.com'
+            // this.receiver = 'test2@oio.com'
+            this.receiver = 'test3@oio.com'
+            // this.receiver = 'test4@oio.com'
+            // this.receiver = 'test5@oio.com'
+            // this.receiver = 'sengna@oio.com'
             // this.receiver = 'chan@oio.com'
-            this.receiver = 'test_test@oio.com'
         },
 
         getUserEmail() {
-            this.sender = 'sengna@oio.com'
-            // this.sender = 'test_test5@oio.com'
+            // this.sender = 'sengna@oio.com'
+            this.sender = 'chan@oio.com'
+            // this.sender = 'test1@oio.com'
+            // this.sender = 'test2@oio.com'
+            // this.sender = 'test3@oio.com'
+            // this.sender = 'test4@oio.com'
+            // this.sender = 'test5@oio.com'
         },
 
         createRoom() {
@@ -61,6 +74,7 @@ export default {
                 createDate,
                 productName: this.productName,
                 productPrice: this.productPrice,
+                productStatus: this.productStatus,
                 receiver: this.receiver,
                 sender: this.sender
             }
@@ -72,8 +86,8 @@ export default {
             )}/${encodeURIComponent(createDate)}/${encodeURIComponent(
                 this.productName
             )}/${encodeURIComponent(this.productPrice)}/${encodeURIComponent(
-                this.receiver
-            )}/${encodeURIComponent(this.sender)}`
+                this.productStatus
+            )}/${encodeURIComponent(this.receiver)}/${encodeURIComponent(this.sender)}`
 
             // 채팅방 생성 요청
             axios
@@ -93,6 +107,7 @@ export default {
                             roomId: response.data.roomId,
                             productName: this.productName,
                             productPrice: this.productPrice,
+                            productStatus: this.productStatus,
                             receiver: this.receiver,
                             sender: this.sender
                         })

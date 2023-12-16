@@ -1,3 +1,5 @@
+<!-- 셍나 해야할 것. 새로고침 안해도 바로바로 채팅 내역 끌고 와서 보여줄 수 있게 코드 수정ㅇ해야함
+지금은 새로 고침해야지 보낸 내역이 보임. -->
 <template>
     <div class="container" v-cloak>
         <div class="chat-header-container">
@@ -36,7 +38,7 @@
                 <!-- 메시지 리스트 그룹 -->
                 <ul class="list-group">
                     <li
-                        v-for="message in messages"
+                        v-for="message in filteredMessages"
                         :key="message.id"
                         :class="{
                             'sent-container': message.sender === sender,
@@ -110,6 +112,7 @@ export default {
             sendDate: '',
             messages: [],
             chatStartDate: ''
+            // websocketConnectedAt: null // 웹소켓 연결 시간
         }
     },
 
@@ -127,6 +130,14 @@ export default {
     beforeUnmount() {
         window.removeEventListener('beforeunload', this.closeWebSocket)
         this.closeWebSocket()
+    },
+
+    computed: {
+        filteredMessages() {
+            return this.messages.filter(
+                (m) => m.messageType !== 'ENTER' && m.messageType !== 'QUIT'
+            )
+        }
     },
 
     methods: {
@@ -149,23 +160,23 @@ export default {
             axios
                 .get(this.$backURL + '/chat-service/chat/room/enter/' + this.roomId)
                 .then((response) => {
-                    // 채팅 내역 가져올 때 배열 형태로 가져오는지 확인
                     if (Array.isArray(response.data)) {
+                        // 서버로부터 받은 데이터를 sendDate 기준으로 오름차순 정렬
+                        const sortedMessages = response.data.sort((a, b) => {
+                            return new Date(a.sendDate) - new Date(b.sendDate)
+                        })
+
                         // 각 메시지의 sendDate를 포매팅
-                        this.messages = response.data.map((message) => {
-                            // 가져온 채팅 로그를 messages에 저장
+                        this.messages = sortedMessages.map((message) => {
                             return {
-                                ...message, // message 객체의 모든 속성을 새로운 객체에 복사
-                                // 이후 sendDate만 포맷된 걸로 덮어씌워줌
+                                ...message,
                                 sendDate: this.formatTime(message.sendDate)
                             }
                         })
-                    } else {
-                        console.error('>>>>>>>>>>> Received data is not an array')
                     }
                 })
                 .catch((error) => {
-                    console.error('채팅 로그를 불러오는데 실패했습니다: ', error)
+                    console.error('Failed to load chat logs: ', error)
                 })
         },
 
@@ -175,7 +186,9 @@ export default {
             const sock = new SockJS(this.$backURL + '/chat-service/ws-stomp')
             const ws = Stomp.over(sock, { protocols: ['v1.2'] }) // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
 
+            // roomData 불러오기
             const roomData = JSON.parse(localStorage.getItem('roomData'))
+
             console.log(roomData)
             if (!roomData || !roomData.roomId) {
                 console.error('Room data or roomId is not available')
@@ -199,14 +212,9 @@ export default {
                         JSON.stringify({
                             messageType: 'ENTER',
                             roomId: roomData.roomId,
-                            // sender: roomData.sender,
                             sender: refer.sender, // 웹소켓 열릴 때 sender로 설정
                             roomName: roomData.roomName,
-                            createDate: roomData.createDate,
-                            productName: roomData.productName,
-                            productPrice: roomData.productPrice,
-                            receiver: roomData.receiver,
-                            sendDate: refer.sendDate
+                            sendDate: sendDate
                         })
                     )
                 },
@@ -215,7 +223,7 @@ export default {
                 }
             )
 
-            refer.ws = ws
+            this.ws = ws
         },
 
         // 웹소켓 닫히는
@@ -261,6 +269,8 @@ export default {
                     sendDate: sendDate
                 })
             )
+
+            // 입력 필드 초기화
             this.message = ''
         },
 
@@ -268,13 +278,15 @@ export default {
         receiveMessage(receive) {
             const formattedSendDate = this.formatTime(receive.sendDate)
 
-            this.messages.push({
-                messageType: receive.type,
-                sender: receive.type == 'ENTER' ? '[알림]' : receive.sender,
-                roomName: receive.name,
-                message: receive.message,
-                sendDate: formattedSendDate
-            })
+            if (receive.messageType !== 'ENTER' && receive.messageType !== 'QUIT') {
+                this.messages.push({
+                    messageType: receive.type,
+                    sender: receive.sender,
+                    roomName: receive.name,
+                    message: receive.message,
+                    sendDate: formattedSendDate
+                })
+            }
 
             // 스크롤바가 최신 메시지 따라갈 수 있도록
             this.$nextTick(() => {
@@ -286,12 +298,14 @@ export default {
         // 시간 포매팅 함수
         formatTime(dateString) {
             const date = new Date(dateString)
-
-            return date.toLocaleTimeString('ko-KR', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-            })
+            return date
+                .toLocaleTimeString('ko-KR', {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true
+                })
+                .replace('오전', '오전 ')
+                .replace('오후', '오후 ')
         },
 
         // 달력 뉴 팝업창

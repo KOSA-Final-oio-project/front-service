@@ -9,24 +9,6 @@
 
         <!-- 방 생성과 방 리스트가 수직 정렬되도록 flex 컨테이너를 적용 -->
         <div class="input-and-list-container">
-            <!-- 방 생성 -->
-            <div class="input-group">
-                <!-- 방제목 입력창 -->
-                <input
-                    type="text"
-                    class="form-control"
-                    v-model="name"
-                    @keyup.enter="createRoom"
-                    placeholder="생성하실 채팅방의 제목을 입력해주세요."
-                />
-                <!-- 채팅방 개설 버튼 -->
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="button" @click="createRoom">
-                        채팅하기
-                    </button>
-                </div>
-            </div>
-
             <!-- 방 리스트 출력 -->
             <ul class="list-group">
                 <li
@@ -64,16 +46,16 @@ export default {
         this.findRoomByEamil() // 해당 이메일의 채팅방 목록을 불러옴
     },
 
-    mounted() {
-        // this.sender = this.getUserEmail() // 현재 사용자의 이메일 가져오기
-        // this.findRoomByEamil() // 해당 이메일의 채팅방 목록을 불러옴
-    },
-
     methods: {
         // email 가져오기
         getUserEmail() {
-            this.sender = 'chan@oio.com'
-            // this.sender = 'test_test@oio.com'
+            // this.sender = 'chan@oio.com'
+            // this.sender = 'sengna@oio.com'
+            // this.sender = 'test1@oio.com'
+            // this.sender = 'test2@oio.com'
+            this.sender = 'test3@oio.com'
+            // this.sender = 'test4@oio.com'
+            // this.sender = 'test5@oio.com'
         },
 
         // 모든 채팅방의 목록 가져옴
@@ -113,7 +95,6 @@ export default {
             if (this.sender) {
                 localStorage.setItem('wschat.sender', this.sender)
                 localStorage.setItem('wschat.roomId', roomId)
-                this.name = localStorage.getItem('currentRoomName') || ''
             }
 
             this.$router.push({ name: 'ChatRoomEnter', params: { roomId, name } })
