@@ -116,7 +116,6 @@ export default {
     created() {
         console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> ChatRoomDetail component created! :-)')
 
-        this.roomName = localStorage.getItem('currentRoomName') || ''
         this.roomId = localStorage.getItem('wschat.roomId')
         this.sender = localStorage.getItem('wschat.sender')
 
@@ -177,12 +176,17 @@ export default {
             const ws = Stomp.over(sock, { protocols: ['v1.2'] }) // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
 
             const roomData = JSON.parse(localStorage.getItem('roomData'))
+            console.log(roomData)
+            if (!roomData || !roomData.roomId) {
+                console.error('Room data or roomId is not available')
+                return
+            }
 
             ws.connect(
                 {},
                 function () {
                     // 구독
-                    ws.subscribe('/sub/chat/room/' + refer.roomId, function (message) {
+                    ws.subscribe('/sub/chat/room/' + roomData.roomId, function (message) {
                         var receive = JSON.parse(message.body)
                         refer.receiveMessage(receive)
                     })
@@ -190,30 +194,19 @@ export default {
                     // 전송할 때 시간도 같이 보내기
                     const sendDate = new Date().toISOString()
 
-                    // 전송
-                    // ws.send(
-                    //     '/pub/chat/message',
-                    //     JSON.stringify({
-                    //         messageType: 'ENTER',
-                    //         roomId: refer.roomId,
-                    //         sender: refer.sender,
-                    //         roomName: refer.roomName,
-                    //         sendDate: sendDate
-                    //     })
-                    // )
-                    // ENTER 메시지 전송
                     ws.send(
                         '/pub/chat/message',
                         JSON.stringify({
                             messageType: 'ENTER',
-                            roomId: refer.roomId,
-                            sender: refer.sender,
-                            roomName: roomData.roomName, // 추가된 정보
-                            createDate: roomData.createDate, // 추가된 정보
-                            productName: roomData.productName, // 추가된 정보
-                            productPrice: roomData.productPrice, // 추가된 정보
-                            receiver: roomData.receiver, // 추가된 정보
-                            email: roomData.email // 추가된 정보
+                            roomId: roomData.roomId,
+                            // sender: roomData.sender,
+                            sender: refer.sender, // 웹소켓 열릴 때 sender로 설정
+                            roomName: roomData.roomName,
+                            createDate: roomData.createDate,
+                            productName: roomData.productName,
+                            productPrice: roomData.productPrice,
+                            receiver: roomData.receiver,
+                            sendDate: refer.sendDate
                         })
                     )
                 },

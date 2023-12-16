@@ -14,7 +14,7 @@ export default {
             productName: '',
             productPrice: '',
             receiver: '',
-            email: '',
+            sender: '',
             roomName: ''
         }
     },
@@ -26,11 +26,13 @@ export default {
         },
 
         getReceiverEmail() {
-            this.receiver = 'chan@oio.com'
+            // this.receiver = 'chan@oio.com'
+            this.receiver = 'test_test@oio.com'
         },
 
         getUserEmail() {
-            this.email = 'sengna@oio.com'
+            this.sender = 'sengna@oio.com'
+            // this.sender = 'test_test5@oio.com'
         },
 
         createRoom() {
@@ -60,7 +62,7 @@ export default {
                 productName: this.productName,
                 productPrice: this.productPrice,
                 receiver: this.receiver,
-                email: this.email
+                sender: this.sender
             }
             console.log('전송할 데이터 객체 확인', dataToSend)
 
@@ -71,7 +73,7 @@ export default {
                 this.productName
             )}/${encodeURIComponent(this.productPrice)}/${encodeURIComponent(
                 this.receiver
-            )}/${encodeURIComponent(this.email)}`
+            )}/${encodeURIComponent(this.sender)}`
 
             // 채팅방 생성 요청
             axios
@@ -88,40 +90,27 @@ export default {
                         JSON.stringify({
                             roomName: response.data.roomName,
                             createDate: response.data.createDate,
+                            roomId: response.data.roomId,
                             productName: this.productName,
                             productPrice: this.productPrice,
                             receiver: this.receiver,
-                            email: this.email
+                            sender: this.sender
                         })
                     )
+
+                    localStorage.setItem('wschat.sender', this.sender)
+                    localStorage.setItem('wschat.roomId', response.data.roomId)
 
                     // ChatRoomDetail로 라우팅
                     this.$router.push({
                         name: 'ChatRoomEnter',
                         params: { roomId: response.data.roomId }
                     })
-                    // this.enterRoom(roomId) // 채팅방 입장 메소드 호출
                 })
                 .catch((error) => {
                     console.log('채팅방 개설에 실패하였습니다. 오류 원인은: ' + error.message)
                 })
         }
-
-        // enterRoom(roomId) {
-        //     this.getUserEmail()
-
-        //     console.log('입장할 채팅방 ID:', roomId)
-        //     console.log('사용자 이메일:', this.email)
-
-        //     if (this.email) {
-        //         localStorage.setItem('wschat.sender', this.email)
-        //         localStorage.setItem('wschat.roomId', roomId)
-
-        //         this.$router.push({ name: 'ChatRoomEnter', params: { roomId: roomId } })
-        //     } else {
-        //         alert('사용자 이메일을 가져오는 데 실패했습니다.')
-        //     }
-        // }
     }
 }
 </script>

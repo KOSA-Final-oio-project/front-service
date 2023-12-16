@@ -53,26 +53,29 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            email: '',
+            sender: '',
             name: '',
             chatRooms: []
         }
     },
 
     created() {
-        // this.findAllRoom()
-        //     // ---------------
-        //     this.email = this.getCurrentUserEmail() // 현재 사용자의 이메일 가져오기
-        //     this.findRoomByEamil() // 해당 이메일의 채팅방 목록을 불러옴
-    },
-
-    mounted() {
-        // this.findAllRoom()
-        this.email = this.getCurrentUserEmail() // 현재 사용자의 이메일 가져오기
+        this.sender = this.getUserEmail() // 현재 사용자의 이메일 가져오기
         this.findRoomByEamil() // 해당 이메일의 채팅방 목록을 불러옴
     },
 
+    mounted() {
+        // this.sender = this.getUserEmail() // 현재 사용자의 이메일 가져오기
+        // this.findRoomByEamil() // 해당 이메일의 채팅방 목록을 불러옴
+    },
+
     methods: {
+        // email 가져오기
+        getUserEmail() {
+            this.sender = 'chan@oio.com'
+            // this.sender = 'test_test@oio.com'
+        },
+
         // 모든 채팅방의 목록 가져옴
         findAllRoom() {
             axios
@@ -87,17 +90,12 @@ export default {
                 })
         },
 
-        // email 가져오기
-        getCurrentUserEmail() {
-            return 'sengna@oio.com' // 임시
-            // return 'chan@oio.com' // 임시
-        },
-
         // 해당 이메일로 생성된 채팅방의 목록을 가져옴
         findRoomByEamil() {
-            // alert('현재 이메일은: ' + this.email)
+            this.getUserEmail()
+            alert('현재 이메일은: ' + this.sender)
             axios
-                .get(this.$backURL + '/chat-service/chat/rooms/' + this.email)
+                .get(this.$backURL + '/chat-service/chat/rooms/' + this.sender)
                 .then((response) => {
                     this.chatRooms = response.data
                     console.log(response.data) // 서버 응답 확인
@@ -107,49 +105,13 @@ export default {
                 })
         },
 
-        // 새 채팅방을 생성
-        createRoom() {
-            // 방 제목 입력 X
-            if (!this.name) {
-                alert('방 제목을 입력해 주십시요.')
-                return
-            }
-
-            alert('입력한 방 제목은: ' + this.name)
-            localStorage.setItem('currentRoomName', this.name)
-
-            axios
-                .post(this.$backURL + '/chat-service/chat/room/' + this.name)
-                .then((response) => {
-                    alert(' "' + response.data.name + '" 방 개설에 성공하였습니다.')
-
-                    this.name = ''
-                    this.findAllRoom() // 채팅방 목록 다시 불러옴
-                    // this.findRoomByEamil()
-                })
-                .catch((error) => {
-                    alert('채팅방 개설에 실패하였습니다. 오류 원인은: ' + error.message)
-                })
-        },
-
         // 채팅방을 입장 - 특정 채팅방을 클릭하면 호출
         // 채팅방에서 사용할 이름 입력 요청 이후 입력된 이름 및 방 ID를 로컬 스토리지에 저장
-        enterRoom(roomId, name) {
-            const sender = prompt('대화명을 입력해 주세요.')
-
-            // 대화명 입력해야만! => 나중에 JWT 토큰으로 받아와서 하기
-            if (!sender) {
-                alert('대화명을 입력해주세요!')
-                return // 함수 실행 종료
-            } else {
-                alert('입력한 대화명은: ' + sender + '입니다.')
-            }
-
+        enterRoom(roomId) {
             console.log('>>>>>>>>>>>>>>> enterRoom called with roomId:', roomId)
-            console.log('>>>>>>>>>>>>>>> enterRoom called with roomId:', name)
 
-            if (sender) {
-                localStorage.setItem('wschat.sender', sender)
+            if (this.sender) {
+                localStorage.setItem('wschat.sender', this.sender)
                 localStorage.setItem('wschat.roomId', roomId)
                 this.name = localStorage.getItem('currentRoomName') || ''
             }
