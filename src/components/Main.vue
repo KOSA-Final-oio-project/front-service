@@ -1,35 +1,32 @@
+<script setup>
+import Header from '../components/Header.vue'
+import MainPost from '../components/Post/MainPost.vue'
+import Footer from '../components/Footer.vue'
+import TopSection from '../components/Main/TopSection.vue'
+</script>
+
 <template>
-  <div>
     <Header />
-    <div class="section">
+  
+    <!-- <div class="section">
     <routerView></routerView>
     </div>
     <div class="head">
       <router-link to="/top-view"><div class="views">최다 조회수</div></router-link>
       <router-link to="/top-rental"><div class="views">최다 대여수</div></router-link>
-    </div>
+    </div> -->
 
-    <TopSection/>
-    <Footer />
-  </div>
+    <MainPost/>
+    <!-- <TopSection/> -->
+    <!-- <Footer /> -->
 </template>
 
 <script>
-import Header from '../components/Header.vue'
-import Footer from '../components/Footer.vue'
-import TopSection from '../components/Main/TopSection.vue'
 
-export default {
-  name: 'mainComponent',
-  components: {
-    Header,
-    Footer,
-    TopSection
-  },
-}
 </script>
 
 <style scoped>
+
 .head {
   padding-bottom:3%;
   display: flex;

@@ -34,6 +34,7 @@ export default {
 .header-container {
   position: fixed;
   width: 100%;
+  height: 150px;
   top: 0;
   z-index: 1000;
   background-color: white; /* Add background color if needed */

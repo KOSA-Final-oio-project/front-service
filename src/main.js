@@ -11,11 +11,13 @@ import App from './App.vue'
 import router from './router/index.js'
 import axios from 'axios'
 
-import 'bootstrap/dist/css/bootstrap.css'
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap"
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
 const app = createApp(App)
+
 
 // Vue Router 사용
 app.use(router)
