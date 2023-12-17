@@ -144,24 +144,6 @@
                     </div>
                 </div>
 
-                <div class="modal" tabindex="-1" role="dialog" :class="{ show: showModal }">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                {{ alertMessage }}
-                            </div>
-                            <button
-                                type="button"
-                                class="btn btn-primary"
-                                data-dismiss="modal"
-                                @click="closeModal"
-                            >
-                                확인
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- 가입하기 버튼 -->
                 <div class="btn-container">
                     <button type="submit" class="submit-btn" @click="submitForm">가입하기</button>
@@ -192,7 +174,7 @@ export default {
             emailCheckNumber: '',
             emailChkMessage: '',
             passwordCheckMessage: '',
-            emailStatus: 0, // 비밀번호 일치&불일치 여부 결과값 메시지
+            emailStatus: 0,
             showModal: false,
             alertMessage: ''
         }
@@ -233,19 +215,7 @@ export default {
                 reader.readAsDataURL(file)
             }
         },
-        showEmailModal() {
-            if (this.emailStatus == 1) {
-                this.alertMessage = '사용가능한 이메일입니다.'
-                this.isActive = false
-            } else {
-                this.alertMessage = '이미 사용중인 이메일입니다.'
-                this.user.email = ''
-            }
-            this.showModal = true
-        },
-        closeModal() {
-            this.showModal = false
-        },
+
         // 이메일 중복확인
         emailDuplicateCheck() {
             console.log('fuck')
@@ -256,9 +226,10 @@ export default {
                 .then((result) => {
                     if (result.data == '사용가능한 이메일입니다.') {
                         this.emailStatus = 1
-                        this.showEmailModal()
+                        this.isActive = false
+                        alert('사용가능한 이메일입니다.')
                     } else {
-                        this.showEmailModal()
+                        alert('이미 사용중인 이메일입니다.')
                     }
                     this.emailChkMessage = result
                 })

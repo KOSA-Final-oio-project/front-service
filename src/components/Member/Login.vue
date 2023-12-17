@@ -70,7 +70,7 @@ export default {
 
                         localStorage.setItem('nickname', jsonObject.nickname)
 
-                        this.$router.push('/')
+                        window.location.href = '/'
                     }
                 })
                 .error((error) => {})
