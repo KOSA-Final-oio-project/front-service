@@ -1,135 +1,173 @@
-<template lang="">
-  <body class="header-container">
-    <div class="header">
-  <div><img src="../assets/oio.png" alt="Logo" class="logo"></div>
-  
-  <div class="input-container">
-    <div class="search-icon"><font-awesome-icon :icon="['fas', 'magnifying-glass']" /></div>
-    <input type="text" class="search-input" placeholder="Search...">
-  </div>
+<template>
+    <body class="header-container">
+        <div class="header">
+            <div><img src="../assets/oio.png" alt="Logo" class="logo" /></div>
 
-  <div class="icons-container">
-    <div class="icons"><font-awesome-icon :icon="['fas', 'user-plus']" /><span>join</span></div>
-    <div class="icons"><font-awesome-icon :icon="['fas', 'right-to-bracket']" /><span>login</span></div>
-    <div class="icons"><font-awesome-icon :icon="['fas', 'user']" /><span>my</span></div>
-    <div class="icons"><font-awesome-icon :icon="['fas', 'bag-shopping']" /><span>0</span></div>
-  </div>
+            <div class="input-container">
+                <div class="search-icon">
+                    <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+                </div>
+                <input type="text" class="search-input" placeholder="Search..." />
+            </div>
 
-</div>
-<nav>
-    <ul class="nav">
-      <li><a href="#">홈</a></li>
-      <li><a href="#">게시판</a></li>
-      <li><a href="#">대여</a></li>
-      <li><a href="#">채팅</a></li>
-    </ul>
-  </nav>
-</body>
+            <div class="icons-container">
+                <router-link
+                    to="/member-service/signup"
+                    :class="{ icons: true, loginCheck: loginCheck }"
+                >
+                    <font-awesome-icon :icon="['fas', 'user-plus']" />
+                    <span>join</span>
+                </router-link>
+
+                <router-link
+                    :class="{ icons: true, loginCheck: loginCheck }"
+                    to="/member-service/login"
+                >
+                    <font-awesome-icon :icon="['fas', 'right-to-bracket']" />
+                    <span>login</span>
+                </router-link>
+                <a href="/mypage" class="icons">
+                    <font-awesome-icon :icon="['fas', 'user']" />
+                    <span>my</span>
+                </a>
+            </div>
+        </div>
+        <nav>
+            <ul class="nav">
+                <li><router-link to="/">홈</router-link></li>
+                <li><router-link to="/">게시판</router-link></li>
+                <li><a href="#">대여</a></li>
+                <li><a href="#">채팅</a></li>
+            </ul>
+        </nav>
+    </body>
 </template>
 <script>
 export default {
+    data() {
+        return {
+            loginCheck: false
+        }
+    },
+
+    methods: {
+        enterJoin() {
+            this.$router.push(`/member-service/signup`)
+        },
+        loginChk() {
+            console.log('로그인 상태가 변경되었습니다.')
+            // 홈으로 이동하는 로직을 추가하려면 아래와 같이 $router.push를 사용할 수 있습니다.
+            this.$router.push('/')
+        }
+    }
 }
 </script>
 <style scoped>
+.loginCheck {
+    display: none;
+}
 .header-container {
-  position: fixed;
-  width: 100%;
-  top: 0;
-  z-index: 1000;
-  background-color: white; /* Add background color if needed */
+    position: fixed;
+    width: 100%;
+    height: 150px;
+    top: 0;
+    z-index: 1000;
+    background-color: white; /* Add background color if needed */
 }
-.icons-container{
-  display: flex;
-  position: relative;
-  margin-right: 4%;
-
+.icons-container {
+    display: flex;
+    position: relative;
+    margin-right: 4%;
 }
-.icons{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding:0px 8%;
-  position: relative;
-  top: 5px;
+.icons {
+    color: black;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0px 8%;
+    position: relative;
+    top: 5px;
 }
-.icons > span{
-  text-align: center;
+.icons > div {
+    text-align: center;
 }
 .input-container {
-  display: flex;
-  border: solid black 1px;
-  text-align: center;
-  align-items: center;
-  border-radius: 30px;
-  width: 44%;
-  height: 6vh;
-  margin-left: 7%;
+    display: flex;
+    border: solid black 1px;
+    text-align: center;
+    align-items: center;
+    border-radius: 30px;
+    width: 44%;
+    height: 6vh;
+    margin-left: 7%;
 }
-.search-icon{
-  margin:0px 10px;
+.search-icon {
+    margin: 0px 10px;
 }
 .search-input {
     border: none;
     width: 80%;
-  }
+}
 .search-input:focus {
-  border-style: none;
-  }
-.header{
+    border-style: none;
+}
+.header {
     display: flex;
 }
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-  }
+}
 
-  .header {
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-  }
+}
 
-  .logo {
-    width: 70px; /* Replace with actual size */
-  }
+.logo {
+    width: 90px; /* Replace with actual size */
+}
 
-  nav{
+nav {
     display: flex;
     justify-content: center;
     margin-bottom: 2%;
-  }
-  .nav {
+}
+.nav {
     display: flex;
     list-style-type: none;
-  }
-  .nav>li>a{
+}
+.nav > li > a {
     font-size: 20px;
-  }
+}
 
-  .nav li {
+.nav li {
     padding: 0 15px;
-  }
+}
 
-  .nav li a {
+.nav li a {
     text-decoration: none;
     color: black;
-  }
+}
 
-  .main {
+.main {
     padding: 20px;
-  }
+}
 
-  .section {
+.section {
     margin-bottom: 20px;
     padding: 20px;
     border: 1px solid #ccc;
-  }
+}
 
-  .footer {
+.footer {
     text-align: center;
     padding: 10px 0;
     background: #f1f1f1;
-  }
+}
 </style>

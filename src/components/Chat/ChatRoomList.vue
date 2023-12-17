@@ -48,40 +48,39 @@
 
     <!-- 방 생성과 방 리스트가 수직 정렬되도록 flex 컨테이너를 적용 -->
     <div class="input-and-list-container">
-      <!-- 방 생성 -->
-      <div class="input-group">
-        <!-- 방제목 입력창 -->
-        <input
-          type="text"
-          class="form-control"
-          v-model="roomName"
-          @keyup.enter="createRoom"
-          placeholder="생성하실 채팅방의 제목을 입력해주세요."
-        />
-        <!-- 채팅방 개설 버튼 -->
-        <div class="input-group-append">
-          <button class="btn btn-primary" type="button" @click="createRoom">채팅하기</button>
+        <!-- 방 생성 -->
+        <div class="input-group">
+            <!-- 방제목 입력창 -->
+            <input
+                type="text"
+                class="form-control"
+                v-model="roomName"
+                @keyup.enter="createRoom"
+                placeholder="생성하실 채팅방의 제목을 입력해주세요."
+            />
+            <!-- 채팅방 개설 버튼 -->
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button" @click="createRoom">채팅하기</button>
+            </div>
         </div>
-      </div>
 
-      <!-- 방 리스트 출력 -->
-      <ul class="list-group">
-        <li
-          class="list-group-item list-group-item-action"
-          v-for="item in chatRooms"
-          :key="item.roomId"
-          @click="enterRoom(item.roomId)"
-        >
-          <!-- 채팅방 제목 -->
-          <span class="chat-room-name">{{ item.name }}</span>
+        <!-- 방 리스트 출력 -->
+        <ul class="list-group">
+            <li
+                class="list-group-item list-group-item-action"
+                v-for="item in chatRooms"
+                :key="item.roomId"
+                @click="enterRoom(item.roomId)"
+            >
+                <!-- 채팅방 제목 -->
+                <span class="chat-room-name">{{ item.name }}</span>
 
-          <!-- 채팅방 생성일자 -->
-          생성일자:&nbsp;
-          <span class="chat-room-date">{{ formatDate(item.createDate) }}</span>
-        </li>
-      </ul>
+                <!-- 채팅방 생성일자 -->
+                생성일자:&nbsp;
+                <span class="chat-room-date">{{ formatDate(item.createDate) }}</span>
+            </li>
+        </ul>
     </div>
-  </div>
 </template>
 
 <script>
@@ -200,28 +199,28 @@ export default {
 <style scoped>
 /* v-cloak = 초기 렌더링 시에 잠시 숨겨진 상태로 표시될 요소들을 관리 */
 [v-cloak] {
-  display: none;
+    display: none;
 }
 
 /* 채팅방 리스트 타이틀 */
 .chat-list-title {
-  text-align: center;
-  padding: 30px 0px 30px 0px;
+    text-align: center;
+    padding: 30px 0px 30px 0px;
 }
 
 /* 채팅방 개별 리스트 */
 .list-group-item {
-  margin-top: 20px;
-  display: flex;
+    margin-top: 20px;
+    display: flex;
 }
 
 /* 채팅방 이름 스타일 */
 .chat-room-name {
-  flex-grow: 1; /* 왼쪽으로 정렬되도록 공간 차지 */
+    flex-grow: 1; /* 왼쪽으로 정렬되도록 공간 차지 */
 }
 
 /* 채팅방 생성 일자 스타일 */
 .chat-room-date {
-  flex-shrink: 0; /* 오른쪽으로 정렬되도록 공간을 유지 */
+    flex-shrink: 0; /* 오른쪽으로 정렬되도록 공간을 유지 */
 }
 </style>

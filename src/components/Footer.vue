@@ -1,26 +1,23 @@
 <template>
-  <div class="footer_container">
-    <div class="footer">
-      Footer Content
+    <div class="footer_container">
+        <div class="footer">Footer Content</div>
     </div>
-  </div>
 </template>
 
 <script>
-export default {
-    
-}
+export default {}
 </script>
 
 <style scoped>
 .footer_container {
-  
-  width: 100%;
+    position: relative;
+    bottom: -125px;
+    width: 100%;
 }
 
 .footer {
-  text-align: center;
-  padding: 10px 0;
-  background: #f1f1f1;
+    text-align: center;
+    padding: 10px 0;
+    background: #f1f1f1;
 }
 </style>

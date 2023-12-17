@@ -5,6 +5,22 @@
         <!-- 서버단에 전송할 데이터 작성 구역 (폼) -->
         <form @submit.prevent="submitForm">
             <div class="form-container">
+                <div class="form-group">
+                    <label for="profile-image">프로필 이미지</label>
+                    <div class="flex-container">
+                        <input
+                            type="file"
+                            id="profile-image"
+                            @change="handleImageUpload"
+                            accept="image/*"
+                        />
+                        <!-- 프로필 이미지 미리보기 -->
+                        <div v-if="user.profileImage" class="profile-preview">
+                            <img :src="user.profileImage" alt="프로필 이미지" />
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 이메일 -->
                 <div class="form-group">
                     <label for="email">이메일</label>
@@ -13,7 +29,18 @@
                         <input type="email" id="email" v-model="user.email" />
 
                         <!-- 중복확인 -> 인증요청 -->
-                        <button class="dup-chk-btn" @click="emailDuplicateCheck">중복확인</button>
+                        <button
+                            :class="{ 'dup-chk-btn': true, isActive: !isActive }"
+                            @click="emailDuplicateCheck"
+                        >
+                            중복확인
+                        </button>
+                        <button
+                            :class="{ 'certificate-btn': true, isActive: isActive }"
+                            @click="requestEmailCertificate"
+                        >
+                            인증요청
+                        </button>
                         <!-- <button class="certificate-btn" @click="requestEmailCertificate">
                             인증요청
                         </button> -->
@@ -24,8 +51,18 @@
                 <div class="form-group">
                     <label for="email-certificate">인증번호</label>
                     <div class="flex-container">
-                        <input type="email-certificate" id="email-certificate" />
-                        <button class="confirm-btn" @click="confirmEmailCertificate">확인</button>
+                        <input
+                            required
+                            v-model="user.emailCheckNumber"
+                            type="email-certificate"
+                            id="email-certificate"
+                        />
+                        <button
+                            :class="{ 'confirm-btn': true, showActive: showActive }"
+                            @click="confirmEmailCertificate"
+                        >
+                            확인
+                        </button>
                     </div>
                 </div>
 
@@ -73,7 +110,10 @@
                     <label for="nickname">닉네임</label>
                     <div class="flex-container">
                         <input type="nickname" id="nickname" v-model="user.nickname" />
-                        <button class="dup-chk-btn" @click="nicknameDuplicateCheck">
+                        <button
+                            :class="{ 'dup-chk-btn': true, nicknameActive: nicknameActive }"
+                            @click="nicknameDuplicateCheck"
+                        >
                             중복확인
                         </button>
                     </div>
@@ -104,6 +144,24 @@
                     </div>
                 </div>
 
+                <div class="modal" tabindex="-1" role="dialog" :class="{ show: showModal }">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                {{ alertMessage }}
+                            </div>
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                data-dismiss="modal"
+                                @click="closeModal"
+                            >
+                                확인
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 가입하기 버튼 -->
                 <div class="btn-container">
                     <button type="submit" class="submit-btn" @click="submitForm">가입하기</button>
@@ -124,9 +182,19 @@ export default {
                 email: '',
                 password: '',
                 nickname: '',
-                phone: ''
+                phone: '',
+                emailCheckNumber: '',
+                profileImage: 'https://oio-bucket.s3.ap-northeast-2.amazonaws.com/logo.png'
             },
-            passwordCheckMessage: '' // 비밀번호 일치&불일치 여부 결과값 메시지
+            nicknameActive: false,
+            showActive: false,
+            isActive: true,
+            emailCheckNumber: '',
+            emailChkMessage: '',
+            passwordCheckMessage: '',
+            emailStatus: 0, // 비밀번호 일치&불일치 여부 결과값 메시지
+            showModal: false,
+            alertMessage: ''
         }
     },
 
@@ -155,19 +223,68 @@ export default {
     },
 
     methods: {
+        handleImageUpload(event) {
+            const file = event.target.files[0]
+            if (file) {
+                const reader = new FileReader()
+                reader.onload = () => {
+                    this.user.profileImage = reader.result
+                }
+                reader.readAsDataURL(file)
+            }
+        },
+        showEmailModal() {
+            if (this.emailStatus == 1) {
+                this.alertMessage = '사용가능한 이메일입니다.'
+                this.isActive = false
+            } else {
+                this.alertMessage = '이미 사용중인 이메일입니다.'
+                this.user.email = ''
+            }
+            this.showModal = true
+        },
+        closeModal() {
+            this.showModal = false
+        },
         // 이메일 중복확인
         emailDuplicateCheck() {
-            // axios
-            //     .post(this.$backURL + '/member-service/~' + )
-            //     .then((response) => {성공로직})
-            //     .catch((error) => {실패로직})
+            console.log('fuck')
+            axios
+                .post('http://localhost:9999/oio/email-chk', {
+                    email: this.user.email
+                })
+                .then((result) => {
+                    if (result.data == '사용가능한 이메일입니다.') {
+                        this.emailStatus = 1
+                        this.showEmailModal()
+                    } else {
+                        this.showEmailModal()
+                    }
+                    this.emailChkMessage = result
+                })
         },
 
         // 이메일 인증요청
-        requestEmailCertificate() {},
+        requestEmailCertificate() {
+            axios
+                .post('http://localhost:9999/oio/send-email', {
+                    email: this.user.email
+                })
+                .then((result) => {
+                    console.log(result.data.code)
+                    this.emailCheckNumber = result.data.code
+                })
+        },
 
         // 이메일 인증번호 확인
-        confirmEmailCertificate() {},
+        confirmEmailCertificate() {
+            if (this.user.emailCheckNumber == this.emailCheckNumber) {
+                alert('일치합니다')
+                this.showActive = true
+            } else {
+                alert('일치하지않습니다')
+            }
+        },
 
         // 비밀번호 유효성 검사
         checkPasswordValidity() {
@@ -185,7 +302,20 @@ export default {
         },
 
         // 닉네임 중복확인
-        nicknameDuplicateCheck() {},
+        nicknameDuplicateCheck() {
+            axios
+                .post('http://localhost:9999/oio/nickname-chk', {
+                    nickname: this.user.nickname
+                })
+                .then((result) => {
+                    if (result.data == '이미 사용중인 닉네임입니다.') {
+                        alert('이미 사용중인 닉네임입니다.')
+                        this.user.nickname = ''
+                    } else {
+                        alert('사용가능한 닉네임입니다.')
+                    }
+                })
+        },
 
         // 핸드폰 인증요청
         requestPhoneCertificate() {},
@@ -194,22 +324,96 @@ export default {
         confirmPhoneCertificate() {},
 
         // 가입하기
-        submitForm() {}
+        submitForm() {
+            // 이미지 파일을 선택한 경우에만 처리
+            if (this.user.profileImage) {
+                // Base64로 인코딩된 이미지를 Blob으로 변환
+                const byteString = atob(this.user.profileImage.split(',')[1])
+                const ab = new ArrayBuffer(byteString.length)
+                const ia = new Uint8Array(ab)
+
+                for (let i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i)
+                }
+
+                const blob = new Blob([ia], { type: 'image/jpeg' })
+
+                // FormData에 이미지 데이터 및 다른 필드들 추가
+                const formData = new FormData()
+                formData.append('image', blob)
+                formData.append('email', this.user.email)
+                formData.append('password', this.user.password)
+                formData.append('nickname', this.user.nickname)
+
+                // 서버로 데이터 전송
+                axios
+                    .post('http://localhost:9999/oio/signup', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    .then((response) => {
+                        console.log(response.data)
+                        // 성공적으로 전송되었을 때 추가로 실행할 로직 작성
+                        this.$router.push('/')
+                    })
+                    .catch((error) => {
+                        console.error('요청 실패:', error)
+                        // 실패 시 추가로 실행할 로직 작성
+                    })
+            } else {
+                // 이미지를 선택하지 않은 경우에 대한 처리
+                console.error('이미지를 선택하세요.')
+                // 이미지를 선택하지 않았을 때 실행할 로직 작성
+            }
+        }
     }
 }
 </script>
 
 <style scoped>
+.profile-preview {
+    margin-left: 30px;
+}
+.profile-preview > img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.showActive {
+    display: none;
+}
+.isActive {
+    display: none;
+}
+.btn {
+    width: 100%;
+    margin-left: 0;
+    border-radius: 0;
+    border: none;
+    background-color: #178ca4;
+}
+.modal {
+    display: none;
+    text-align: center;
+}
+
+.modal.show {
+    margin-top: 12%;
+    display: block;
+}
 /* 제목 타이틀 */
 h2 {
+    margin-top: 200px;
     text-align: center;
-    margin-top: 50px;
     margin-bottom: 50px;
 }
 .form-container {
+    margin-top: 150px;
     /* 폼 컨테이너 너비 조절용 */
     max-width: 80%;
-    margin: auto;
+    margin-left: 21%;
 }
 
 /* 각 입력창 영역 공통 스타일 */

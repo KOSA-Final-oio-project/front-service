@@ -1,32 +1,69 @@
-<template>
-    <div class="topProduct">
-        <router-link to="/top-view"
-            ><div @click="getTopView()" class="view"><span>최다 조회수</span></div></router-link
-        >
-        <router-link to="/top-rental"
-            ><div class="rent"><span>최다 대여수</span></div></router-link
-        >
-
-        <div class="top" v-for="(item, index) in topViews" :key="index">
-            <div class="topImg">
-                <span class="rented"> {{ item.status === 1 ? '대여중' : '미대여' }}</span>
-                <img src="https://oio-bucket.s3.ap-northeast-2.amazonaws.com/logo.png" />
+<template lang="">
+    <body>
+        <section>
+            <div class="productContainer">
+                <div class="dropdown">
+                    <select v-model="selectedSido" name="region siDo">
+                        <option value="">전체</option>
+                        <option :value="item" v-for="(item, index) in siDoList" :key="index">
+                            {{ item }}
+                        </option>
+                    </select>
+                    <select v-model="selectedSiGunGu" @click="getSiGunGu()" name="region siGunGu">
+                        <option value="">전체</option>
+                        <option :value="item" v-for="(item, index) in siGunGuList" :key="index">
+                            {{ item }}
+                        </option>
+                    </select>
+                    <select
+                        v-model="selectedEupMyeonRo"
+                        @click="getEupMyeonRo()"
+                        name="region eupMyeonRo"
+                    >
+                        <option value="">전체</option>
+                        <option :value="item" v-for="(item, index) in eupMyeonRoList" :key="index">
+                            {{ item }}
+                        </option>
+                    </select>
+                    <button @click="selectProduct()" class="selectBt">조회</button>
+                </div>
+                <div class="productList">
+                    <div class="products">
+                        <div class="product" v-for="(item, index) in products" :key="index">
+                            <div class="productImg">
+                                <span class="rented">{{
+                                    item.status === 1 ? '대여중' : '미대여'
+                                }}</span>
+                                <img
+                                    src="https://oio-bucket.s3.ap-northeast-2.amazonaws.com/logo.png"
+                                />
+                            </div>
+                            <p class="title">{{ item.content }}</p>
+                            <p class="date">
+                                {{ formatDate(item.startDate) }} ~ {{ formatDate(item.endDate) }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <p class="count">{{ item.view }}</p>
-            <p class="title">{{ item.content }}</p>
-            <p class="date">{{ formatDate(item.startDate) }} ~ {{ formatDate(item.endDate) }}</p>
-        </div>
-    </div>
+        </section>
+    </body>
 </template>
-
 <script>
 import axios from 'axios'
 export default {
     data() {
         return {
-            topViews: []
+            products: [],
+            siDoList: [],
+            siGunGuList: [],
+            eupMyeonRoList: [],
+            selectedSido: '',
+            selectedSiGunGu: '',
+            selectedEupMyeonRo: ''
         }
     },
+
     methods: {
         formatDate(dateString) {
             const parsedDate = new Date(dateString)
@@ -35,29 +72,119 @@ export default {
             const day = parsedDate.getDate().toString().padStart(2, '0')
             return `${year}-${month}-${day}`
         },
-        getTopView() {
-            const url = 'http://localhost:8889/product/productList/v'
-
-            axios.get(url).then((result) => {
-                console.log(result)
-                this.topViews = result.data.productList
+        selectProduct() {
+            if (this.selectedSido == '') {
+                axios.get('http://localhost:8889/product/productList/n').then((result) => {
+                    this.products = result.data.productList
+                })
+            } else if (this.selectedSiGunGu == '') {
+                axios
+                    .get('http://localhost:8889/product/productList/n?siDo=' + this.selectedSido)
+                    .then((result) => {
+                        this.products = result.data.productList
+                    })
+            } else if (this.selectedEupMyeonRoeup == '') {
+                axios
+                    .get('http://localhost:8889/product/productList/n', {
+                        params: {
+                            siDo: this.selectedSido,
+                            siGunGu: this.selectedSiGunGu
+                        }
+                    })
+                    .then((result) => {
+                        this.products = result.data.productList
+                    })
+            } else {
+                axios
+                    .get('http://localhost:8889/product/productList/n', {
+                        params: {
+                            siDo: this.selectedSido,
+                            siGunGu: this.selectedSiGunGu,
+                            eupMyeonRo: this.selectedEupMyeonRo
+                        }
+                    })
+                    .then((result) => {
+                        this.products = result.data.productList
+                    })
+            }
+        },
+        getSiDo() {
+            axios.get('http://localhost:8889/address/siDoList').then((result) => {
+                this.siDoList = result.data
+            })
+        },
+        getSiGunGu() {
+            axios
+                .get(`http://localhost:8889/address/siGunGuList/${this.selectedSido}`)
+                .then((result) => {
+                    this.siGunGuList = result.data
+                })
+        },
+        getEupMyeonRo() {
+            axios
+                .get(
+                    `http://localhost:8889/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
+                )
+                .then((result) => {
+                    this.eupMyeonRoList = result.data
+                })
+        },
+        get() {
+            axios.get('http://localhost:8889/product/productList/n').then((result) => {
+                this.products = result.data.productList
             })
         }
     },
     created() {
-        this.getTopView()
+        this.get()
+        this.getSiDo()
     }
 }
 </script>
-
 <style scoped>
-section {
-    margin-top: 150px;
-}
 body {
     margin: 0px;
     /* overflow-x: hidden; */
     /* position: relative; */
+}
+/* Basic styling for the dropdown container */
+.dropdown {
+    display: flex;
+    align-items: center;
+    margin-top: 1%;
+    justify-content: right;
+    margin-right: 1%;
+}
+
+/* Styling for the individual selects */
+select {
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+/* Styling for the button */
+.selectBt {
+    padding: 8px 15px;
+    background-color: #18b7be;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Hover effect for the button */
+.selectBt:hover {
+    background-color: #0056b3;
+}
+
+/* Optional: Style the options within the dropdown */
+option {
+    background-color: #fff;
+    color: #333;
 }
 
 header {
@@ -153,7 +280,6 @@ a {
 }
 
 .topProduct {
-    margin-top: 150px;
     background-color: #18b7be;
     display: flex;
     justify-content: center;
@@ -161,16 +287,13 @@ a {
 }
 
 .view {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     outline: none;
     position: absolute;
-    top: 90%;
-    right: 46%;
+    top: 85%;
+    left: 47.9%;
     transform: translate(-50%, -50%);
     height: 50px;
-    width: 8%;
+    width: 80px;
     background-color: #178ca4;
     border-top: 4px solid #ffffff;
     border-bottom: 4px solid #ffffff;
@@ -182,16 +305,13 @@ a {
 }
 
 .rent {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     outline: none;
     position: absolute;
-    top: 90%;
-    left: 54%;
+    top: 85%;
+    left: 52.1%;
     transform: translate(-50%, -50%);
     height: 50px;
-    width: 8%;
+    width: 80px;
     background-color: #d1d1d1;
     border-top: 4px solid #ffffff;
     border-bottom: 4px solid #ffffff;
@@ -308,7 +428,7 @@ a {
     display: flex;
     justify-content: center;
     position: relative;
-    margin: 50px 0px; /* 간격을 조절 */
+    margin-left: 5%; /* 간격을 조절 */
 }
 
 .products {
