@@ -23,13 +23,7 @@
             <router-link to="/mypage/receive">
                 <p>받은 후기</p>
             </router-link>
-            <router-link to="/mypage/write">
-                <p>남긴 후기</p>
-            </router-link>
-            <router-link to="/mypage/qna">
-                <p>Q&A 목록</p>
-            </router-link>
-            <p>회원 탈퇴</p>
+            <p>회원 신고</p>
         </nav>
     </div>
     <div class="section">
@@ -42,18 +36,23 @@
 <script>
 import axios from 'axios'
 export default {
-    name: 'MyPage',
-
+    name: 'UserInfo',
     data() {
         return {
             nickname: '',
-            heart: 0
+            heart: 0,
+            reviewData: ''
         }
     },
 
     methods: {
         getHeart() {
-            const nickname = localStorage.getItem('nickname')
+            let nickname = ''
+            if(localStorage.getItem('nickname') == this.reviewData.writerNickname) {
+                nickname = this.reviewData.receiverNickname
+            } else {
+                nickname = this.reviewData.writerNickname
+            }
             const url = `http://192.168.1.86:7575/review/heart?nickname=${nickname}`
 
             axios
@@ -65,12 +64,20 @@ export default {
                 .catch((error) => {
                     console.log(error.data)
                 })
-        }
+        },
+
     },
 
     mounted() {
-        this.getHeart()
-        this.nickname = localStorage.getItem('nickname')
+        const productDataString = this.$route.query.productData;
+        const productData = JSON.parse(productDataString);
+        const reviewDataString = this.$route.query.reviewData;
+        const reviewData = JSON.parse(reviewDataString);
+        this.reviewData = reviewData
+        console.log(this.reviewData)
+        console.log(productData)
+        console.log(reviewData)
+        this.getHeart();
     }
 }
 </script>

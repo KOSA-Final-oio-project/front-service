@@ -21,7 +21,7 @@
             </ul>
         </div>
         <transition name="overlay-fade">
-            <div v-if="showModal || showConfirmationModal" class="modal-overlay" @click="closeModals"></div>
+            <div v-if="showModal || showConfirmationModal" class="modal-overlay" @click="closeModal"></div>
         </transition>
         <transition name="modal-fade" mode="out-in">
             <WriteReview v-if="showModal" @close="closeModal" @reviewSubmitted="refreshData" :ReviewList="ReviewList"
@@ -87,17 +87,6 @@ export default {
         getProductTitle(productNo) {
             const matchingProduct = this.data.find(item => item.productNo === productNo);
             return matchingProduct ? matchingProduct.title : '상품명을 찾을 수 없습니다.';
-        },
-
-
-        scrollHandler() {
-            const scrollContainer = this.$refs.scrollContainer;
-            if (
-                scrollContainer.scrollTop + scrollContainer.clientHeight >=
-                scrollContainer.scrollHeight
-            ) {
-                this.getBorrowedList();
-            }
         },
 
         openModal(item) {

@@ -53,7 +53,6 @@ export default {
             rentedProduct: [],
             product: [],
             showModal: false,
-            ReviewData: null
         }
     },
     methods: {

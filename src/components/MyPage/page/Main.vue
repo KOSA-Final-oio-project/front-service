@@ -23,10 +23,11 @@ export default {
 }
 
 .main-container {
+    /* margin-top: 150px; */
     width: 100%;
-    height: 75vh;
+    height: 65vh;
     margin: auto;
-    overflow: auto;
+    /* overflow: auto; */
     display: flex;
     justify-content: center;
     align-items: center;

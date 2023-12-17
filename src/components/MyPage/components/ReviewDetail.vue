@@ -15,7 +15,14 @@
             </div>
         </div>
         <div class="review-detail">
-            <img src="../../../assets/favicon.ico" />
+            <router-link :to="{
+                path: '/userinfo', query: {
+                    productData: JSON.stringify({ ownerNickname: product.ownerNickname, borrowerNickname: product.borrowerNickname }),
+                    reviewData: JSON.stringify({ writerNickname: review.writerNickname, receiverNickname: review.receiverNickname })
+                }
+            }">
+                <img src="../../../assets/favicon.ico" />
+            </router-link>
             <div class="detail-info">
                 <p class="post-date">
                     <img src="../../../assets/wall-clock.png" />{{ review.postDate }}
@@ -43,7 +50,7 @@ export default {
         return {
             review: '',
             product: '',
-            title: ''
+            title: '',
         }
     },
     methods: {
@@ -88,8 +95,10 @@ export default {
 
         closeModal() {
             this.$emit('close-modal')
-        }
+        },
+
     },
+
     mounted() {
         this.getReviewDetail()
         this.getRentedProduct()

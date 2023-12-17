@@ -1,14 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Signup from '@/components/Member/Signup.vue'
-import Login from '@/components/Member/Login.vue'
-import ChatRoomList from '@/components/Chat/ChatRoomList.vue'
-import ChatRoomDetail from '@/components/Chat/ChatRoomDetail.vue'
-import SelectDatePopup from '@/components/Chat/SelectDatePopup.vue'
+//MAIN
 import TopView from '@/components/Main/TopView.vue'
 import TopRental from '@/components/Main/TopRental.vue'
 import AllProduct from '@/components/Main/AllProduct.vue'
+
+//USER
+import Signup from '@/components/Member/Signup.vue'
+import Login from '@/components/Member/Login.vue'
 import FindPassword from '@/components/Member/FindPassword.vue'
+import ModifyUser from '@/components/Member/ModifyUser.vue'
+import UserInfo from '@/components/Member/UserInfo.vue'
+
+//CHAT
+import ChatRoomList from '@/components/Chat/ChatRoomList.vue'
+import ChatRoomDetail from '@/components/Chat/ChatRoomDetail.vue'
+import SelectDatePopup from '@/components/Chat/SelectDatePopup.vue'
+
+//MYPAGE
 import MyPageMain from '@/components/MyPage/page/Main.vue'
 import NeedRent from '@/components/MyPage/components/NeedRent.vue'
 import NeedBorrow from '@/components/MyPage/components/NeedBorrow.vue'
@@ -34,13 +43,20 @@ const router = createRouter({
             path: '/mypage',
             component: MyPageMain,
             children: [
+                { path: '', component: ModifyUser },
                 { path: 'needrent', component: NeedRent },
                 { path: 'needborr', component: NeedBorrow },
                 { path: 'receive', component: Receive },
                 { path: 'write', component: Write },
                 { path: 'rent', component: Rent },
-                { path: 'borrow', component: Borrow }
+                { path: 'borrow', component: Borrow },
+                { path: 'modify', component: ModifyUser },
             ]
+        },
+        {
+            path: '/userinfo',
+            name: 'UserInfo',
+            component: UserInfo,
         }
     ]
 })
