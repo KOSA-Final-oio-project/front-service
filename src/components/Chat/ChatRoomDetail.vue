@@ -184,14 +184,16 @@ export default {
         connectWebSocket() {
             const refer = this // Vue 인스턴스 참조를 변수에 저장
             const sock = new SockJS(this.$backURL + '/chat-service/ws-stomp')
+            // const sock = new SockJS('http://localhost:57625' + '/chat-service/ws-stomp')
             const ws = Stomp.over(sock, { protocols: ['v1.2'] }) // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
+            // const ws = Stomp.over(sock)
 
             // roomData 불러오기
             const roomData = JSON.parse(localStorage.getItem('roomData'))
 
             console.log(roomData)
             if (!roomData || !roomData.roomId) {
-                console.error('Room data or roomId is not available')
+                console.error('채팅 내역이 존재하지 않습니다.')
                 return
             }
 

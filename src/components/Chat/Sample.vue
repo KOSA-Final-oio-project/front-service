@@ -70,8 +70,8 @@ export default {
 
             // 전송할 데이터 객체 생성
             const dataToSend = {
-                roomName,
-                createDate,
+                roomName: roomName,
+                createDate: createDate,
                 productName: this.productName,
                 productPrice: this.productPrice,
                 productStatus: this.productStatus,
@@ -80,33 +80,12 @@ export default {
             }
             console.log('전송할 데이터 객체 확인', dataToSend)
 
-            // URL 경로에 데이터 포함
-            // const url = `http://localhost:9797/chat-service/chat/room/${roomName}/${createDate}/${this.productName}/${this.productPrice}/${this.productStatus}/${this.receiver}/${this.sender}`
-            const encodedRoomName = encodeURIComponent(roomName)
-            const encodedCreateDate = encodeURIComponent(createDate)
-            const encodedProductName = encodeURIComponent(this.productName)
-            const encodedProductPrice = encodeURIComponent(this.productPrice)
-            const encodedProductStatus = encodeURIComponent(this.productStatus)
-            const encodedReceiver = encodeURIComponent(this.receiver)
-            const encodedSender = encodeURIComponent(this.sender)
-
-            const url = `http://localhost:9797/chat-service/chat/room/${encodedRoomName}/${encodedCreateDate}/${encodedProductName}/${encodedProductPrice}/${encodedProductStatus}/${encodedReceiver}/${encodedSender}`
-            console.log(url)
+            // 파라미터로 보낼 데이터 생성
+            const data = new URLSearchParams(dataToSend)
 
             // 채팅방 생성 요청
             axios
-                // requestBody로 보내면 CORS 오류 개쩔게남
-                // .post('http://localhost:9797/chat-service/chat/room', {
-                //     roomName,
-                //     createDate,
-                //     productName: this.productName,
-                //     productPrice: this.productPrice,
-                //     // productStatus: this.productStatus,
-                //     receiver: this.receiver,
-                //     sender: this.sender
-                // })
-                // .post(this.$backURL + '/chat-service/chat/room', dataToSend)
-                .post(url)
+                .post(this.$backURL + '/chat-service/chat/room', data)
                 .then((response) => {
                     console.log('response.data: ', response.data)
                     alert(' "' + response.data.roomName + '" 방 개설에 성공하였습니다.')
@@ -120,7 +99,7 @@ export default {
                             roomId: response.data.roomId,
                             productName: this.productName,
                             productPrice: this.productPrice,
-                            productStatus: this.productStatus,
+                            // productStatus: this.productStatus,
                             receiver: this.receiver,
                             sender: this.sender
                         })
