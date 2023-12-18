@@ -184,6 +184,10 @@ export default {
     font-size: 20px;
 }
 
+.review-detail img {
+    width: 100px
+}
+
 .detail-info {
     display: flex;
     justify-content: space-between;
