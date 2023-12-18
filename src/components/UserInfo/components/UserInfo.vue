@@ -3,7 +3,7 @@
         <div class="profile">
             <img class="profile-image" src="../../../../assets/8.jpg" />
             <div class="profile-info">
-                <p class="nickname">{{ nickname }}</p>
+                <p class="nickname">{{ nickname }} <img src="../../../assets/siren.png" @click="declareUser"></p>
                 <p class="heart-count"><i class="bi bi-heart-fill"></i> {{ heart }}</p>
             </div>
         </div>
@@ -23,7 +23,6 @@
             <router-link to="/userinfo/receive">
                 <p>받은 후기</p>
             </router-link>
-            <p>회원 신고</p>
         </nav>
     </div>
     <div class="section">
@@ -62,6 +61,10 @@ export default {
                     console.log(error.data)
                 })
         },
+
+        declareUser() {
+            
+        }
 
     },
 
@@ -126,7 +129,11 @@ export default {
     flex-direction: column;
     justify-content: center;
     margin-left: 20px;
+}
 
+.profile-info img {
+    width: 20px;
+    margin-left: 10px;
 }
 
 .nickname {
