@@ -1,32 +1,33 @@
 <template>
-    <div class="container" v-cloak>
-        <!-- 타이틀 -->
-        <div class="row">
-            <div class="chat-list-title">
-                <h3>채팅방 리스트</h3>
+    <section>
+        <div class="container" v-cloak>
+            <!-- 타이틀 -->
+            <div class="row">
+                <div class="chat-list-title">
+                    <h3>채팅방 리스트</h3>
+                </div>
+            </div>
+
+            <!-- 방 리스트 출력 -->
+            <div class="input-and-list-container">
+                <ul class="list-group">
+                    <li
+                        class="list-group-item list-group-item-action"
+                        v-for="item in chatRooms"
+                        :key="item.roomId"
+                        @click="enterRoom(item.roomId)"
+                    >
+                        <!-- 채팅방 제목 -->
+                        <span class="chat-room-name">{{ item.name }}</span>
+
+                        <!-- 채팅방 생성일자 -->
+                        생성일자:&nbsp;
+                        <span class="chat-room-date">{{ formatDate(item.createDate) }}</span>
+                    </li>
+                </ul>
             </div>
         </div>
-
-        <!-- 방 생성과 방 리스트가 수직 정렬되도록 flex 컨테이너를 적용 -->
-        <div class="input-and-list-container">
-            <!-- 방 리스트 출력 -->
-            <ul class="list-group">
-                <li
-                    class="list-group-item list-group-item-action"
-                    v-for="item in chatRooms"
-                    :key="item.roomId"
-                    @click="enterRoom(item.roomId)"
-                >
-                    <!-- 채팅방 제목 -->
-                    <span class="chat-room-name">{{ item.name }}</span>
-
-                    <!-- 채팅방 생성일자 -->
-                    생성일자:&nbsp;
-                    <span class="chat-room-date">{{ formatDate(item.createDate) }}</span>
-                </li>
-            </ul>
-        </div>
-    </div>
+    </section>
 </template>
 
 <script>
@@ -128,6 +129,13 @@ export default {
 /* ========= v-cloak = 초기 렌더링 시에 잠시 숨겨진 상태로 표시될 요소들을 관리 ========= */
 [v-cloak] {
     display: none;
+}
+
+section {
+    border: 1px solid black;
+    margin-top: 200px;
+    /* width: 100%; */
+    height: 100%;
 }
 
 /* 채팅방 리스트 타이틀 */

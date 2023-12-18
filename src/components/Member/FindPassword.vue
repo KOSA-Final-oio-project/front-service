@@ -1,5 +1,5 @@
 <template>
-    <h2>로그인</h2>
+    <h2>비밀번호 찾기</h2>
     <!-- 회원가입 폼 컨테이너 -->
     <div class="form-container">
         <!-- 서버단에 전송할 데이터 작성 구역 (폼) -->
@@ -11,74 +11,51 @@
                 <div class="form-group">
                     <label for="nickname">이메일</label>
                     <div class="flex-container">
-                        <input type="nickname" v-model="this.user.email" id="nickname" />
-                    </div>
-                </div>
-
-                <!-- 핸드폰 인증번호 입력 -->
-                <div class="form-group">
-                    <label for="phone-certificate">비밀번호</label>
-                    <div class="flex-container">
                         <input
-                            type="phone-certificate"
-                            v-model="this.user.password"
-                            id="phone-certificate"
+                            v-model="email"
+                            type="nickname"
+                            id="nickname"
+                            placeholder="가입 시 등록하신 이메일로 임시 비밀번호를 발송해 드립니다."
                         />
                     </div>
                 </div>
 
-                <a class="findPassword" href="/FindPassword">비밀번호를 잊으셨나요?</a>
-
-                <!-- 가입하기 버튼 -->
                 <div class="btn-container">
-                    <button type="submit" class="submit-btn" @click="login">로그인</button>
+                    <button type="submit" class="submit-btn" @click="findPassword">
+                        임시 비밀번호 발급
+                    </button>
                 </div>
             </div>
         </form>
     </div>
 </template>
-
 <script>
 import axios from 'axios'
+
 export default {
-    props: ['loginChk'],
     data() {
         return {
-            user: {
-                email: '',
-                password: ''
-            },
-            loginChk: false
+            email: '',
+            newPassword: ''
         }
     },
     methods: {
-        login() {
-            console.log(this.user.email)
+        findPassword() {
             axios
-                .post('http://192.168.1.37:9999/oio/login', {
-                    email: this.user.email,
-                    password: this.user.password
+                .post(`http://localhost:9999/oio/member/${this.email}`, {
+                    email: this.email
                 })
-                .then((response) => {
-                    if (!response.headers['accesstoken']) {
-                        alert('아이디와 패스워드가 일치하지않습니다.')
-                    } else {
-                        let token = response.headers['accesstoken']
-                        const base64Payload = token.split('.')[1]
-                        const utf8DecodedPayload = decodeURIComponent(escape(atob(base64Payload)))
-                        const jsonObject = JSON.parse(utf8DecodedPayload)
-
-                        localStorage.setItem('nickname', jsonObject.nickname)
-
-                        window.location.href = '/'
-                    }
+                .then((result) => {
+                    alert('해당 이메일로 임시 비밀번호가 발송되었습니다.')
+                    console.log
                 })
-                .error((error) => {})
+                .catch(() => {
+                    alert('유효하지 않은 이메일입니다.')
+                })
         }
     }
 }
 </script>
-
 <style scoped>
 .findPassword {
     text-decoration: none;
@@ -96,13 +73,13 @@ h2 {
     margin-left: 22%;
     /* 폼 컨테이너 너비 조절용 */
     max-width: 80%;
+    margin-bottom: 225px;
 }
 
 /* 각 입력창 영역 공통 스타일 */
 .form-group {
     align-items: center;
     justify-content: space-between;
-    margin-top: 50px;
     margin-bottom: 20px;
 }
 

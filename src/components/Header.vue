@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <body class="header-container">
         <div class="header">
             <div><img src="../assets/oio.png" alt="Logo" class="logo" /></div>
@@ -11,24 +11,41 @@
             </div>
 
             <div class="icons-container">
-                <div class="icons">
-                    <font-awesome-icon :icon="['fas', 'user-plus']" /><span>join</span>
+                <router-link
+                    to="/member-service/signup"
+                    :class="{ icons: true, loginCheck: loginCheck }"
+                    v-if="!loginChk()"
+                >
+                    <font-awesome-icon :icon="['fas', 'user-plus']" />
+                    <span>join</span>
+                </router-link>
+                <div
+                    @click="logout()"
+                    :class="{ icons: true, loginCheck: loginCheck }"
+                    v-if="loginChk()"
+                >
+                    <font-awesome-icon :icon="['fas', 'right-from-bracket']" />
+                    <span>logout</span>
                 </div>
-                <div class="icons">
-                    <font-awesome-icon :icon="['fas', 'right-to-bracket']" /><span>login</span>
-                </div>
-                <div class="icons">
-                    <font-awesome-icon :icon="['fas', 'user']" /><span>my</span>
-                </div>
-                <div class="icons">
-                    <font-awesome-icon :icon="['fas', 'bag-shopping']" /><span>0</span>
-                </div>
+
+                <router-link
+                    :class="{ icons: true, loginCheck: loginCheck }"
+                    to="/member-service/login"
+                    v-if="!loginChk()"
+                >
+                    <font-awesome-icon :icon="['fas', 'right-to-bracket']" />
+                    <span>login</span>
+                </router-link>
+                <a href="/mypage" class="icons" v-if="loginChk()">
+                    <font-awesome-icon :icon="['fas', 'user']" />
+                    <span>my</span>
+                </a>
             </div>
         </div>
         <nav>
             <ul class="nav">
-                <li><a href="#">홈</a></li>
-                <li><a href="#">게시판</a></li>
+                <li><router-link to="/">홈</router-link></li>
+                <li><router-link to="/">게시판</router-link></li>
                 <li><a href="#">대여</a></li>
                 <li><a href="#">채팅</a></li>
             </ul>
@@ -36,12 +53,37 @@
     </body>
 </template>
 <script>
-export default {}
+export default {
+    data() {
+        return {
+            loginCheck: false
+        }
+    },
+
+    methods: {
+        enterJoin() {
+            this.$router.push(`/member-service/signup`)
+        },
+        loginChk() {
+            if (localStorage.getItem('nickname')) {
+                return true
+            }
+        },
+        logout() {
+            localStorage.removeItem('nickname')
+            window.location = '/'
+        }
+    }
+}
 </script>
 <style scoped>
+.loginCheck {
+    display: none;
+}
 .header-container {
     position: fixed;
     width: 100%;
+    height: 150px;
     top: 0;
     z-index: 1000;
     background-color: white; /* Add background color if needed */
@@ -52,6 +94,8 @@ export default {}
     margin-right: 4%;
 }
 .icons {
+    color: black;
+    text-decoration: none;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -59,7 +103,7 @@ export default {}
     position: relative;
     top: 5px;
 }
-.icons > span {
+.icons > div {
     text-align: center;
 }
 .input-container {
@@ -100,7 +144,7 @@ html {
 }
 
 .logo {
-    width: 70px; /* Replace with actual size */
+    width: 90px; /* Replace with actual size */
 }
 
 nav {

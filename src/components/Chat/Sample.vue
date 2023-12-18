@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <section>
         <!-- 채팅하기 버튼 -->
         <!-- 이미 채팅 내역 있는 앤지 아닌지 확인하기 -->
         <button @click="createRoom">채팅하기</button>
-    </div>
+    </section>
 </template>
 
 <script>
@@ -81,17 +81,30 @@ export default {
             console.log('전송할 데이터 객체 확인', dataToSend)
 
             // URL 경로에 데이터 포함
-            const url = `${this.$backURL}/chat-service/chat/room/${encodeURIComponent(
-                roomName
-            )}/${encodeURIComponent(createDate)}/${encodeURIComponent(
-                this.productName
-            )}/${encodeURIComponent(this.productPrice)}/${encodeURIComponent(
-                this.productStatus
-            )}/${encodeURIComponent(this.receiver)}/${encodeURIComponent(this.sender)}`
+            // const url = `http://localhost:9797/chat-service/chat/room/${roomName}/${createDate}/${this.productName}/${this.productPrice}/${this.productStatus}/${this.receiver}/${this.sender}`
+            const encodedRoomName = encodeURIComponent(roomName)
+            const encodedCreateDate = encodeURIComponent(createDate)
+            const encodedProductName = encodeURIComponent(this.productName)
+            const encodedProductPrice = encodeURIComponent(this.productPrice)
+            const encodedProductStatus = encodeURIComponent(this.productStatus)
+            const encodedReceiver = encodeURIComponent(this.receiver)
+            const encodedSender = encodeURIComponent(this.sender)
+
+            const url = `http://localhost:9797/chat-service/chat/room/${encodedRoomName}/${encodedCreateDate}/${encodedProductName}/${encodedProductPrice}/${encodedProductStatus}/${encodedReceiver}/${encodedSender}`
+            console.log(url)
 
             // 채팅방 생성 요청
             axios
                 // requestBody로 보내면 CORS 오류 개쩔게남
+                // .post('http://localhost:9797/chat-service/chat/room', {
+                //     roomName,
+                //     createDate,
+                //     productName: this.productName,
+                //     productPrice: this.productPrice,
+                //     // productStatus: this.productStatus,
+                //     receiver: this.receiver,
+                //     sender: this.sender
+                // })
                 // .post(this.$backURL + '/chat-service/chat/room', dataToSend)
                 .post(url)
                 .then((response) => {
@@ -130,4 +143,11 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+section {
+    border: 1px solid black;
+    margin-top: 200px;
+    /* width: 100%; */
+    height: 100%;
+}
+</style>

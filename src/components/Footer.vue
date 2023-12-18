@@ -10,6 +10,8 @@ export default {}
 
 <style scoped>
 .footer_container {
+    position: relative;
+    bottom: -120px;
     width: 100%;
 }
 
