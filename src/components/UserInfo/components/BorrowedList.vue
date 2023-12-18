@@ -12,43 +12,29 @@
                         <p><img src="../../../assets/user-profile.png"> {{ item.ownerNickname }}<br></p>
                         <p><img src="../../../assets/calendar.png"> {{ item.rentStartDate }} ~ {{ item.rentEndDate }}<br></p>
                         <img src="../../../assets/status.png"> {{ item.status }}
-                        <span>
-                            <button v-if="showReviewButton(item.reviewStatus, item.status)" @click="openModal(item)"
-                                class="review-button">리뷰 작성</button>
-                        </span>
                     </div>
                 </li>
             </ul>
         </div>
-        <transition name="overlay-fade">
-            <div v-if="showModal || showConfirmationModal" class="modal-overlay" @click="closeModal"></div>
-        </transition>
-        <transition name="modal-fade" mode="out-in">
-            <WriteReview v-if="showModal" @close="closeModal" @reviewSubmitted="refreshData" :ReviewList="ReviewList"
-                class="modal-wrapper" />
-        </transition>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
-import WriteReview from './WriteReview.vue';
 export default {
-    components: {
-        WriteReview
-    },
     name: 'BorrowedList',
     data() {
         return {
             list: [],
             data: [],
+            nickname: '',
             showModal: false,
             ReviewList: null,
         }
     },
     methods: {
         getBorrowedList() {
-            const nickname = localStorage.getItem('nickname');
+            const nickname = localStorage.getItem("user")
             const url = `http://192.168.1.86:7575/rent/1?nickname=${nickname}`;
             axios.get(url)
                 .then(response => {
@@ -87,19 +73,6 @@ export default {
         getProductTitle(productNo) {
             const matchingProduct = this.data.find(item => item.productNo === productNo);
             return matchingProduct ? matchingProduct.title : '상품명을 찾을 수 없습니다.';
-        },
-
-        openModal(item) {
-            this.ReviewList = item;
-            this.showModal = true;
-        },
-
-        closeModal() {
-            this.showModal = false;
-        },
-
-        showReviewButton(reviewStatus, status) {
-            return reviewStatus !== "대여받은사람" && reviewStatus !== "모두" && status !== "대여중";
         },
 
         refreshData() {

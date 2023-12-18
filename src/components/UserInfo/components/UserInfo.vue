@@ -3,33 +3,26 @@
         <div class="profile">
             <img class="profile-image" src="../../../../assets/8.jpg" />
             <div class="profile-info">
-                <p class="nickname">{{ nickname }}</p>
+                <p class="nickname">{{ nickname }} <img src="../../../assets/siren.png" @click="declareUser"></p>
                 <p class="heart-count"><i class="bi bi-heart-fill"></i> {{ heart }}</p>
             </div>
         </div>
         <nav class="menu-nav">
-            <router-link to="/mypage/needrent">
+            <router-link to="/userinfo/needrent">
                 <p>빌려드려요</p>
             </router-link>
-            <router-link to="/mypage/needborr">
+            <router-link to="/userinfo/needborr">
                 <p>빌려주세요</p>
             </router-link>
-            <router-link to="/mypage/rent">
+            <router-link to="/userinfo/rent">
                 <p>대여해준 목록</p>
             </router-link>
-            <router-link to="/mypage/borrow">
+            <router-link to="/userinfo/borrow">
                 <p>대여한 목록</p>
             </router-link>
-            <router-link to="/mypage/receive">
+            <router-link to="/userinfo/receive">
                 <p>받은 후기</p>
             </router-link>
-            <router-link to="/mypage/write">
-                <p>남긴 후기</p>
-            </router-link>
-            <router-link to="/mypage/qna">
-                <p>Q&A 목록</p>
-            </router-link>
-            <p>회원 탈퇴</p>
         </nav>
     </div>
     <div class="section">
@@ -42,18 +35,20 @@
 <script>
 import axios from 'axios'
 export default {
-    name: 'MyPage',
-
+    name: 'UserInfo',
     data() {
         return {
             nickname: '',
-            heart: 0
+            heart: 0,
+            review: '',
+            product: ''
         }
     },
 
     methods: {
         getHeart() {
-            const nickname = localStorage.getItem('nickname')
+            let nickname = localStorage.getItem('user')
+           
             const url = `http://192.168.1.86:7575/review/heart?nickname=${nickname}`
 
             axios
@@ -65,12 +60,38 @@ export default {
                 .catch((error) => {
                     console.log(error.data)
                 })
+        },
+
+        declareUser() {
+            
         }
+
     },
 
     mounted() {
-        this.getHeart()
-        this.nickname = localStorage.getItem('nickname')
+        const productDataString = this.$route.query.productData;
+        const productData = JSON.parse(productDataString);
+        const reviewDataString = this.$route.query.reviewData;
+        const reviewData = JSON.parse(reviewDataString);
+        this.review = reviewData
+        this.product = productData
+
+        let nickname = ''
+
+        if (localStorage.getItem('nickname') === this.review.writerNickname) {
+            nickname = this.review.receiverNickname;
+        } else {
+            nickname = this.review.writerNickname;
+        }
+
+        this.nickname = nickname;
+
+        localStorage.setItem("user", nickname)
+
+        console.log(this.review)
+        console.log(productData)
+        console.log(reviewData)
+        this.getHeart();
     }
 }
 </script>
@@ -108,7 +129,11 @@ export default {
     flex-direction: column;
     justify-content: center;
     margin-left: 20px;
+}
 
+.profile-info img {
+    width: 20px;
+    margin-left: 10px;
 }
 
 .nickname {
