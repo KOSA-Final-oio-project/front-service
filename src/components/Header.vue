@@ -46,7 +46,7 @@
             <ul class="nav">
                 <li><router-link to="/">홈</router-link></li>
                 <li><router-link to="/">게시판</router-link></li>
-                <li><a href="#">대여</a></li>
+                <li><router-link to="/location">대여</router-link></li>
                 <li><a href="#">채팅</a></li>
             </ul>
         </nav>
@@ -120,6 +120,7 @@ export default {
     margin: 0px 10px;
 }
 .search-input {
+    outline: none;
     border: none;
     width: 80%;
 }

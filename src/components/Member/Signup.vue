@@ -16,7 +16,11 @@
                         />
                         <!-- 프로필 이미지 미리보기 -->
                         <div v-if="user.profileImage" class="profile-preview">
-                            <img :src="user.profileImage" alt="프로필 이미지" />
+                            <img :src="testFile" alt="프로필 이미지" />
+                            <!-- <img
+                                src="https://oio-bucket.s3.ap-northeast-2.amazonaws.com/logo.png"
+                                alt=""
+                            /> -->
                         </div>
                     </div>
                 </div>
@@ -26,7 +30,7 @@
                     <label for="email">이메일</label>
                     <!-- 인풋창이랑 버튼 수평정렬 -->
                     <div class="flex-container">
-                        <input type="email" id="email" v-model="user.email" />
+                        <input type="email" id="email" v-model="user.email" required />
 
                         <!-- 중복확인 -> 인증요청 -->
                         <button
@@ -35,12 +39,13 @@
                         >
                             중복확인
                         </button>
-                        <button
+                        <div
+                            class="button"
                             :class="{ 'certificate-btn': true, isActive: isActive }"
                             @click="requestEmailCertificate"
                         >
                             인증요청
-                        </button>
+                        </div>
                         <!-- <button class="certificate-btn" @click="requestEmailCertificate">
                             인증요청
                         </button> -->
@@ -48,7 +53,7 @@
                 </div>
 
                 <!-- 이메일 인증번호 입력 -->
-                <div class="form-group">
+                <div :class="{ 'form-group': true, isActive: isActive }">
                     <label for="email-certificate">인증번호</label>
                     <div class="flex-container">
                         <input
@@ -57,12 +62,16 @@
                             type="email-certificate"
                             id="email-certificate"
                         />
-                        <button
-                            :class="{ 'confirm-btn': true, showActive: showActive }"
+                        <div
+                            :class="{
+                                'confirm-btn': true,
+                                button: true,
+                                showActive: showActive
+                            }"
                             @click="confirmEmailCertificate"
                         >
                             확인
-                        </button>
+                        </div>
                     </div>
                 </div>
 
@@ -70,7 +79,7 @@
                 <div class="form-group">
                     <label for="password">비밀번호</label>
                     <div class="flex-container">
-                        <input type="password" id="password" v-model="user.password" />
+                        <input type="password" id="password" v-model="user.password" required />
                     </div>
 
                     <span
@@ -89,15 +98,15 @@
                     <label for="nickname">비밀번호 확인</label>
                     <div class="flex-container">
                         <input type="password" id="check-password" v-model="user.checkPassword" />
-                        <button
-                            class="confirm-btn"
+                        <div
+                            :class="{ 'confirm-btn': true, button: true }"
                             @click="confirmPassword"
                             :style="{
                                 backgroundColor: isConfirmButtonActive ? '#18b7be' : '#D1D1D1'
                             }"
                         >
                             확인
-                        </button>
+                        </div>
                     </div>
                     <!-- 비밀번호 일치 & 불일치 메시지 표시 -->
                     <span v-if="passwordCheckMessage" :class="passwordCheckClass">{{
@@ -109,13 +118,17 @@
                 <div class="form-group">
                     <label for="nickname">닉네임</label>
                     <div class="flex-container">
-                        <input type="nickname" id="nickname" v-model="user.nickname" />
-                        <button
-                            :class="{ 'dup-chk-btn': true, nicknameActive: nicknameActive }"
+                        <input required type="nickname" id="nickname" v-model="user.nickname" />
+                        <div
+                            :class="{
+                                'dup-chk-btn': true,
+                                nicknameActive: nicknameActive,
+                                button: true
+                            }"
                             @click="nicknameDuplicateCheck"
                         >
                             중복확인
-                        </button>
+                        </div>
                     </div>
                 </div>
 
@@ -129,9 +142,12 @@
                             v-model="user.phone"
                             placeholder="010-0000-0000"
                         />
-                        <button class="certificate-btn" @click="requestPhoneCertificate">
+                        <div
+                            :class="{ 'certificate-btn': true, button: true }"
+                            @click="requestPhoneCertificate"
+                        >
                             인증요청
-                        </button>
+                        </div>
                     </div>
                 </div>
 
@@ -146,7 +162,7 @@
 
                 <!-- 가입하기 버튼 -->
                 <div class="btn-container">
-                    <button type="submit" class="submit-btn" @click="submitForm">가입하기</button>
+                    <button type="submit" class="submit-btn">가입하기</button>
                 </div>
             </div>
         </form>
@@ -160,14 +176,16 @@ export default {
     data() {
         return {
             user: {
-                name: '',
-                email: '',
-                password: '',
-                nickname: '',
-                phone: '',
-                emailCheckNumber: '',
-                profileImage: 'https://oio-bucket.s3.ap-northeast-2.amazonaws.com/logo.png'
+                name: undefined,
+                email: undefined,
+                password: undefined,
+                nickname: undefined,
+                phone: undefined,
+                emailCheckNumber: undefined,
+                profileImage: undefined
             },
+
+            testFile: '',
             nicknameActive: false,
             showActive: false,
             isActive: true,
@@ -176,7 +194,8 @@ export default {
             passwordCheckMessage: '',
             emailStatus: 0,
             showModal: false,
-            alertMessage: ''
+            alertMessage: '',
+            location: ''
         }
     },
 
@@ -205,20 +224,30 @@ export default {
     },
 
     methods: {
+        isEmpty(value) {
+            // 빈 값인 경우 true 반환
+            return value === undefined || value === null || value.trim() === ''
+        },
         handleImageUpload(event) {
             const file = event.target.files[0]
+            console.log('change')
+            console.log(file)
+            this.user.profileImage = file
+            console.log(this.user.profileImage)
             if (file) {
                 const reader = new FileReader()
                 reader.onload = () => {
-                    this.user.profileImage = reader.result
+                    this.testFile = reader.result
                 }
                 reader.readAsDataURL(file)
+
+                console.log(this.user.profileImage)
             }
         },
 
         // 이메일 중복확인
         emailDuplicateCheck() {
-            console.log('fuck')
+            console.log('ddd')
             axios
                 .post('http://localhost:9999/oio/email-chk', {
                     email: this.user.email
@@ -230,6 +259,7 @@ export default {
                         alert('사용가능한 이메일입니다.')
                     } else {
                         alert('이미 사용중인 이메일입니다.')
+                        this.user.email = ''
                     }
                     this.emailChkMessage = result
                 })
@@ -237,6 +267,7 @@ export default {
 
         // 이메일 인증요청
         requestEmailCertificate() {
+            alert('이메일로 인증번호가 발송되었습니다.')
             axios
                 .post('http://localhost:9999/oio/send-email', {
                     email: this.user.email
@@ -296,53 +327,44 @@ export default {
 
         // 가입하기
         submitForm() {
-            // 이미지 파일을 선택한 경우에만 처리
-            if (this.user.profileImage) {
-                // Base64로 인코딩된 이미지를 Blob으로 변환
-                const byteString = atob(this.user.profileImage.split(',')[1])
-                const ab = new ArrayBuffer(byteString.length)
-                const ia = new Uint8Array(ab)
+            // FormData에 이미지 데이터 및 다른 필드들 추가
+            console.log(this.user.profileImage)
+            const formData = new FormData()
+            formData.append('file', this.user.profileImage)
+            formData.append('email', this.user.email)
+            formData.append('password', this.user.password)
+            formData.append('nickname', this.user.nickname)
 
-                for (let i = 0; i < byteString.length; i++) {
-                    ia[i] = byteString.charCodeAt(i)
-                }
-
-                const blob = new Blob([ia], { type: 'image/jpeg' })
-
-                // FormData에 이미지 데이터 및 다른 필드들 추가
-                const formData = new FormData()
-                formData.append('image', blob)
-                formData.append('email', this.user.email)
-                formData.append('password', this.user.password)
-                formData.append('nickname', this.user.nickname)
-
-                // 서버로 데이터 전송
-                axios
-                    .post('http://localhost:9999/oio/signup', formData, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    })
-                    .then((response) => {
-                        console.log(response.data)
-                        // 성공적으로 전송되었을 때 추가로 실행할 로직 작성
-                        this.$router.push('/')
-                    })
-                    .catch((error) => {
-                        console.error('요청 실패:', error)
-                        // 실패 시 추가로 실행할 로직 작성
-                    })
-            } else {
-                // 이미지를 선택하지 않은 경우에 대한 처리
-                console.error('이미지를 선택하세요.')
-                // 이미지를 선택하지 않았을 때 실행할 로직 작성
-            }
+            // 서버로 데이터 전송
+            axios
+                .post('http://192.168.1.37:9999/oio/signup', formData, {
+                    contentType: false,
+                    processData: false
+                })
+                .then((response) => {
+                    console.log(response.data)
+                    window.location = '/'
+                })
+                .catch((error) => {
+                    console.error('요청 실패:', error)
+                    // 실패 시 추가로 실행할 로직 작성
+                })
         }
     }
 }
 </script>
 
 <style scoped>
+.button {
+    margin-left: 3%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.error-message {
+    color: red;
+    font-size: 12px;
+}
 .profile-preview {
     margin-left: 30px;
 }
@@ -381,7 +403,6 @@ h2 {
     margin-bottom: 50px;
 }
 .form-container {
-    margin-top: 150px;
     /* 폼 컨테이너 너비 조절용 */
     max-width: 80%;
     margin-left: 21%;

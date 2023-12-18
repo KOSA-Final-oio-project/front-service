@@ -20,7 +20,7 @@
                     <label for="phone-certificate">비밀번호</label>
                     <div class="flex-container">
                         <input
-                            type="phone-certificate"
+                            type="password"
                             v-model="this.user.password"
                             id="phone-certificate"
                         />
