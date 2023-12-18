@@ -32,7 +32,6 @@ import Receive from '@/components/MyPage/components/ReceiveReviewList.vue'
 import Write from '@/components/MyPage/components/WriteReviewList.vue'
 import Rent from '@/components/MyPage/components/RentedList.vue'
 import Borrow from '@/components/MyPage/components/BorrowedList.vue'
-import Location from '@/components/Member/Location.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -58,7 +57,7 @@ const router = createRouter({
                 { path: 'write', component: Write },
                 { path: 'rent', component: Rent },
                 { path: 'borrow', component: Borrow },
-                { path: 'modify', component: ModifyUser },
+                { path: 'modify', component: ModifyUser }
             ]
         },
         {
@@ -69,10 +68,9 @@ const router = createRouter({
                 { path: 'needborr', component: UserInfoNeedBorrow },
                 { path: 'receive', component: UserInfoReceive },
                 { path: 'borrow', component: UserInfoBorrow },
-                { path: 'rent', component: UserInfoRent },
+                { path: 'rent', component: UserInfoRent }
             ]
-        },
-        { path: '/location', component: Location }
+        }
     ]
 })
 

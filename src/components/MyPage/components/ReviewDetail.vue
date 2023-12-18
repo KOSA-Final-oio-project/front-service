@@ -15,13 +15,22 @@
             </div>
         </div>
         <div class="review-detail">
-            <router-link :to="{
-                path: '/userinfo', query: {
-                    productData: JSON.stringify({ ownerNickname: product.ownerNickname, borrowerNickname: product.borrowerNickname }),
-                    reviewData: JSON.stringify({ writerNickname: review.writerNickname, receiverNickname: review.receiverNickname })
-                }
-            }">
-                <img src="../../../assets/favicon.ico" />
+            <router-link
+                :to="{
+                    path: '/userinfo',
+                    query: {
+                        productData: JSON.stringify({
+                            ownerNickname: product.ownerNickname,
+                            borrowerNickname: product.borrowerNickname
+                        }),
+                        reviewData: JSON.stringify({
+                            writerNickname: review.writerNickname,
+                            receiverNickname: review.receiverNickname
+                        })
+                    }
+                }"
+            >
+                <img :src="profile" />
             </router-link>
             <div class="detail-info">
                 <p class="post-date">
@@ -51,6 +60,7 @@ export default {
             review: '',
             product: '',
             title: '',
+            profile: ''
         }
     },
     methods: {
@@ -87,6 +97,16 @@ export default {
                 })
         },
 
+        getProfile() {
+            const useReviewdata = this.ReviewData
+            const nickname = useReviewdata.profile.result.nickname
+            const url = `http://192.168.1.37:9999/oio/member/${nickname}`
+
+            axios.get(url).then((response) => {
+                this.profile = response.data.result.profile
+            })
+        },
+
         getProductTitle() {
             const useReviewdata = this.ReviewData
             this.title = useReviewdata.rentedProduct.product.title
@@ -95,14 +115,14 @@ export default {
 
         closeModal() {
             this.$emit('close-modal')
-        },
-
+        }
     },
 
     mounted() {
         this.getReviewDetail()
         this.getRentedProduct()
         this.getProductTitle()
+        this.getProfile()
     }
 }
 </script>

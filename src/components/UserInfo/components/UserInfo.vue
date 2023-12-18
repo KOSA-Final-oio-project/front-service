@@ -1,9 +1,11 @@
 <template>
     <div class="side-bar">
         <div class="profile">
-            <img class="profile-image" src="../../../../assets/8.jpg" />
+            <img class="profile-image" :src="userProfile" />
             <div class="profile-info">
-                <p class="nickname">{{ nickname }} <img src="../../../assets/siren.png" @click="declareUser"></p>
+                <p class="nickname">
+                    {{ nickname }} <img src="../../../assets/siren.png" @click="declareUser" />
+                </p>
                 <p class="heart-count"><i class="bi bi-heart-fill"></i> {{ heart }}</p>
             </div>
         </div>
@@ -41,14 +43,22 @@ export default {
             nickname: '',
             heart: 0,
             review: '',
-            product: ''
+            product: '',
+            userProfile: ''
         }
     },
 
+    created() {
+        let nickname = localStorage.getItem('user')
+        const url = `http://192.168.1.37:9999/oio/member/${nickname}`
+        axios.get(url).then((result) => {
+            this.userProfile = result.data.result.profile
+        })
+    },
     methods: {
         getHeart() {
             let nickname = localStorage.getItem('user')
-           
+
             const url = `http://192.168.1.86:7575/review/heart?nickname=${nickname}`
 
             axios
@@ -62,36 +72,33 @@ export default {
                 })
         },
 
-        declareUser() {
-            
-        }
-
+        declareUser() {}
     },
 
     mounted() {
-        const productDataString = this.$route.query.productData;
-        const productData = JSON.parse(productDataString);
-        const reviewDataString = this.$route.query.reviewData;
-        const reviewData = JSON.parse(reviewDataString);
+        const productDataString = this.$route.query.productData
+        const productData = JSON.parse(productDataString)
+        const reviewDataString = this.$route.query.reviewData
+        const reviewData = JSON.parse(reviewDataString)
         this.review = reviewData
         this.product = productData
 
         let nickname = ''
 
         if (localStorage.getItem('nickname') === this.review.writerNickname) {
-            nickname = this.review.receiverNickname;
+            nickname = this.review.receiverNickname
         } else {
-            nickname = this.review.writerNickname;
+            nickname = this.review.writerNickname
         }
 
-        this.nickname = nickname;
+        this.nickname = nickname
 
-        localStorage.setItem("user", nickname)
+        localStorage.setItem('user', nickname)
 
         console.log(this.review)
         console.log(productData)
         console.log(reviewData)
-        this.getHeart();
+        this.getHeart()
     }
 }
 </script>

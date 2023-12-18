@@ -1,7 +1,7 @@
 <template>
     <div class="side-bar">
         <div class="profile">
-            <img class="profile-image" src="../../../../assets/8.jpg" />
+            <img class="profile-image" :src="profile" />
             <div class="profile-info">
                 <p class="nickname">{{ nickname }}</p>
                 <p class="heart-count"><i class="bi bi-heart-fill"></i> {{ heart }}</p>
@@ -47,7 +47,8 @@ export default {
     data() {
         return {
             nickname: '',
-            heart: 0
+            heart: 0,
+            profile: ''
         }
     },
 
@@ -65,12 +66,22 @@ export default {
                 .catch((error) => {
                     console.log(error.data)
                 })
+        },
+        getUserProfile() {
+            const nickname = localStorage.getItem('nickname')
+            const url = `http://192.168.1.37:9999/oio/member/${nickname}`
+
+            axios.get(url).then((response) => {
+                this.profile = response.data.result.profile
+            })
         }
     },
 
     mounted() {
+        this.getUserProfile()
         this.getHeart()
         this.nickname = localStorage.getItem('nickname')
+        // this.profile =
     }
 }
 </script>
@@ -108,7 +119,6 @@ export default {
     flex-direction: column;
     justify-content: center;
     margin-left: 20px;
-
 }
 
 .nickname {
