@@ -10,7 +10,14 @@ import Signup from '@/components/Member/Signup.vue'
 import Login from '@/components/Member/Login.vue'
 import FindPassword from '@/components/Member/FindPassword.vue'
 import ModifyUser from '@/components/Member/ModifyUser.vue'
-import UserInfo from '@/components/Member/UserInfo.vue'
+
+//USER-INFO
+import UserInfoMain from '@/components/UserInfo/page/UserInfoMain.vue'
+import UserInfoNeedRent from '@/components/UserInfo/components/NeedRent.vue'
+import UserInfoNeedBorrow from '@/components/UserInfo/components/NeedBorrow.vue'
+import UserInfoReceive from '@/components/UserInfo/components/ReceiveReviewList.vue'
+import UserInfoBorrow from '@/components/UserInfo/components/BorrowedList.vue'
+import UserInfoRent from '@/components/UserInfo/components/RentedList.vue'
 
 //CHAT
 import ChatRoomList from '@/components/Chat/ChatRoomList.vue'
@@ -55,8 +62,14 @@ const router = createRouter({
         },
         {
             path: '/userinfo',
-            name: 'UserInfo',
-            component: UserInfo,
+            component: UserInfoMain,
+            children: [
+                { path: 'needrent', component: UserInfoNeedRent },
+                { path: 'needborr', component: UserInfoNeedBorrow },
+                { path: 'receive', component: UserInfoReceive },
+                { path: 'borrow', component: UserInfoBorrow },
+                { path: 'rent', component: UserInfoRent },
+            ]
         }
     ]
 })

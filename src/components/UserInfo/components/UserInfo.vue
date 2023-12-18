@@ -8,19 +8,19 @@
             </div>
         </div>
         <nav class="menu-nav">
-            <router-link to="/mypage/needrent">
+            <router-link to="/userinfo/needrent">
                 <p>빌려드려요</p>
             </router-link>
-            <router-link to="/mypage/needborr">
+            <router-link to="/userinfo/needborr">
                 <p>빌려주세요</p>
             </router-link>
-            <router-link to="/mypage/rent">
+            <router-link to="/userinfo/rent">
                 <p>대여해준 목록</p>
             </router-link>
-            <router-link to="/mypage/borrow">
+            <router-link to="/userinfo/borrow">
                 <p>대여한 목록</p>
             </router-link>
-            <router-link to="/mypage/receive">
+            <router-link to="/userinfo/receive">
                 <p>받은 후기</p>
             </router-link>
             <p>회원 신고</p>
@@ -41,18 +41,15 @@ export default {
         return {
             nickname: '',
             heart: 0,
-            reviewData: ''
+            review: '',
+            product: ''
         }
     },
 
     methods: {
         getHeart() {
-            let nickname = ''
-            if(localStorage.getItem('nickname') == this.reviewData.writerNickname) {
-                nickname = this.reviewData.receiverNickname
-            } else {
-                nickname = this.reviewData.writerNickname
-            }
+            let nickname = localStorage.getItem('user')
+           
             const url = `http://192.168.1.86:7575/review/heart?nickname=${nickname}`
 
             axios
@@ -73,8 +70,22 @@ export default {
         const productData = JSON.parse(productDataString);
         const reviewDataString = this.$route.query.reviewData;
         const reviewData = JSON.parse(reviewDataString);
-        this.reviewData = reviewData
-        console.log(this.reviewData)
+        this.review = reviewData
+        this.product = productData
+
+        let nickname = ''
+
+        if (localStorage.getItem('nickname') === this.review.writerNickname) {
+            nickname = this.review.receiverNickname;
+        } else {
+            nickname = this.review.writerNickname;
+        }
+
+        this.nickname = nickname;
+
+        localStorage.setItem("user", nickname)
+
+        console.log(this.review)
         console.log(productData)
         console.log(reviewData)
         this.getHeart();
