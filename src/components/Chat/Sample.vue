@@ -2,7 +2,7 @@
     <section>
         <!-- 채팅하기 버튼 -->
         <!-- 이미 채팅 내역 있는 앤지 아닌지 확인하기 -->
-        <button @click="createRoom">채팅하기</button>
+        <button class="chat-btn" @click="createRoom">채팅하기</button>
     </section>
 </template>
 
@@ -14,7 +14,6 @@ export default {
         return {
             productName: '',
             productPrice: '',
-            productStatus: '',
             receiver: '',
             sender: '',
             roomName: ''
@@ -25,41 +24,44 @@ export default {
         getProductInfo() {
             this.productName = '감자'
             this.productPrice = '1000원'
-            this.productStatus = '대여대기'
+            // this.productStatus = '대여대기'
         },
 
-        getReceiverEmail() {
-            // this.receiver = 'test1@oio.com'
-            // this.receiver = 'test2@oio.com'
-            this.receiver = 'test3@oio.com'
-            // this.receiver = 'test4@oio.com'
-            // this.receiver = 'test5@oio.com'
-            // this.receiver = 'sengna@oio.com'
-            // this.receiver = 'chan@oio.com'
+        getReceiverNickname() {
+            // this.receiver = 'test1'
+            // this.receiver = 'test2'
+            this.receiver = 'test3'
+            // this.receiver = 'test4'
+            // this.receiver = 'test5'
+            // this.receiver = 'sengna'
+            // this.receiver = 'chan'
         },
 
-        getUserEmail() {
-            // this.sender = 'sengna@oio.com'
-            this.sender = 'chan@oio.com'
-            // this.sender = 'test1@oio.com'
-            // this.sender = 'test2@oio.com'
-            // this.sender = 'test3@oio.com'
-            // this.sender = 'test4@oio.com'
-            // this.sender = 'test5@oio.com'
+        getUserNickname() {
+            // this.sender = 'sengna'
+            this.sender = 'chan'
+            // this.sender = 'test1'
+            // this.sender = 'test2'
+            // this.sender = 'test3'
+            // this.sender = 'test4'
+            // this.sender = 'test5'
         },
 
         createRoom() {
-            // 제품 정보, 수신자 이메일, 사용자 이메일 가져오기
+            // 제품 정보, 수신자 닉네임, 사용자 닉네임 가져오기
             this.getProductInfo()
-            this.getReceiverEmail()
-            this.getUserEmail()
+            this.getReceiverNickname()
+            this.getUserNickname()
 
             // 채팅방 제목 입력
-            const roomName = prompt('생성하실 채팅방의 제목을 입력해주세요.')
+            const roomName = prompt('생성하실 채팅방의 제목을 입력해주세요. (20자 이내)')
 
             // 채팅방 제목 입력 필수로
             if (!roomName) {
-                alert('채팅방 제목을 입력해야 합니다.')
+                alert('채팅방 제목을 입력해주세요.')
+                return
+            } else if (roomName.length > 20) {
+                alert('채팅방 제목은 20자를 초과할 수 없습니다.')
                 return
             }
             console.log('입력된 채팅방 제목:', roomName)
@@ -74,7 +76,6 @@ export default {
                 createDate: createDate,
                 productName: this.productName,
                 productPrice: this.productPrice,
-                productStatus: this.productStatus,
                 receiver: this.receiver,
                 sender: this.sender
             }
@@ -99,7 +100,6 @@ export default {
                             roomId: response.data.roomId,
                             productName: this.productName,
                             productPrice: this.productPrice,
-                            // productStatus: this.productStatus,
                             receiver: this.receiver,
                             sender: this.sender
                         })
@@ -124,9 +124,18 @@ export default {
 
 <style scoped>
 section {
-    border: 1px solid black;
     margin-top: 200px;
-    /* width: 100%; */
     height: 100%;
+}
+
+.chat-btn {
+    width: 100px;
+    height: 40px;
+    border-radius: 30px;
+    background-color: #178ca4;
+    color: white;
+    font-weight: bold;
+    border: none;
+    font-size: 15px;
 }
 </style>

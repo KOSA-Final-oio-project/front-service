@@ -1,98 +1,99 @@
-<!-- 셍나 해야할 것. 새로고침 안해도 바로바로 채팅 내역 끌고 와서 보여줄 수 있게 코드 수정ㅇ해야함
-지금은 새로 고침해야지 보낸 내역이 보임. -->
 <template>
-    <div class="container" v-cloak>
-        <div class="chat-header-container">
-            <!-- 채팅방 이름 -->
-            <div class="chat-name">
-                <h2>✉️ {{ room.name }} ✉️</h2>
-            </div>
+    <section>
+        <div class="container" v-cloak>
+            <div class="chat-header-container">
+                <!-- 채팅방 이름 -->
+                <div class="chat-name">
+                    <h2 v-if="room">✉️ {{ roomName }} ✉️</h2>
+                </div>
 
-            <!-- rentStartDate & rendEndDate  -->
-            <!-- 2023-12-16 12:00 -->
-            <div class="deal-start-btn">
-                <button class="btn deal-start-btn" type="button" @click="openDateSelectionPopup">
-                    거래하기
-                </button>
-            </div>
-        </div>
-
-        <div class="chat-product-container">
-            <div class="product-img">사진</div>
-            <div class="product-info">
-                <p>상품명</p>
-                <p>상품가격</p>
-                <p>대여상태</p>
-            </div>
-        </div>
-
-        <!-- 채팅 영역 -->
-        <!-- 채팅 내역들 스크롤 가능하게 -->
-        <div class="chat-main" ref="chatMain">
-            <!-- 채팅 날짜 -->
-            <!-- 아직 안함!!!!!!!!!!!!! -->
-            <div class="chat-header">{{ chatStartDate }}</div>
-
-            <!-- 메시지 내역들 출력 -->
-            <div class="messages-container">
-                <!-- 메시지 리스트 그룹 -->
-                <ul class="list-group">
-                    <li
-                        v-for="message in filteredMessages"
-                        :key="message.id"
-                        :class="{
-                            'sent-container': message.sender === sender,
-                            'received-container': message.sender !== sender
-                        }"
+                <div class="deal-start-btn">
+                    <button
+                        class="btn deal-start-btn"
+                        type="button"
+                        @click="openDateSelectionPopup"
                     >
-                        <!-- 보낸 메시지의 시간 -->
-                        <div v-if="message.sender === sender" class="sendDate">
-                            {{ message.sendDate }}
-                        </div>
+                        거래하기
+                    </button>
+                </div>
+            </div>
 
-                        <!-- 메시지 말풍선 -->
-                        <div
+            <div class="chat-product-container">
+                <!-- <div class="product-img">사진</div> -->
+                <div class="product-info">
+                    <p>상품명: {{ productName }}</p>
+                    <p>상품가격: {{ productPrice }}</p>
+                </div>
+            </div>
+
+            <!-- 채팅 영역 -->
+            <!-- 채팅 내역들 스크롤 가능하게 -->
+            <div class="chat-main" ref="chatMain">
+                <!-- 채팅 날짜 -->
+                <!-- 아직 안함!!!!!!!!!!!!! -->
+                <div class="chat-header">{{ chatStartDate }}</div>
+
+                <!-- 메시지 내역들 출력 -->
+                <div class="messages-container">
+                    <!-- 메시지 리스트 그룹 -->
+                    <ul class="list-group">
+                        <li
+                            v-for="message in filteredMessages"
+                            :key="message.id"
                             :class="{
-                                'list-group-item': true,
-                                sent: message.sender === sender,
-                                received: message.sender !== sender
+                                'sent-container': message.sender === sender,
+                                'received-container': message.sender !== sender
                             }"
                         >
-                            {{ message.message }}
-                        </div>
+                            <!-- 보낸 메시지의 시간 -->
+                            <div v-if="message.sender === sender" class="sendDate">
+                                {{ message.sendDate }}
+                            </div>
 
-                        <!-- 읽음 표시 -->
-                        <div class="read-sign">
-                            1
-                            <!-- {{ message.isRead }} -->
-                        </div>
+                            <!-- 메시지 말풍선 -->
+                            <div
+                                :class="{
+                                    'list-group-item': true,
+                                    sent: message.sender === sender,
+                                    received: message.sender !== sender
+                                }"
+                            >
+                                {{ message.message }}
+                            </div>
 
-                        <!-- 받은 메시지의 시간 -->
-                        <div v-if="message.sender !== sender" class="sendDate">
-                            {{ message.sendDate }}
-                        </div>
-                    </li>
-                </ul>
+                            <!-- 읽음 표시 -->
+                            <div class="read-sign">
+                                1
+                                <!-- {{ message.isRead }} -->
+                            </div>
+
+                            <!-- 받은 메시지의 시간 -->
+                            <div v-if="message.sender !== sender" class="sendDate">
+                                {{ message.sendDate }}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 채팅 입력 영역 -->
+            <div class="input-group">
+                <!-- 채팅 입력창 -->
+                <input
+                    type="text"
+                    class="form-control"
+                    v-model="message"
+                    @keypress.enter="sendMessage"
+                    placeholder="메시지를 입력해주세요."
+                />
+
+                <!-- 전송 버튼 -->
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button" @click="sendMessage">전송</button>
+                </div>
             </div>
         </div>
-
-        <!-- 채팅 입력 영역 -->
-        <div class="input-group">
-            <!-- 채팅 입력창 -->
-            <input
-                type="text"
-                class="form-control"
-                v-model="message"
-                @keypress.enter="sendMessage"
-                placeholder="메시지를 입력해주세요."
-            />
-
-            <!-- 전송 버튼 -->
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button" @click="sendMessage">전송</button>
-            </div>
-        </div>
-    </div>
+    </section>
 </template>
 
 <script>
@@ -106,19 +107,31 @@ export default {
             roomId: '',
             room: {},
             roomName: '',
-            email: '',
+            nickname: '',
             sender: '',
             message: '',
             sendDate: '',
             messages: [],
-            chatStartDate: ''
-            // websocketConnectedAt: null // 웹소켓 연결 시간
+            chatStartDate: '',
+            productName: '',
+            productPrice: '',
+            productStatus: ''
         }
     },
 
     created() {
         console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> ChatRoomDetail component created! :-)')
 
+        // 로컬 스토리지에서 roomData 읽기
+        const roomData = JSON.parse(localStorage.getItem('roomData'))
+
+        if (roomData) {
+            this.roomName = roomData.roomName
+            this.productName = roomData.productName
+            this.productPrice = roomData.productPrice
+        }
+
+        // 로컬 스토리지에서 roomId랑 sender 읽기
         this.roomId = localStorage.getItem('wschat.roomId')
         this.sender = localStorage.getItem('wschat.sender')
 
@@ -133,6 +146,7 @@ export default {
     },
 
     computed: {
+        // 입&퇴장 메시지 안보이게 처리
         filteredMessages() {
             return this.messages.filter(
                 (m) => m.messageType !== 'ENTER' && m.messageType !== 'QUIT'
@@ -176,6 +190,7 @@ export default {
                     }
                 })
                 .catch((error) => {
+                    alert('채팅 내역을 조회하는데 실패하였습니다.')
                     console.error('Failed to load chat logs: ', error)
                 })
         },
@@ -184,14 +199,13 @@ export default {
         connectWebSocket() {
             const refer = this // Vue 인스턴스 참조를 변수에 저장
             const sock = new SockJS(this.$backURL + '/chat-service/ws-stomp')
-            // const sock = new SockJS('http://localhost:57625' + '/chat-service/ws-stomp')
             const ws = Stomp.over(sock, { protocols: ['v1.2'] }) // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
-            // const ws = Stomp.over(sock)
 
             // roomData 불러오기
             const roomData = JSON.parse(localStorage.getItem('roomData'))
 
             console.log(roomData)
+
             if (!roomData || !roomData.roomId) {
                 console.error('채팅 내역이 존재하지 않습니다.')
                 return
@@ -216,6 +230,8 @@ export default {
                             roomId: roomData.roomId,
                             sender: refer.sender, // 웹소켓 열릴 때 sender로 설정
                             roomName: roomData.roomName,
+                            productName: roomData.productName,
+                            productPrice: roomData.productPrice,
                             sendDate: sendDate
                         })
                     )
@@ -240,6 +256,8 @@ export default {
                     roomId: this.roomId,
                     sender: this.sender,
                     roomName: this.roomName,
+                    productName: this.productName,
+                    productPrice: this.productPrice,
                     sendDate: sendDate
                 })
             )
@@ -353,6 +371,10 @@ export default {
 
 * {
     font-family: 'NotoSansKR-VariableFont_wght';
+}
+
+section {
+    margin-top: 150px;
 }
 
 /* ========= 채팅 전체 영역 ========= */

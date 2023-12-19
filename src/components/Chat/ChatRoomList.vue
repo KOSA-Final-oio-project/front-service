@@ -17,12 +17,20 @@
                         :key="item.roomId"
                         @click="enterRoom(item.roomId)"
                     >
-                        <!-- 채팅방 제목 -->
-                        <span class="chat-room-name">{{ item.name }}</span>
+                        <div class="list-container">
+                            <p class="chat-room-entry">
+                                참여자: {{ item.receiver }} & {{ item.sender }}
+                            </p>
+                            <div class="flex-container">
+                                <!-- 채팅방 제목 -->
+                                <span class="chat-room-name">방제목: {{ item.roomName }}</span>
 
-                        <!-- 채팅방 생성일자 -->
-                        생성일자:&nbsp;
-                        <span class="chat-room-date">{{ formatDate(item.createDate) }}</span>
+                                <!-- 채팅방 생성일자 -->
+                                <span class="chat-room-date"
+                                    >생성일자: {{ formatDate(item.createDate) }}</span
+                                >
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -43,45 +51,34 @@ export default {
     },
 
     created() {
-        this.sender = this.getUserEmail() // 현재 사용자의 이메일 가져오기
-        this.findRoomByEamil() // 해당 이메일의 채팅방 목록을 불러옴
+        this.sender = this.getUserNickname() // 현재 사용자의 닉네임 가져오기
+        this.findRoomByNickname() // 해당 이메일의 채팅방 목록을 불러옴
+        // this.findChatRoomInfo()
     },
 
     methods: {
         // email 가져오기
-        getUserEmail() {
-            // this.sender = 'chan@oio.com'
-            // this.sender = 'sengna@oio.com'
-            // this.sender = 'test1@oio.com'
-            // this.sender = 'test2@oio.com'
-            this.sender = 'test3@oio.com'
-            // this.sender = 'test4@oio.com'
-            // this.sender = 'test5@oio.com'
-        },
-
-        // 모든 채팅방의 목록 가져옴
-        findAllRoom() {
-            axios
-                .get(this.$backURL + '/chat-service/chat/rooms')
-                .then((response) => {
-                    this.chatRooms = response.data
-                    //역순 정렬 .reverse()
-                    console.log(response.data) // 서버 응답 확인
-                })
-                .catch((error) => {
-                    console.error('방을 찾는데 실패했습니다. 오류 원인은: ', error)
-                })
+        getUserNickname() {
+            // this.sender = 'chan'
+            // this.sender = 'sengna'
+            // this.sender = 'test1'
+            // this.sender = 'test2'
+            this.sender = 'test3'
+            // this.sender = 'test4'
+            // this.sender = 'test5'
         },
 
         // 해당 이메일로 생성된 채팅방의 목록을 가져옴
-        findRoomByEamil() {
-            this.getUserEmail()
-            alert('현재 이메일은: ' + this.sender)
+        findRoomByNickname() {
+            this.getUserNickname()
+
+            alert('현재 닉네임은: ' + this.sender)
+
             axios
                 .get(this.$backURL + '/chat-service/chat/rooms/' + this.sender)
                 .then((response) => {
                     this.chatRooms = response.data
-                    console.log(response.data) // 서버 응답 확인
+                    console.log('response.data = ' + response.data) // 서버 응답 확인
                 })
                 .catch((error) => {
                     console.error('방을 찾는데 실패했습니다. 오류 원인은:', error)
@@ -98,18 +95,58 @@ export default {
                 localStorage.setItem('wschat.roomId', roomId)
             }
 
+            alert('전달하는 url은 ' + this.$backURL + '/chat-service/chat/roominfo/' + roomId)
+
+            // API 호출하여 채팅방 정보 가져오기
+            axios.get(this.$backURL + '/chat-service/chat/roominfo/' + roomId).then((response) => {
+                alert(this.roomId)
+                console.log('&&&&&&&&&&&&&&&&&&&&&&&&&7 ' + response.data)
+                localStorage.setItem(
+                    'roomData',
+                    JSON.stringify({
+                        roomName: response.data.roomName,
+                        createDate: response.data.createDate,
+                        roomId: response.data.roomId,
+                        productName: response.data.productName,
+                        productPrice: response.data.productPrice,
+                        receiver: response.data.receiver,
+                        sender: response.data.sender
+                    })
+                )
+            })
+
             this.$router.push({ name: 'ChatRoomEnter', params: { roomId, name } })
         },
 
         // 채팅방 생성 일자 날짜 형식을 변환
         formatDate(dateString) {
-            const date = new Date(dateString)
+            // 날짜와 시간을 분리
+            const datePart = dateString.substring(0, 10) // 년월일 분리
+            const timePart = dateString.substring(10) // 시간 분리
 
-            return date.toLocaleDateString('ko-KR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            })
+            // 시간을 HH:MM:SS 형식으로 변환
+            const timeFormatted = timePart.replace(/(\d{2})(\d{2})(\d{2})/, '$1:$2:$3')
+
+            // 날짜와 시간을 결합
+            const dateTime = datePart + ' ' + timeFormatted
+
+            // Date 객체 생성
+            const date = new Date(dateTime)
+
+            // 날짜 포매팅
+            return (
+                date.getFullYear() +
+                '년 ' +
+                (date.getMonth() + 1) +
+                '월 ' +
+                date.getDate() +
+                '일 ' +
+                (date.getHours() < 12 ? '오전 ' : '오후 ') +
+                (date.getHours() % 12 || 12) +
+                '시 ' +
+                date.getMinutes() +
+                '분'
+            )
         }
     }
 }
@@ -134,7 +171,7 @@ export default {
 section {
     border: 1px solid black;
     margin-top: 200px;
-    /* width: 100%; */
+    width: 100%;
     height: 100%;
 }
 
@@ -150,13 +187,23 @@ section {
     display: flex;
 }
 
+/* 채팅방 제목 & 생성 시간 flex 정렬 */
+.flex-container {
+    display: flex;
+    justify-content: space-between; /* 아이템들을 양쪽으로 정렬 */
+    width: 100%; /* 너비를 100%로 설정 */
+}
+
 /* 채팅방 이름 스타일 */
 .chat-room-name {
-    flex-grow: 1; /* 왼쪽으로 정렬되도록 공간 차지 */
+    margin-right: 10px; /* 오른쪽 여백 추가 */
+    white-space: nowrap;
 }
 
 /* 채팅방 생성 일자 스타일 */
 .chat-room-date {
-    flex-shrink: 0; /* 오른쪽으로 정렬되도록 공간을 유지 */
+    flex-shrink: 0;
+    margin-left: 10px; /* 필요한 경우 왼쪽 여백 추가 */
+    white-space: nowrap;
 }
 </style>
