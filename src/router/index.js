@@ -33,6 +33,13 @@ import Write from '@/components/MyPage/components/WriteReviewList.vue'
 import Rent from '@/components/MyPage/components/RentedList.vue'
 import Borrow from '@/components/MyPage/components/BorrowedList.vue'
 
+//PRODUCT
+import ProductDetail from'@/components/Product/ProductDetail.vue'
+import ProductList from'@/components/Product/ProductList.vue'
+import SearchProduct from'@/components/Product/SearchProduct.vue'
+import WriteProduct from'@/components/Product/WriteProduct.vue'
+import ModifyProduct from'@/components/Product/ModifyProduct.vue'
+
 const router = createRouter({
     history: createWebHistory(),
 
@@ -70,7 +77,12 @@ const router = createRouter({
                 { path: 'borrow', component: UserInfoBorrow },
                 { path: 'rent', component: UserInfoRent }
             ]
-        }
+        },
+        {path: '/product-service/productDetail', component: ProductDetail},
+        {path: '/product-service/productList', component: ProductList},
+        {path: '/product-service/searchProduct', component: SearchProduct},
+        {path: '/product-service/writeProduct', component: WriteProduct},
+        {path: '/product-service/modifyProduct', component: ModifyProduct}
     ]
 })
 
