@@ -29,13 +29,10 @@
             <router-link to="/mypage/qna">
                 <p>Q&A 목록</p>
             </router-link>
-            <p>회원 탈퇴</p>
         </nav>
     </div>
     <div class="section">
-        <transition name="fade" mode="out-in">
-            <router-view></router-view>
-        </transition>
+        <router-view></router-view>
     </div>
 </template>
 

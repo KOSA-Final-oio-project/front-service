@@ -53,12 +53,13 @@ export default {
             rentedProduct: [],
             product: [],
             showModal: false,
+            nickname:''
         }
     },
     methods: {
         async getReceiveReviews() {
             try {
-                const nickname = localStorage.getItem('nickname')
+                const nickname = localStorage.getItem('user')
                 const url = `http://192.168.1.86:7575/review/myreviews/1?nickname=${nickname}`
                 const response = await axios.get(url)
                 const responseReview = response.data
@@ -127,6 +128,7 @@ export default {
     },
     mounted() {
         this.getReceiveReviews()
+        this.nickname = localStorage.getItem('user')
     }
 }
 </script>

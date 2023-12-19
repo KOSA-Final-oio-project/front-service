@@ -1,5 +1,5 @@
 <template>
-    <div class="side-bar">
+    <div class="side-bar" v-if="nickname">
         <div class="profile">
             <img class="profile-image" :src="userProfile" />
             <div class="profile-info">
@@ -10,27 +10,65 @@
             </div>
         </div>
         <nav class="menu-nav">
-            <router-link to="/userinfo/needrent">
+            <router-link :to="{
+                path: '/userinfo/needrent',
+                query: {
+                    owner: product.owner,
+                    borrower: product.borrower,
+                    writer: review.writer,
+                    receiver: review.receiver
+                }
+            }">
                 <p>빌려드려요</p>
             </router-link>
-            <router-link to="/userinfo/needborr">
+            <router-link :to="{
+                path: '/userinfo/needborr',
+                query: {
+                    owner: product.owner,
+                    borrower: product.borrower,
+                    writer: review.writer,
+                    receiver: review.receiver
+                }
+            }">
                 <p>빌려주세요</p>
             </router-link>
-            <router-link to="/userinfo/rent">
+            <router-link :to="{
+                path: '/userinfo/rent',
+                query: {
+                    owner: product.owner,
+                    borrower: product.borrower,
+                    writer: review.writer,
+                    receiver: review.receiver
+                }
+            }">
                 <p>대여해준 목록</p>
             </router-link>
-            <router-link to="/userinfo/borrow">
+            <router-link :to="{
+                path: '/userinfo/borrow',
+                query: {
+                    owner: product.owner,
+                    borrower: product.borrower,
+                    writer: review.writer,
+                    receiver: review.receiver
+                }
+            }">
                 <p>대여한 목록</p>
             </router-link>
-            <router-link to="/userinfo/receive">
+            <router-link :to="{
+                path: '/userinfo/receive',
+                query: {
+                    owner: product.owner,
+                    borrower: product.borrower,
+                    writer: review.writer,
+                    receiver: review.receiver
+                }
+            }">
                 <p>받은 후기</p>
             </router-link>
         </nav>
     </div>
     <div class="section">
-        <transition name="fade" mode="out-in">
-            <router-view></router-view>
-        </transition>
+        <router-view></router-view>
     </div>
 </template>
 
@@ -48,16 +86,17 @@ export default {
         }
     },
 
-    created() {
-        let nickname = localStorage.getItem('user')
-        const url = `http://192.168.1.37:9999/oio/member/${nickname}`
-        axios.get(url).then((result) => {
-            this.userProfile = result.data.result.profile
-        })
-    },
     methods: {
+        getUserInfo() {
+            const nickname = localStorage.getItem('user')
+            const url = `http://192.168.1.37:9999/oio/member/${nickname}`
+            axios.get(url).then((result) => {
+                this.userProfile = result.data.result.profile
+            })
+        },
+
         getHeart() {
-            let nickname = localStorage.getItem('user')
+            const nickname = localStorage.getItem('user')
 
             const url = `http://192.168.1.86:7575/review/heart?nickname=${nickname}`
 
@@ -72,32 +111,30 @@ export default {
                 })
         },
 
-        declareUser() {}
+        receiveData() {
+            const productData = this.$route.query
+            const reviewData = this.$route.query
+            this.review = reviewData
+            this.product = productData
+
+            let nickname = '';
+
+            if (localStorage.getItem('nickname') === this.review.writer) {
+                nickname = this.review.receiver;
+            } else {
+                nickname = this.review.writer;
+            }
+            localStorage.setItem('user', nickname);
+
+            this.nickname = nickname
+        },
+
+        declareUser() { }
     },
 
     mounted() {
-        const productDataString = this.$route.query.productData
-        const productData = JSON.parse(productDataString)
-        const reviewDataString = this.$route.query.reviewData
-        const reviewData = JSON.parse(reviewDataString)
-        this.review = reviewData
-        this.product = productData
-
-        let nickname = ''
-
-        if (localStorage.getItem('nickname') === this.review.writerNickname) {
-            nickname = this.review.receiverNickname
-        } else {
-            nickname = this.review.writerNickname
-        }
-
-        this.nickname = nickname
-
-        localStorage.setItem('user', nickname)
-
-        console.log(this.review)
-        console.log(productData)
-        console.log(reviewData)
+        this.receiveData()
+        this.getUserInfo()
         this.getHeart()
     }
 }

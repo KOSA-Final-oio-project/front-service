@@ -1,5 +1,5 @@
 <template>
-    <div class="rent-list-outer-container">
+    <div class="rent-list-outer-container" v-if="nickname">
         <div class="rent-list-container">
             <ul class="rented-list-ul">
                 <li v-for="item in list" :key="item.id" class="rented-item" :data-rented-product-no="item.rentedProductNo">
@@ -40,7 +40,8 @@ export default {
             showConfirmationModal: false, // 대여 완료 확인 모달 상태 변수
             selectedRentedItem: null,
             product: '',
-            review: ''
+            review: '',
+            nickname: ''
         }
     },
     methods: {
@@ -116,6 +117,7 @@ export default {
 
     mounted() {
         this.getRentedList(this.nickname)
+        this.nickname = localStorage.getItem('user')
     }
 }
 </script>

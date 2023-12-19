@@ -9,25 +9,25 @@
                         <label for="profile-image">프로필</label>
                         <input type="file" id="profile-image" @change="handleImageUpload" accept="image/*" />
                         <!-- 프로필 이미지 미리보기 -->
-                        <div v-if="user.profileImage" class="profile-preview">
-                            <img :src="user.profileImage" alt="프로필 이미지" />
+                        <div v-if="user.profileImage2" class="profile-preview">
+                            <img :src="user.profileImage2" alt="프로필 이미지" />
                         </div>
                     </div>
                 </div>
 
                 <!-- 이메일 -->
-                <div class="form-group">
+                <div class="form-group" v-if="userData.result">
                     <div class="flex-container">
                         <label for="email">이메일</label>
-                        <p>이메일</p>
+                        <p>{{ userData.result.email }}</p>
                     </div>
                 </div>
 
                 <!-- 닉네임 -->
-                <div class="form-group">
+                <div class="form-group" v-if="userData.result">
                     <div class="flex-container">
                         <label for="nickname">닉네임</label>
-                        <p>닉네임</p>
+                        <p>{{ userData.result.nickname }}</p>
                     </div>
                 </div>
 
@@ -50,15 +50,10 @@
                 <div class="form-group">
                     <div class="flex-container">
                         <label for="nickname">비밀번호 확인</label>
-                        <input type="password" id="check-password" v-model="user.checkPassword" />
-                        <button class="confirm-btn" @click="confirmPassword">
-                            확인
-                        </button>
+                        <input type="password" id="check-password" v-model="user.checkPassword" @input="confirmPassword" />
                     </div>
                     <!-- 비밀번호 일치 & 불일치 메시지 표시 -->
-                    <span v-if="passwordCheckMessage" :class="passwordCheckClass">{{
-                        passwordCheckMessage
-                    }}</span>
+                    <span v-if="passwordCheckMessage" :class="passwordCheckClass">{{ passwordCheckMessage }}</span>
                 </div>
 
                 <!-- 가입하기 버튼 -->
@@ -67,6 +62,26 @@
                 </div>
             </div>
         </form>
+    </div>
+    <button class="delete-btn" @click="showModal = true">회원 탈퇴</button>
+    <div class="modal" :class="{ 'show': showModal }">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">회원 탈퇴</h5>
+                    <button type="button" class="close" @click="showModal = false">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>정말 탈퇴하시겠습니까?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="confirm-button" @click="confirmDelete">예</button>
+                    <button type="button" class="cancel-button" @click="cancelDelete">아니오</button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -88,8 +103,15 @@ export default {
             emailStatus: 0, // 비밀번호 일치&불일치 여부 결과값 메시지
             showModal: false,
             alertMessage: '',
-            userData: ''
+            userData: '',
+            showModal: false
+        }
+    },
 
+    watch: {
+        // 사용자가 입력한 값과 비밀번호 일치 여부 실시간 확인
+        'user.checkPassword': function (newVal) {
+            this.confirmPassword();
         }
     },
 
@@ -106,24 +128,12 @@ export default {
     },
 
     watch: {
-        // 비밀번호가 변경될 때마다 유효성 검사 해줘야 해서 watch 줌
         'user.password': function () {
             this.checkPasswordValidity()
         }
     },
 
     methods: {
-        getUserInfo() {
-            const nickname = localStorage.getItem("nickname")
-            const url = `http://192.168.1.37:9999/oio/member/${nickname}`
-
-            axios.get(url).then((response) => {
-                this.userData = response.data
-                this.profileImage = response.data.result.profile
-                console.log(this.userData)
-            })
-        },
-
         handleImageUpload(event) {
             const file = event.target.files[0]
             this.user.profileImage = file
@@ -145,9 +155,9 @@ export default {
         // 비밀번호 중복 확인
         confirmPassword() {
             if (this.user.password === this.user.checkPassword) {
-                this.passwordCheckMessage = '🙆🏻‍♀️ 비밀번호가 일치합니다.'
+                this.passwordCheckMessage = '🙆🏻‍♀️ 비밀번호가 일치합니다.';
             } else {
-                this.passwordCheckMessage = '🙅🏻‍♀️ 비밀번호가 일치하지 않습니다.'
+                this.passwordCheckMessage = '🙅🏻‍♀️ 비밀번호가 일치하지 않습니다.';
             }
         },
 
@@ -158,7 +168,7 @@ export default {
             const formData = new FormData()
             formData.append('file', this.user.profileImage)
             formData.append('password', this.user.password)
-            
+
 
             const nickname = localStorage.getItem('nickname')
             // 서버로 데이터 전송
@@ -175,6 +185,30 @@ export default {
                     console.error('요청 실패:', error)
                     // 실패 시 추가로 실행할 로직 작성
                 })
+        },
+
+        getUserInfo() {
+            const nickname = localStorage.getItem("nickname")
+            const url = `http://192.168.1.37:9999/oio/member/${nickname}`
+
+            axios.get(url)
+                .then((response) => {
+                    this.userData = response.data
+                    console.log(this.userData)
+                    this.profileImage = this.userData.result.profile
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        },
+
+        cancelDelete() {
+            this.showModal = false;
+        },
+
+        confirmDelete() {
+
+            this.showModal = false;
         }
 
     },
@@ -286,7 +320,7 @@ input:focus {
 button {
     white-space: nowrap;
     /* margin-left: 20px; */
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 
 /* 인증요청 & 중복확인 버튼 */
@@ -388,5 +422,115 @@ button {
 .submit-btn:hover {
     background-color: #ffffff;
     color: #18b7be;
+}
+
+.delete-btn {
+    width: 100px;
+    height: 40px;
+    margin-right: 20px;
+    float: right;
+    border: 2px solid #dd4848;
+    background-color: #dd4848;
+    color: white;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #ffffff;
+    color: #dd4848;
+}
+
+/* 모달 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.modal.show {
+    display: block;
+}
+
+.modal-dialog {
+    margin: 5% auto;
+    width: 80%;
+    max-width: 600px;
+}
+
+.modal-content {
+    color: #000000;
+    text-align: center;
+    /* font-size: 18px; */
+    font-weight: bold
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    margin: 0;
+}
+
+.modal-body {
+    margin-bottom: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.close {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.confirm-button {
+    width: 70px;
+    height: 40px;
+    border: 2px solid #18b7be;
+    background-color: #18b7be;
+    color: white;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold
+}
+
+.confirm-button:hover {
+    background-color: #ffffff;
+    color: #18b7be;
+}
+
+
+.cancel-button {
+    width: 70px;
+    height: 40px;
+    border: 2px solid #d9d9d9;
+    background-color: #d9d9d9;
+    color: white;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold
+}
+
+.cancel-button:hover {
+    background-color: #ffffff;
+    color: #d9d9d9;
 }
 </style>
