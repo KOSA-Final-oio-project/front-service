@@ -138,11 +138,15 @@ export default {
         this.findRoom()
         this.findChatRoomLogs()
         this.connectWebSocket()
+
+        // 메시지 리스너 추가
+        window.addEventListener('message', this.handleMessage)
     },
 
     beforeUnmount() {
         window.removeEventListener('beforeunload', this.closeWebSocket)
         this.closeWebSocket()
+        window.removeEventListener('message', this.handleMessage)
     },
 
     computed: {
