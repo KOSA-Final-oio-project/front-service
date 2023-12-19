@@ -59,11 +59,12 @@
                 <!-- 가입하기 버튼 -->
                 <div class="btn-container">
                     <button type="submit" class="submit-btn" @click="submitForm">변경</button>
+                    <button class="delete-btn" @click="showModal = true">회원 탈퇴</button>
                 </div>
             </div>
         </form>
     </div>
-    <button class="delete-btn" @click="showModal = true">회원 탈퇴</button>
+    
     <div class="modal" :class="{ 'show': showModal }">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -179,7 +180,6 @@ export default {
                 })
                 .then((response) => {
                     console.log(response.data)
-                    window.location = '/'
                 })
                 .catch((error) => {
                     console.error('요청 실패:', error)
@@ -221,6 +221,8 @@ export default {
 <style scoped>
 .profile-preview {
     margin-left: 30px;
+    border-radius: 50%;
+    border: 2px solid #18b7be;
 }
 
 .profile-preview>img {
@@ -409,7 +411,7 @@ button {
 .submit-btn {
     width: 70px;
     height: 40px;
-    margin-right: 100px;
+    margin-right: 40px;
     border: 2px solid #18b7be;
     background-color: #18b7be;
     color: white;
