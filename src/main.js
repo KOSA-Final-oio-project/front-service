@@ -15,6 +15,7 @@ import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
 const app = createApp(App)
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 // Vue Router 사용
 app.use(router)

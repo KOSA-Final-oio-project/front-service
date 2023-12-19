@@ -35,7 +35,7 @@
         <nav>
             <ul class="nav">
                 <li><router-link to="/">홈</router-link></li>
-                <li><router-link to="/">게시판</router-link></li>
+                <li><router-link to="/post">게시판</router-link></li>
                 <li><a href="#">대여</a></li>
                 <li><a href="#">채팅</a></li>
             </ul>

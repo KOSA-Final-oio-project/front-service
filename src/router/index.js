@@ -16,33 +16,47 @@ import Receive from '@/components/MyPage/components/ReceiveReviewList.vue'
 import Write from '@/components/MyPage/components/WriteReviewList.vue'
 import Rent from '@/components/MyPage/components/RentedList.vue'
 import Borrow from '@/components/MyPage/components/BorrowedList.vue'
+import MainPost from '@/components/Post/MainPost.vue'
+import PostList from '@/components/Post/PostList.vue'
+import PostView from '@/components/Post/PostView.vue'
+import PostRegister from '@/components/Post/PostRegister.vue'
 
 const router = createRouter({
-    history: createWebHistory(),
+  history: createWebHistory(),
 
-    routes: [
-        { path: '/', components: { default: TopView, TopRental, AllProduct } },
-        { path: '/top-view', components: { default: TopView, AllProduct } },
-        { path: '/top-rental', components: { default: TopRental, AllProduct } },
-        { path: '/member-service/login', name: 'Login', component: Login },
-        { path: '/member-service/signup', component: Signup },
-        { path: '/chat-service/chat', component: ChatRoomList }, // ChatRoomList 컴포넌트가 열리는 경로
-        { path: '/chat-service/chat/room/enter/:roomId', component: ChatRoomDetail }, // ChatRoomDetail 컴포넌트가 열리는 경로
-        { path: '/chat-service/chat/date', component: SelectDatePopup }, // SelectDatePopup 컴포넌트가 열리는 경로
-        { path: '/findPassword', component: FindPassword },
-        {
-            path: '/mypage',
-            component: MyPageMain,
-            children: [
-                { path: 'needrent', component: NeedRent },
-                { path: 'needborr', component: NeedBorrow },
-                { path: 'receive', component: Receive },
-                { path: 'write', component: Write },
-                { path: 'rent', component: Rent },
-                { path: 'borrow', component: Borrow }
-            ]
-        }
-    ]
+  routes: [
+    { path: '/', components: { default: TopView, TopRental, AllProduct } },
+    { path: '/top-view', components: { default: TopView, AllProduct } },
+    { path: '/top-rental', components: { default: TopRental, AllProduct } },
+    { path: '/member-service/login', name: 'Login', component: Login },
+    { path: '/member-service/signup', component: Signup },
+    { path: '/chat-service/chat', component: ChatRoomList }, // ChatRoomList 컴포넌트가 열리는 경로
+    { path: '/chat-service/chat/room/enter/:roomId', component: ChatRoomDetail }, // ChatRoomDetail 컴포넌트가 열리는 경로
+    { path: '/chat-service/chat/date', component: SelectDatePopup }, // SelectDatePopup 컴포넌트가 열리는 경로
+    { path: '/findPassword', component: FindPassword },
+    {
+      path: '/mypage',
+      component: MyPageMain,
+      children: [
+        { path: 'needrent', component: NeedRent },
+        { path: 'needborr', component: NeedBorrow },
+        { path: 'receive', component: Receive },
+        { path: 'write', component: Write },
+        { path: 'rent', component: Rent },
+        { path: 'borrow', component: Borrow }
+      ]
+    },
+    {
+      path: '/post',
+      component: MainPost,
+      children: [
+        { path: '', component: PostList },
+        { path: 'list/:id', component: PostList },
+        { path: 'view/:id', component: PostView },
+        { path: 'register', component: PostRegister }
+      ]
+    }
+  ]
 })
 
 export default router
