@@ -40,6 +40,10 @@
                     <font-awesome-icon :icon="['fas', 'user']" />
                     <span>my</span>
                 </a>
+                <router-link to="/location" class="icons" v-if="loginChk()">
+                    <font-awesome-icon :icon="['fas', 'location-dot']" />
+                    <span>location</span>
+                </router-link>
             </div>
         </div>
         <nav>

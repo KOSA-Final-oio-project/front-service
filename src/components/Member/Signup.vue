@@ -230,8 +230,6 @@ export default {
         },
         handleImageUpload(event) {
             const file = event.target.files[0]
-            console.log('change')
-            console.log(file)
             this.user.profileImage = file
             console.log(this.user.profileImage)
             if (file) {

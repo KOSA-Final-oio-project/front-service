@@ -33,6 +33,7 @@ import Write from '@/components/MyPage/components/WriteReviewList.vue'
 import Rent from '@/components/MyPage/components/RentedList.vue'
 import Borrow from '@/components/MyPage/components/BorrowedList.vue'
 
+import Location from '@/components/Member/location.vue'
 const router = createRouter({
     history: createWebHistory(),
 
@@ -70,6 +71,10 @@ const router = createRouter({
                 { path: 'borrow', component: UserInfoBorrow },
                 { path: 'rent', component: UserInfoRent }
             ]
+        },
+        {
+            path: '/location',
+            component: Location
         }
     ]
 })
