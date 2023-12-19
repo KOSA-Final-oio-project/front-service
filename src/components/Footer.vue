@@ -11,12 +11,14 @@ export default {
 
 <style scoped>
 .footer_container {
+    min-height: 30vh; /* Use min-height to ensure the container takes at least the full viewport height */
     position: relative;
-    bottom: -125px;
-    width: 100%;
 }
 
 .footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     text-align: center;
     padding: 10px 0;
     background: #f1f1f1;

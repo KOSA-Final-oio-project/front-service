@@ -1,17 +1,17 @@
 <template>
     <div class="main">
         <div class="main-container">
-            <MyPage></MyPage>
+            <UserInfo></UserInfo>
         </div>
     </div>
 </template>
 
 <script>
-import MyPage from '../components/MyPage.vue'
+import UserInfo from '../components/UserInfo.vue'
 export default {
-    name: 'Main',
+    name: 'UserInfoMain',
     components: {
-        MyPage
+        UserInfo
     }
 }
 </script>

@@ -14,29 +14,43 @@
                 <router-link
                     to="/member-service/signup"
                     :class="{ icons: true, loginCheck: loginCheck }"
+                    v-if="!loginChk()"
                 >
                     <font-awesome-icon :icon="['fas', 'user-plus']" />
                     <span>join</span>
                 </router-link>
+                <div
+                    @click="logout()"
+                    :class="{ icons: true, loginCheck: loginCheck }"
+                    v-if="loginChk()"
+                >
+                    <font-awesome-icon :icon="['fas', 'right-from-bracket']" />
+                    <span>logout</span>
+                </div>
 
                 <router-link
                     :class="{ icons: true, loginCheck: loginCheck }"
                     to="/member-service/login"
+                    v-if="!loginChk()"
                 >
                     <font-awesome-icon :icon="['fas', 'right-to-bracket']" />
                     <span>login</span>
                 </router-link>
-                <a href="/mypage" class="icons">
+                <a href="/mypage" class="icons" v-if="loginChk()">
                     <font-awesome-icon :icon="['fas', 'user']" />
                     <span>my</span>
                 </a>
+                <router-link to="/location" class="icons" v-if="loginChk()">
+                    <font-awesome-icon :icon="['fas', 'location-dot']" />
+                    <span>location</span>
+                </router-link>
             </div>
         </div>
         <nav>
             <ul class="nav">
                 <li><router-link to="/">홈</router-link></li>
                 <li><router-link to="/post">게시판</router-link></li>
-                <li><a href="#">대여</a></li>
+                <li><router-link to="/location">대여</router-link></li>
                 <li><a href="#">채팅</a></li>
             </ul>
         </nav>
@@ -55,9 +69,13 @@ export default {
             this.$router.push(`/member-service/signup`)
         },
         loginChk() {
-            console.log('로그인 상태가 변경되었습니다.')
-            // 홈으로 이동하는 로직을 추가하려면 아래와 같이 $router.push를 사용할 수 있습니다.
-            this.$router.push('/')
+            if (localStorage.getItem('nickname')) {
+                return true
+            }
+        },
+        logout() {
+            localStorage.removeItem('nickname')
+            window.location = '/'
         }
     }
 }
@@ -106,6 +124,7 @@ export default {
     margin: 0px 10px;
 }
 .search-input {
+    outline: none;
     border: none;
     width: 80%;
 }

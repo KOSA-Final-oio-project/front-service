@@ -52,13 +52,13 @@ export default {
             reviews: [],
             rentedProduct: [],
             product: [],
-            showModal: false
+            showModal: false,
         }
     },
     methods: {
         async getReceiveReviews() {
             try {
-                const nickname = localStorage.getItem('nickname')
+                const nickname = localStorage.getItem('user')
                 const url = `http://192.168.1.86:7575/review/myreviews/1?nickname=${nickname}`
                 const response = await axios.get(url)
                 const responseReview = response.data
@@ -76,23 +76,15 @@ export default {
                     const responseProduct = await axios.get(url3)
                     const productData = responseProduct.data
 
-                    const writerNickname = review.writerNickname
-                    const url4 = `http://192.168.1.37:9999/oio/member/${writerNickname}`
-                    const responseProfile = await axios.get(url4)
-                    const profileData = responseProfile.data
-                    console.log(profileData)
-
                     // productNo가 일치하는 경우에만 리뷰를 추가합니다.
                     if (Array.isArray(productData)) {
                         productData.forEach((product) => {
                             const rentedProductCopy = { ...responseRentedProduct.data }
-                            const profileCopy = { ...responseProfile.data }
                             if (product.productNo === rentedProductCopy.productNo) {
                                 rentedProductCopy.product = product
 
                                 const updatedReview = { ...review }
                                 updatedReview.rentedProduct = rentedProductCopy
-                                updatedReview.profile = profileCopy
 
                                 updatedReviews.push(updatedReview)
                             }
@@ -112,7 +104,6 @@ export default {
                 }
 
                 this.reviews = updatedReviews
-                console.log(this.reviews)
             } catch (error) {
                 console.error('에러 발생: ', error)
             }

@@ -45,8 +45,9 @@ export default {
                 .post(`http://localhost:9999/oio/member/${this.email}`, {
                     email: this.email
                 })
-                .then(() => {
+                .then((result) => {
                     alert('해당 이메일로 임시 비밀번호가 발송되었습니다.')
+                    console.log
                 })
                 .catch(() => {
                     alert('유효하지 않은 이메일입니다.')
@@ -72,6 +73,7 @@ h2 {
     margin-left: 22%;
     /* 폼 컨테이너 너비 조절용 */
     max-width: 80%;
+    margin-bottom: 225px;
 }
 
 /* 각 입력창 영역 공통 스타일 */

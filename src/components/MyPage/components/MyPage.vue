@@ -1,12 +1,13 @@
 <template>
     <div class="side-bar">
         <div class="profile">
-            <img class="profile-image" src="../../../../assets/8.jpg" />
+            <img class="profile-image" :src="profile" />
+            <div class="profile-info">
+                <p class="nickname">{{ nickname }}</p>
+                <p class="heart-count"><i class="bi bi-heart-fill"></i> {{ heart }}</p>
+            </div>
         </div>
-        <p class="nickname">{{ nickname }}</p>
-        <p class="heart-count"><i class="bi bi-heart-fill"></i> {{ heart }}</p>
         <nav class="menu-nav">
-            <p>정보 수정</p>
             <router-link to="/mypage/needrent">
                 <p>빌려드려요</p>
             </router-link>
@@ -33,7 +34,7 @@
     </div>
     <div class="section">
         <transition name="fade" mode="out-in">
-            <router-view />
+            <router-view></router-view>
         </transition>
     </div>
 </template>
@@ -46,7 +47,8 @@ export default {
     data() {
         return {
             nickname: '',
-            heart: 0
+            heart: 0,
+            profile: ''
         }
     },
 
@@ -64,12 +66,22 @@ export default {
                 .catch((error) => {
                     console.log(error.data)
                 })
+        },
+        getUserProfile() {
+            const nickname = localStorage.getItem('nickname')
+            const url = `http://192.168.1.37:9999/oio/member/${nickname}`
+
+            axios.get(url).then((response) => {
+                this.profile = response.data.result.profile
+            })
         }
     },
 
     mounted() {
+        this.getUserProfile()
         this.getHeart()
         this.nickname = localStorage.getItem('nickname')
+        // this.profile =
     }
 }
 </script>
@@ -85,22 +97,28 @@ export default {
     align-items: center;
     text-align: center;
     padding-top: 20px;
-    /* border-right: 2px solid #ffffff; */
 }
 
 .profile {
-    border-radius: 50%;
-    border: 3px solid #ffffff;
-    overflow: hidden;
-    width: 100px;
-    height: 100px;
-    margin-top: 0px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
 }
 
 .profile-image {
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    overflow: hidden;
     object-fit: cover;
-    width: 100%;
-    height: 100%;
+    width: 100px;
+    height: 100px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 20px;
 }
 
 .nickname {
@@ -117,7 +135,7 @@ export default {
 }
 
 .menu-nav {
-    margin-top: 20px;
+    margin-top: 5px;
 }
 
 .menu-nav p {
@@ -149,9 +167,11 @@ a {
     margin-top: 150px;
     width: 85%;
     height: 100%;
-    /* border-radius: 30px; */
     border: 3px solid #18b7be;
-    /* flex-grow: 1; */
+    flex: 1;
+    /* 남은 공간을 모두 차지하도록 설정 */
+    overflow-y: auto;
+    /* 섹션 내부에 스크롤 생성 */
 }
 
 .fade-enter-active,

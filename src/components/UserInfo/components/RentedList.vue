@@ -20,53 +20,16 @@
                             {{ item.rentEndDate }}<br />
                         </p>
                         <img src="../../../assets/status.png" /> {{ item.status }}
-                        <span class="button-container">
-                            <button v-if="showReviewButton(item.reviewStatus, item.status)" @click="openModal(item)"
-                                class="review-button">
-                                리뷰 작성
-                            </button>
-                            <button v-if="showEndRentButton(item.status)" @click="openConfirmationModal(item)"
-                                class="rent-button">
-                                대여 완료
-                            </button>
-                        </span>
                     </div>
                 </li>
             </ul>
         </div>
-        <transition name="overlay-fade">
-            <div v-if="showModal || showConfirmationModal" class="modal-overlay" @click="closeModals"></div>
-        </transition>
-        <transition name="modal-fade" mode="out-in">
-            <WriteReview v-if="showModal" @close="closeModal" @reviewSubmitted="refreshData" :ReviewList="ReviewList"
-                class="modal-wrapper" />
-        </transition>
-        <transition name="modal-fade" mode="out-in">
-            <div v-if="showConfirmationModal" class="modal-wrapper">
-                <div class="confirmation-modal">
-                    <div class="modal-content">
-                        <p>대여를 완료 하시겠습니까?</p>
-                        <p class="warnig-text">※완료된 대여는 취소 불가합니다.※</p>
-                        <div class="modal-buttons">
-                            <button @click="confirmEndRent" class="confirm-button">예</button>
-                            <button @click="closeConfirmationModal" class="cancel-button">
-                                아니오
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </transition>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
-import WriteReview from './WriteReview.vue'
 export default {
-    components: {
-        WriteReview
-    },
     name: 'RentedList',
     data() {
         return {
@@ -82,8 +45,8 @@ export default {
     },
     methods: {
         async getRentedList() {
+            const nickname = localStorage.getItem("user")
             try {
-                const nickname = localStorage.getItem('nickname')
 
                 // 데이터를 가져오는 데 필요한 API 호출
                 const [rentedListResponse, myProductResponse] = await Promise.all([
@@ -138,23 +101,6 @@ export default {
             return matchingProduct ? matchingProduct.title : '상품명을 찾을 수 없습니다.'
         },
 
-        openModal(item) {
-            this.ReviewList = item
-            this.showModal = true
-        },
-
-        closeModal() {
-            this.showModal = false
-        },
-
-        showReviewButton(reviewStatus, status) {
-            return reviewStatus !== '대여해준사람' && reviewStatus !== '모두' && status !== '대여중'
-        },
-
-        showEndRentButton(status) {
-            return status !== '대여완료'
-        },
-
         refreshData() {
             this.getRentedList()
         },
@@ -169,7 +115,7 @@ export default {
     },
 
     mounted() {
-        this.getRentedList()
+        this.getRentedList(this.nickname)
     }
 }
 </script>
