@@ -49,7 +49,7 @@
         <nav>
             <ul class="nav">
                 <li><router-link to="/">홈</router-link></li>
-                <li><router-link to="/post">게시판</router-link></li>
+                <li><router-link :to="`/post/list/${encodeURIComponent('공지사항')}`">게시판</router-link></li>
                 <li><router-link to="/location">대여</router-link></li>
                 <li><a href="#">채팅</a></li>
             </ul>

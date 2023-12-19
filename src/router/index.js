@@ -33,14 +33,12 @@ import Write from '@/components/MyPage/components/WriteReviewList.vue'
 import Rent from '@/components/MyPage/components/RentedList.vue'
 import Borrow from '@/components/MyPage/components/BorrowedList.vue'
 
-
 //POST
 import MainPost from '@/components/Post/MainPost.vue'
 import PostList from '@/components/Post/PostList.vue'
 import PostView from '@/components/Post/PostView.vue'
 import PostRegister from '@/components/Post/PostRegister.vue'
 
-import Location from '@/components/Member/location.vue'
 const router = createRouter({
   history: createWebHistory(),
 
@@ -88,12 +86,11 @@ const router = createRouter({
           path: '/post',
           component: MainPost,
           children: [
-            { path: '', component: PostList },
             { path: 'list/:id', component: PostList },
             { path: 'view/:id', component: PostView },
             { path: 'register', component: PostRegister }
           ]
-        }
+        }, 
     ]
 })
 
