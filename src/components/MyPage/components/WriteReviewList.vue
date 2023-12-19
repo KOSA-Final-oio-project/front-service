@@ -75,15 +75,23 @@ export default {
                     const responseProduct = await axios.get(url3)
                     const productData = responseProduct.data
 
+                    const receiverNickname = review.receiverNickname
+                    const url4 = `http://192.168.1.37:9999/oio/member/${receiverNickname}`
+                    const responseProfile = await axios.get(url4)
+                    const profileData = responseProfile.data
+                    console.log(profileData)
+
                     // productNo가 일치하는 경우에만 리뷰를 추가합니다.
                     if (Array.isArray(productData)) {
                         productData.forEach((product) => {
                             const rentedProductCopy = { ...responseRentedProduct.data }
+                            const profileCopy = { ...responseProfile.data }
                             if (product.productNo === rentedProductCopy.productNo) {
                                 rentedProductCopy.product = product
 
                                 const updatedReview = { ...review }
                                 updatedReview.rentedProduct = rentedProductCopy
+                                updatedReview.profile = profileCopy
 
                                 updatedReviews.push(updatedReview)
                             }

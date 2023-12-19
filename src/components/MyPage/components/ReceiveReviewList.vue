@@ -3,12 +3,8 @@
         <div class="reviews-container">
             <div class="review-list">
                 <ul class="reviews-list-ul">
-                    <li
-                        v-for="review in reviews"
-                        :key="review.id"
-                        class="review-item"
-                        @click="openReviewDetailModal(review)"
-                    >
+                    <li v-for="review in reviews" :key="review.id" class="review-item"
+                        @click="openReviewDetailModal(review)">
                         <span v-if="review.heart === 0"><i class="bi bi-heart"></i></span>
                         <span v-else-if="review.heart === 1"><i class="bi bi-heart-fill"></i></span>
                         <p>
@@ -26,13 +22,9 @@
                         <p><img src="../../../assets/wall-clock.png" /> {{ review.postDate }}</p>
                     </li>
                 </ul>
-                <transition name="modal-fade">
-                    <ReviewDetail
-                        v-if="showModal"
-                        :ReviewData="ReviewData"
-                        class="modal-wrapper"
-                        @close-modal="closeModal"
-                    />
+                <transition name="overlay-fade">
+                    <ReviewDetail v-if="showModal" :ReviewData="ReviewData" class="modal-wrapper"
+                        @close-modal="closeModal" />
                 </transition>
             </div>
         </div>
@@ -195,4 +187,15 @@ export default {
     z-index: 999;
     /* 배경 오버레이보다 더 앞에 표시되도록 설정 */
 }
+
+.overlay-fade-enter-active,
+.overlay-fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.overlay-fade-enter,
+.overlay-fade-leave-to {
+    opacity: 0;
+}
+
 </style>
