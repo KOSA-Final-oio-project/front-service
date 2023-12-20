@@ -18,6 +18,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 const app = createApp(App)
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
+
 // Vue Router 사용
 app.use(router)
 // DatePicker 라이브러리 사용

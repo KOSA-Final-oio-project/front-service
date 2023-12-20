@@ -63,7 +63,7 @@ export default {
     methods: {
         getBorrowedList() {
             const nickname = localStorage.getItem('nickname');
-            const url = this.$backURL + `rent/1?nickname=${nickname}`;
+            const url = this.$backURL + `1?nickname=${nickname}`;
             axios.get(url)
                 .then(response => {
                     const list = response.data;

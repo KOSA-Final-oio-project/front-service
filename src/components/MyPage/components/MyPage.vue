@@ -54,35 +54,35 @@ export default {
     methods: {
         getHeart() {
             const nickname = localStorage.getItem('nickname')
-            const url = this.$backURL+`review/heart?nickname=${nickname}`
+            const url = this.$backURL + `heart?nickname=${nickname}`
 
             axios
                 .get(url)
                 .then((response) => {
-                    console.log(response.data)
-                    this.heart = response.data.msg
-                })
-                .catch((error) => {
-                    console.log(error.data)
-                })
-        },
-        getUserProfile() {
-            const nickname = localStorage.getItem('nickname')
-            const url = this.$backURL+`member/${nickname}`
-
-            axios.get(url).then((response) => {
-                console.log(response)
-                this.profile = response.data.result.profile
+                        console.log(response.data)
+                        this.heart = response.data.msg
+                    })
+            .catch((error) => {
+                console.log(error.data)
             })
-        }
     },
+    getUserProfile() {
+        const nickname = localStorage.getItem('nickname')
+        const url = this.$backURL + `member/${nickname}`
 
-    mounted() {
-        this.getUserProfile()
-        this.getHeart()
-        this.nickname = localStorage.getItem('nickname')
-        // this.profile =
+        axios.get(url).then((response) => {
+            console.log(response)
+            this.profile = response.data.result.profile
+        })
     }
+},
+
+mounted() {
+    this.getUserProfile()
+    this.getHeart()
+    this.nickname = localStorage.getItem('nickname')
+    // this.profile =
+}
 }
 </script>
 

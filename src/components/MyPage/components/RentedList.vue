@@ -94,7 +94,7 @@ export default {
 
                 // 데이터를 가져오는 데 필요한 API 호출
                 const [rentedListResponse, myProductResponse] = await Promise.all([
-                    axios.get(this.$backURL + `rent/0?nickname=${nickname}`),
+                    axios.get(this.$backURL + `0?nickname=${nickname}`),
                     axios.get(this.$backURL + `product/myProduct/${nickname}/0`)
                 ])
 

@@ -167,10 +167,10 @@ export default {
     methods: {
         // 방 조회
         findRoom() {
-            console.log('http://192.168.1.86:9797/chat-service/chat/room/' + this.roomId)
+            console.log('http://192.168.1.93:9712/chat/room/' + this.roomId)
 
             axios
-                .get('http://192.168.1.86:9797/chat-service/chat/room/' + this.roomId)
+                .get('http://192.168.1.93:9712/chat/room/' + this.roomId)
                 .then((response) => {
                     this.room = response.data
                 })
@@ -182,7 +182,7 @@ export default {
         // 채팅방 로그 불러오기
         findChatRoomLogs() {
             axios
-                .get('http://192.168.1.86:9797/chat-service/chat/room/enter/' + this.roomId)
+                .get('http://192.168.1.93:9712/chat/room/enter/' + this.roomId)
                 .then((response) => {
                     if (Array.isArray(response.data)) {
                         // 서버로부터 받은 데이터를 sendDate 기준으로 오름차순 정렬
@@ -208,7 +208,7 @@ export default {
         // 웹소켓 연결
         connectWebSocket() {
             const refer = this // Vue 인스턴스 참조를 변수에 저장
-            const sock = new SockJS('http://192.168.1.86:9797/chat-service/ws-stomp')
+            const sock = new SockJS('http://192.168.1.93:9712/ws-stomp')
             const ws = Stomp.over(sock, { protocols: ['v1.2'] }) // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
 
             // roomData 불러오기
@@ -364,7 +364,7 @@ export default {
 
     // 라우터 떠날 때 호출
     beforeRouteLeave(to, from, next) {
-        if (to.path !== 'http://192.168.1.86:9797/chat-service/chat/date') {
+        if (to.path !== 'http://192.168.1.93:9712/chat/date') {
             this.closeWebSocket()
         }
         next()
