@@ -11,6 +11,7 @@
                     <button
                         class="btn deal-start-btn"
                         type="button"
+                        v-if="!isSender"
                         @click="openDateSelectionPopup"
                     >
                         거래하기
@@ -122,6 +123,7 @@ export default {
 
         // 로컬 스토리지에서 roomData 읽기
         const roomData = JSON.parse(localStorage.getItem('roomData'))
+        this.nickname = localStorage.getItem('nickname')
 
         if (roomData) {
             this.roomName = roomData.roomName
@@ -153,6 +155,12 @@ export default {
             return this.messages.filter(
                 (m) => m.messageType !== 'ENTER' && m.messageType !== 'QUIT'
             )
+        },
+
+        isSender() {
+            const roomData = JSON.parse(localStorage.getItem('roomData'));
+
+            return roomData && roomData.sender === this.nickname;
         }
     },
 

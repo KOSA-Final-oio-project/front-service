@@ -19,7 +19,6 @@ import UserInfoBorrow from '@/components/UserInfo/components/BorrowedList.vue'
 import UserInfoRent from '@/components/UserInfo/components/RentedList.vue'
 
 //CHAT
-import Sample from '@/components/Chat/Sample.vue'
 import ChatRoomList from '@/components/Chat/ChatRoomList.vue'
 import ChatRoomDetail from '@/components/Chat/ChatRoomDetail.vue'
 import SelectDatePopup from '@/components/Chat/SelectDatePopup.vue'
@@ -57,11 +56,6 @@ const router = createRouter({
         { path: '/member-service/login', name: 'Login', component: Login },
         { path: '/member-service/signup', component: Signup },
         { path: '/findPassword', component: FindPassword },
-        {
-            path: '/chat-service/',
-            name: 'Sample',
-            component: Sample
-        },
         {
             path: '/chat', // ChatRoomList 컴포넌트가 열리는 경로
             name: 'ChatRoomList',
