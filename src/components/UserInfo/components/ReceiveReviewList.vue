@@ -53,6 +53,7 @@ export default {
             rentedProduct: [],
             product: [],
             showModal: false,
+            nickname:''
         }
     },
     methods: {
@@ -127,6 +128,7 @@ export default {
     },
     mounted() {
         this.getReceiveReviews()
+        this.nickname = localStorage.getItem('user')
     }
 }
 </script>

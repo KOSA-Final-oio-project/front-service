@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="review-detail">
-            <img src="../../../assets/favicon.ico" />
+            <img :src=profile />
             <div class="detail-info">
                 <p class="post-date">
                     <img src="../../../assets/wall-clock.png" />{{ review.postDate }}
@@ -44,6 +44,7 @@ export default {
             review: '',
             product: '',
             title: '',
+            profile: ''
         }
     },
     methods: {
@@ -86,6 +87,17 @@ export default {
             console.log(this.title)
         },
 
+        getProfile() {
+            const useReviewdata = this.ReviewData
+            const nickname = useReviewdata.writerNickname
+            const url = `http://192.168.1.37:9999/oio/member/${nickname}`
+
+            axios.get(url)
+                .then((response) => {
+                    this.profile = response.data.result.profile
+                })
+        },
+
         closeModal() {
             this.$emit('close-modal')
         },
@@ -93,6 +105,7 @@ export default {
     },
 
     mounted() {
+        this.getProfile()
         this.getReviewDetail()
         this.getRentedProduct()
         this.getProductTitle()
@@ -155,6 +168,10 @@ export default {
 
 .review-detail span {
     font-size: 20px;
+}
+
+.review-detail img {
+    width: 90px;
 }
 
 .detail-info {

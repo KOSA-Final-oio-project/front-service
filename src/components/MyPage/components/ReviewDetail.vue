@@ -15,21 +15,15 @@
             </div>
         </div>
         <div class="review-detail">
-            <router-link
-                :to="{
-                    path: '/userinfo',
-                    query: {
-                        productData: JSON.stringify({
-                            ownerNickname: product.ownerNickname,
-                            borrowerNickname: product.borrowerNickname
-                        }),
-                        reviewData: JSON.stringify({
-                            writerNickname: review.writerNickname,
-                            receiverNickname: review.receiverNickname
-                        })
-                    }
-                }"
-            >
+            <router-link :to="{
+                path: '/userinfo',
+                query: {
+                    owner: product.ownerNickname,
+                    borrower: product.borrowerNickname,
+                    writer: review.writerNickname,
+                    receiver: review.receiverNickname
+                }
+            }">
                 <img :src="profile" />
             </router-link>
             <div class="detail-info">
@@ -69,6 +63,7 @@ export default {
             const rentedProductNo = useReviewdata.rentedProductNo
 
             const url = `http://192.168.1.86:7575/rent/detail/${rentedProductNo}`
+
             axios
                 .get(url)
                 .then((response) => {
@@ -85,6 +80,7 @@ export default {
             const reviewNo = useReviewdata.reviewNo
 
             const url = `http://192.168.1.86:7575/review/${reviewNo}`
+
             axios
                 .get(url)
                 .then((response) => {
@@ -99,7 +95,9 @@ export default {
 
         getProfile() {
             const useReviewdata = this.ReviewData
+
             const nickname = useReviewdata.profile.result.nickname
+
             const url = `http://192.168.1.37:9999/oio/member/${nickname}`
 
             axios.get(url).then((response) => {
@@ -182,6 +180,10 @@ export default {
 
 .review-detail span {
     font-size: 20px;
+}
+
+.review-detail img {
+    width: 100px
 }
 
 .detail-info {

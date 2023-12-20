@@ -1,12 +1,14 @@
 <template>
     <div class="side-bar">
-        <div class="profile">
-            <img class="profile-image" :src="profile" />
-            <div class="profile-info">
-                <p class="nickname">{{ nickname }}</p>
-                <p class="heart-count"><i class="bi bi-heart-fill"></i> {{ heart }}</p>
+        <router-link to="/mypage">
+            <div class="profile">
+                <img class="profile-image" :src="profile" />
+                <div class="profile-info">
+                    <p class="nickname">{{ nickname }}</p>
+                    <p class="heart-count"><i class="bi bi-heart-fill"></i> {{ heart }}</p>
+                </div>
             </div>
-        </div>
+        </router-link>
         <nav class="menu-nav">
             <router-link to="/mypage/needrent">
                 <p>빌려드려요</p>
@@ -29,13 +31,10 @@
             <router-link to="/mypage/qna">
                 <p>Q&A 목록</p>
             </router-link>
-            <p>회원 탈퇴</p>
         </nav>
     </div>
     <div class="section">
-        <transition name="fade" mode="out-in">
-            <router-view></router-view>
-        </transition>
+        <router-view></router-view>
     </div>
 </template>
 
@@ -72,6 +71,7 @@ export default {
             const url = `http://192.168.1.37:9999/oio/member/${nickname}`
 
             axios.get(url).then((response) => {
+                console.log(response)
                 this.profile = response.data.result.profile
             })
         }
@@ -109,6 +109,7 @@ export default {
     border-radius: 50%;
     border: 2px solid #ffffff;
     overflow: hidden;
+    background-color: #ffffff;
     object-fit: cover;
     width: 100px;
     height: 100px;

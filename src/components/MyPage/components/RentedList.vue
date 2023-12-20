@@ -35,7 +35,7 @@
             </ul>
         </div>
         <transition name="overlay-fade">
-            <div v-if="showModal || showConfirmationModal" class="modal-overlay" @click="closeModals"></div>
+            <div v-if="showModal || showConfirmationModal" class="modal-overlay" @click="closeModal"></div>
         </transition>
         <transition name="modal-fade" mode="out-in">
             <WriteReview v-if="showModal" @close="closeModal" @reviewSubmitted="refreshData" :ReviewList="ReviewList"
@@ -309,10 +309,7 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    /* 배경 오버레이를 어둡게 설정 */
     z-index: 998;
-    /* 모달보다 앞에 표시되도록 설정 */
 }
 
 .modal-wrapper {
