@@ -40,10 +40,12 @@
 
           <div class="my-4">
             <div class="d-flex justify-content-end">
-              <button type="button" class="btn btn-outline-info" @click="test">확인</button>
+              <button type="button" class="btn btn-outline-info" @click="confirmBtn">확인</button>
               <template v-if="isWriter">
-                <button type="button" class="btn btn-outline-info mx-2">수정</button>
-                <button type="button" class="btn btn-outline-info">삭제</button>
+                <button type="button" class="btn btn-outline-info mx-2">
+                  <RouterLink :to="`/post/modify/${postId}`" class="link">수정</RouterLink>
+                </button>
+                <button type="button" class="btn btn-outline-info" @click="removeBtn">삭제</button>
               </template>
             </div>
           </div>
@@ -60,10 +62,9 @@
       <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap">
         <template v-for="file in setFiles" :key="file">
           <div class="card col-2">
-            <div class="card-header d-flex justify-content-center">
-            </div>
+            <div class="card-header d-flex justify-content-center"></div>
             <div class="card-body">
-              <img :src="setUrl + file" alt="image" height="150" width="150"/>
+              <img :src="setUrl + file" alt="image" height="150" width="150" />
             </div>
           </div>
         </template>
@@ -73,12 +74,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import { getPost } from './post'
-import { useRoute } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { getPost, deletePost } from './post'
+import { useRoute, useRouter } from 'vue-router'
 
+const router = useRouter()
 const route = useRoute()
-
 const postId = route.params.id
 const post = ref([])
 const setCategory = ref('')
@@ -87,8 +88,7 @@ const setContent = ref('')
 const isWriter = ref(false)
 const setFiles = ref([])
 const setUrl = 'https://oioproject-bucket.s3.ap-northeast-2.amazonaws.com/'
-// https://oioproject-bucket.s3.ap-northeast-2.amazonaws.com/5a875463-8977-46a3-833c-1dcb4d1d7b35_%EC%B2%AD%EB%85%84%EC%88%98%EB%8B%B9%ED%8C%8C%EC%9D%BC1%20-%20%EB%B3%B5%EC%82%AC%EB%B3%B8.jpg
-// 5a875463-8977-46a3-833c-1dcb4d1d7b35_청년수당파일1 - 복사본.jpg
+
 const getPostOne = async (postId) => {
   const { data } = await getPost(postId)
   post.value = data
@@ -99,7 +99,16 @@ const getPostOne = async (postId) => {
   setFiles.value = post.value.postDto.fileNames
 }
 
-const splitFileName = computed(() => setFiles.value.map(fileName => fileName.split('_')));
+const confirmBtn = () => {
+  router.push('/post/list/Q&A')
+}
+
+const removeBtn = async () => {
+  await deletePost(postId, setFiles.value).then((response) => {
+    console.log(response)
+    router.push('/post/list/공지사항')
+  })
+}
 
 onMounted(() => {
   getPostOne(postId)
@@ -113,5 +122,12 @@ onMounted(() => {
 .select-wrapper {
   width: 120px;
   margin-right: 40px;
+}
+.link{
+  text-decoration: none;
+  color:#0dcaf0;
+}
+.link:hover{
+  color:black;
 }
 </style>
