@@ -3,7 +3,7 @@
         <form @submit.prevent="registProduct">
             <div class="product">
                 <div class="title">
-                    <input type="text" placeholder="제목" v-model="title">
+                    <input type="text" placeholder="제목" v-model="title" required>
                 </div>
                 <div class="postCategory">
                     <input type="radio" id="select" name="post" value="0" v-model="postCategory">
@@ -12,31 +12,27 @@
                     <label for="select2">빌려주세요</label>
                 </div>
                 <div class="dropdown">
-                    <select v-model="selectedSido" name="region siDo">
+                    <select v-model="selectedSido" name="region siDo" required>
                         <option value="" selected disabled hidden>시/도</option>
                         <option :value="item" v-for="(item, index) in siDoList" :key="index">
                             {{ item }}
                         </option>
                     </select>
-                    <select v-model="selectedSiGunGu" @click="getSiGunGu()" name="region siGunGu">
+                    <select v-model="selectedSiGunGu" @click="getSiGunGu()" name="region siGunGu" required>
                         <option value="" selected disabled hidden>시/군/구</option>
                         <option :value="item" v-for="(item, index) in siGunGuList" :key="index">
                             {{ item }}
                         </option>
                     </select>
-                    <select
-                        v-model="selectedEupMyeonRo"
-                        @click="getEupMyeonRo()"
-                        name="region eupMyeonRo"
-                    >
-                    <option value="" selected disabled hidden>읍/면/로</option>
+                    <select v-model="selectedEupMyeonRo" @click="getEupMyeonRo()" name="region eupMyeonRo" required>
+                        <option value="" selected disabled hidden>읍/면/로</option>
                         <option :value="item" v-for="(item, index) in eupMyeonRoList" :key="index">
                             {{ item }}
                         </option>
                     </select>
                 </div>
                 <div class="dropdown">
-                    <select v-model="selectedCategory" name="category">
+                    <select v-model="selectedCategory" name="category" required>
                         <option value="" selected disabled hidden>상품카테고리</option>
                         <option :value="item" v-for="(item, index) in categoryList" :key="index">
                             {{ item }}
@@ -44,24 +40,27 @@
                     </select>
                 </div>
                 <div class="dropdown">
-                    <select name="priceCategory" v-model="priceCategory">
+                    <select name="priceCategory" v-model="priceCategory" required>
                         <option value="" selected disabled hidden>시간단위</option>
                         <option value="시간">시간</option>
                         <option value="일">일</option>
                         <option value="주">주</option>
                         <option value="월">월</option>
                     </select>
-                    <input type="text" placeholder="가격" v-model="price">
+                    <input type="text" placeholder="가격" v-model="price" required>
+                </div>
+                <div class="datePicker">
+                    대여기간을 선택해주세요
+                    <VueDatePicker v-model="dateRange" type="date" range placeholder="YYYY-MM-DD"></VueDatePicker>
                 </div>
                 <div class="content">
-                    <input type="text" placeholder="상세정보" v-model="content">
+                    <input type="text" placeholder="상세정보" v-model="content" required>
                 </div>
                 <div class="imageUpload">
                     <input type="file" ref="imageInput" multiple @change="handleImageChange">
                     <div class="imagePreview" v-if="images2.length > 0">
                         <div v-for="(image, index) in images2" :key="index" class="previewItem">
                             <img :src="image" alt="Preview">
-                            <button @click="removeImage(index)">삭제</button>
                         </div>
                     </div>
                 </div>
@@ -75,9 +74,13 @@
   
 <script>
 import axios from 'axios';
+import VueDatePicker from '@vuepic/vue-datepicker'
 
 export default {
     name: 'WriteProduct',
+    components: {
+        VueDatePicker
+    },
     data() {
         return {
             title: '',
@@ -88,6 +91,9 @@ export default {
             content: '',
             images: [],
             images2: [], // Array to store selected image files
+            startDate: null,
+            endDate: null,
+            dateRange: null,
             siDoList: [],
             siGunGuList: [],
             eupMyeonRoList: [],
@@ -95,27 +101,39 @@ export default {
             selectedSiGunGu: '',
             selectedEupMyeonRo: '',
             categoryList: [],
-            selectedCategory: ''
+            selectedCategory: '',
         };
     },
     methods: {
         registProduct() {
+            if (!this.dateRange || this.dateRange.length !== 2) {
+                this.isDateRangeValid = false;
+                alert("대여기간을 선택해주세요");
+                return;
+            } else {
+                this.isDateRangeValid = true;
+            }
+
+            // if (this.postCategory === null) {
+            //     alert("빌려드립니다 빌려주세요 중에서 하나를 선택해주세요");
+            // }
+
             const formData = new FormData();
-            formData.append("title",this.title);
-            formData.append("content",this.content);
-            formData.append("priceCategory",this.priceCategory);
-            formData.append("price",this.price)
-            formData.append("startDate","2023-12-19");
-            formData.append("endDate","2023-12-20");
-            formData.append("postCategory",this.postCategory);
+            formData.append("title", this.title);
+            formData.append("content", this.content);
+            formData.append("priceCategory", this.priceCategory);
+            formData.append("price", this.price)
+            formData.append("startDate", this.dateRange[0]);
+            formData.append("endDate", this.dateRange[1]);
+            formData.append("postCategory", this.postCategory);
 
             console.log(this.images)
-            for(let i = 0 ; i <= this.images.length; i ++){
-                formData.append("files",this.images[i]);
+            for (let i = 0; i <= this.images.length; i++) {
+                formData.append("files", this.images[i]);
             }
 
             const nickname = localStorage.getItem('nickname')
-           
+
 
             // 서버로 전송
             axios.post(`http://127.0.0.1:8889/product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/주소수`, formData, {
