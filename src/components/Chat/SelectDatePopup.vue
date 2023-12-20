@@ -37,6 +37,9 @@
 
 <script>
 import axios from 'axios'
+import SockJS from 'sockjs-client'
+import Stomp from 'webstomp-client'
+
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -49,7 +52,8 @@ export default {
         return {
             date: [new Date(), null],
             minDate: new Date(),
-            datePickerConfig: {}
+            datePickerConfig: {},
+            message: ''
         }
     },
 
@@ -87,11 +91,21 @@ export default {
         formatDateForRent(dateValue) {
             if (!dateValue) return ''
             const date = new Date(dateValue)
-            return date.toISOString().slice(0, 16).replace('T', ' ')
+
+            const year = date.getFullYear()
+            const month = (date.getMonth() + 1).toString().padStart(2, '0')
+            const day = date.getDate().toString().padStart(2, '0')
+            const hours = date.getHours().toString().padStart(2, '0')
+            const minutes = date.getMinutes().toString().padStart(2, '0')
+
+            return `${year}-${month}-${day} ${hours}:${minutes}`
         },
 
         // 거래 시작 메서드
         startRent() {
+
+            const roomDataJson = JSON.parse(localStorage.getItem('roomData'))
+
             // 날짜 데이터 포맷팅 (YYYY-MM-DD HH:mm 형식)
             const rentStartDate = this.formatDateForRent(this.date[0])
             const rentEndDate = this.formatDateForRent(this.date[1])
@@ -100,8 +114,8 @@ export default {
             console.log(rentEndDate)
 
             // 대여자 및 소유자 닉네임 임시로
-            const ownerNickname = '아무개'
-            const borrowerNickname = '김학윤'
+            const ownerNickname = roomDataJson.receiver
+            const borrowerNickname = roomDataJson.sender
 
             // 백엔드로 전송할 데이터 구성
             const rentData = {
@@ -110,26 +124,89 @@ export default {
                 rentStartDate,
                 rentEndDate
             }
+            const productNo = roomDataJson.productNo
 
-            console.log(rentData)
+            console.log(productNo)
 
             // 백엔드로 데이터 전송
-            // axios
-            //     .post('백엔드 API', rentData)
-            //     .then(response => {
-            //         // 성공시 로직
-            //         console.log('거래 시작 데이터 전송 성공:', response);
-            //     })
-            //     .catch(error => {
-            //         // 실패시 로직
-            //         console.error('거래 시작 데이터 전송 실패:', error);
-            //     });
+            axios
+                .post(`http://192.168.1.86:7575/rent/${productNo}`, rentData)
+                .then(response => {
+                    // 성공시 로직
+                    console.log('거래 시작 데이터 전송 성공:', response);
+                })
+                .catch(error => {
+                    // 실패시 로직
+                    console.error('거래 시작 데이터 전송 실패:', error);
+                });
+
+            // -------------------------------------------------------------------
+
+            // 웹소켓 연결
+            const refer = this // Vue 인스턴스의 this를 변수에 저장
+            const sock = new SockJS('http://192.168.1.93:9797/chat-service/ws-stomp')
+            const ws = Stomp.over(sock, { protocols: ['v1.2'] }) // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
+
+            this.roomId = localStorage.getItem('wschat.roomId')
+            this.sender = localStorage.getItem('wschat.sender')
+            const sender = this.sender
+            const message = this.message
+
+            const roomData = JSON.parse(localStorage.getItem('roomData'))
+
+            if (roomData) {
+                this.roomId = roomData.roomId
+                this.roomName = roomData.roomName
+                this.productName = roomData.productName
+                this.productPrice = roomData.productPrice
+            }
+
+            alert(rentData.rentStartDate + ' + ' + rentData.rentEndDate)
+
+            ws.connect({}, function () {
+                // 전송할 때 시간도 같이 보내기
+                const sendDate = new Date().toISOString()
+
+                ws.send(
+                    '/pub/chat/message',
+                    JSON.stringify({
+                        messageType: 'ALERT',
+                        roomId: roomData.roomId,
+                        sender: sender, // 웹소켓 열릴 때 sender로 설정
+                        roomName: roomData.roomName,
+                        productName: roomData.productName,
+                        productPrice: roomData.productPrice,
+                        sendDate: sendDate,
+                        message: message,
+                        rentStartDate: rentData.rentStartDate,
+                        rentEndDate: rentData.rentEndDate
+                    })
+                )
+
+                refer.closePopup()
+            })
+        },
+        closePopup() {
+            window.close() // 현재 팝업 창 닫기
         }
     }
 }
 </script>
 
 <style scoped>
+@font-face {
+    font-family: 'NotoSansKR-VariableFont_wght';
+    src: url(../../../public/fonts/NotoSansKR-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: 'NotoSansKR-VariableFont_wght';
+}
+
+section {
+    margin-top: 150px;
+}
+
 /* 거래하기 타이틀 */
 .title {
     font-size: 25px;
