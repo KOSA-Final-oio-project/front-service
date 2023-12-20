@@ -114,7 +114,6 @@ export default {
             chatStartDate: '',
             productName: '',
             productPrice: '',
-            productStatus: ''
         }
     },
 
@@ -160,10 +159,10 @@ export default {
     methods: {
         // 방 조회
         findRoom() {
-            console.log(this.$backURL + '/chat-service/chat/room/' + this.roomId)
+            console.log('http://192.168.1.93:9797/chat-service/chat/room/' + this.roomId)
 
             axios
-                .get(this.$backURL + '/chat-service/chat/room/' + this.roomId)
+                .get('http://192.168.1.93:9797/chat-service/chat/room/' + this.roomId)
                 .then((response) => {
                     this.room = response.data
                 })
@@ -175,7 +174,7 @@ export default {
         // 채팅방 로그 불러오기
         findChatRoomLogs() {
             axios
-                .get(this.$backURL + '/chat-service/chat/room/enter/' + this.roomId)
+                .get('http://192.168.1.93:9797/chat-service/chat/room/enter/' + this.roomId)
                 .then((response) => {
                     if (Array.isArray(response.data)) {
                         // 서버로부터 받은 데이터를 sendDate 기준으로 오름차순 정렬
@@ -201,7 +200,7 @@ export default {
         // 웹소켓 연결
         connectWebSocket() {
             const refer = this // Vue 인스턴스 참조를 변수에 저장
-            const sock = new SockJS(this.$backURL + '/chat-service/ws-stomp')
+            const sock = new SockJS('http://192.168.1.93:9797/chat-service/ws-stomp')
             const ws = Stomp.over(sock, { protocols: ['v1.2'] }) // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
 
             // roomData 불러오기
@@ -342,7 +341,7 @@ export default {
 
             // Datepicker 컴포넌트가 포함된 페이지로 팝업창 열기
             const popup = window.open(
-                '/chat-service/chat/date', // Datepicker 컴포넌트가 있는 경로
+                '/chat/date', // Datepicker 컴포넌트가 있는 경로
                 'DateSelectionPopup',
                 `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`
             )
@@ -357,7 +356,7 @@ export default {
 
     // 라우터 떠날 때 호출
     beforeRouteLeave(to, from, next) {
-        if (to.path !== 'http://localhost:5173/chat-service/chat/date') {
+        if (to.path !== 'http://192.168.1.93:9797/chat-service/chat/date') {
             this.closeWebSocket()
         }
         next()

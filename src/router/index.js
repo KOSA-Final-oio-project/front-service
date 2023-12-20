@@ -33,11 +33,19 @@ import Write from '@/components/MyPage/components/WriteReviewList.vue'
 import Rent from '@/components/MyPage/components/RentedList.vue'
 import Borrow from '@/components/MyPage/components/BorrowedList.vue'
 
+//PRODUCT
+import ProductDetail from'@/components/Product/ProductDetail.vue'
+import ProductList from'@/components/Product/ProductList.vue'
+import SearchProduct from'@/components/Product/SearchProduct.vue'
+import WriteProduct from'@/components/Product/WriteProduct.vue'
+import ModifyProduct from'@/components/Product/ModifyProduct.vue'
+
 //POST
 import MainPost from '@/components/Post/MainPost.vue'
 import PostList from '@/components/Post/PostList.vue'
 import PostView from '@/components/Post/PostView.vue'
 import PostRegister from '@/components/Post/PostRegister.vue'
+
 
 const router = createRouter({
   history: createWebHistory(),
@@ -55,17 +63,18 @@ const router = createRouter({
             component: Sample
         },
         {
-            path: '/chat-service/chat', // ChatRoomList 컴포넌트가 열리는 경로
+            path: '/chat', // ChatRoomList 컴포넌트가 열리는 경로
             name: 'ChatRoomList',
             component: ChatRoomList
         },
         {
-            path: '/chat-service/chat/room/enter/:roomId', // ChatRoomDetail 컴포넌트가 열리는 경로
+            path: '/chat/room/enter/:roomId', // ChatRoomDetail 컴포넌트가 열리는 경로
             name: 'ChatRoomEnter',
-            component: ChatRoomDetail
+            component: ChatRoomDetail,
+            props: true,
         },
         {
-            path: '/chat-service/chat/date', // SelectDatePopup 컴포넌트가 열리는 경로
+            path: '/chat/date', // SelectDatePopup 컴포넌트가 열리는 경로
             name: 'SelectDatePopup',
             component: SelectDatePopup
         },
@@ -94,6 +103,13 @@ const router = createRouter({
                 { path: 'rent', component: UserInfoRent }
             ]
         },
+
+        {path: '/product/productDetail', component: ProductDetail},
+        {path: '/product/productList', component: ProductList},
+        {path: '/product/searchProduct', component: SearchProduct},
+        {path: '/product/writeProduct', component: WriteProduct},
+        {path: '/product/modifyProduct', component: ModifyProduct},
+
         {
             path: '/location',
             component: Location
@@ -108,6 +124,7 @@ const router = createRouter({
             { path: 'register', component: PostRegister }
           ]
         }, 
+
     ]
 })
 

@@ -1,7 +1,7 @@
 <template>
     <body class="header-container">
         <div class="header">
-            <div><img src="../assets/oio.png" alt="Logo" class="logo" /></div>
+            <div><img src="../assets/sample.png" alt="Logo" class="logo" /></div>
 
             <div class="input-container">
                 <div class="search-icon">
@@ -51,7 +51,7 @@
                 <li><router-link to="/">홈</router-link></li>
                 <li><router-link :to="`/post/list/${encodeURIComponent('공지사항')}`">게시판</router-link></li>
                 <li><router-link to="/location">대여</router-link></li>
-                <li><a href="#">채팅</a></li>
+                <li><router-link to="/chat">채팅</router-link></li>
             </ul>
         </nav>
     </body>

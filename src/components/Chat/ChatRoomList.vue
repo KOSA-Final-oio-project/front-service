@@ -59,13 +59,7 @@ export default {
     methods: {
         // email 가져오기
         getUserNickname() {
-            // this.sender = 'chan'
-            // this.sender = 'sengna'
-            // this.sender = 'test1'
-            // this.sender = 'test2'
-            this.sender = 'test3'
-            // this.sender = 'test4'
-            // this.sender = 'test5'
+            this.sender = localStorage.getItem('nickname')
         },
 
         // 해당 이메일로 생성된 채팅방의 목록을 가져옴
@@ -75,7 +69,7 @@ export default {
             alert('현재 닉네임은: ' + this.sender)
 
             axios
-                .get(this.$backURL + '/chat-service/chat/rooms/' + this.sender)
+                .get('http://192.168.1.93:9797/chat-service/chat/rooms/' + this.sender)
                 .then((response) => {
                     this.chatRooms = response.data
                     console.log('response.data = ' + response.data) // 서버 응답 확인
@@ -95,10 +89,10 @@ export default {
                 localStorage.setItem('wschat.roomId', roomId)
             }
 
-            alert('전달하는 url은 ' + this.$backURL + '/chat-service/chat/roominfo/' + roomId)
+            alert('전달하는 url은 ' + 'http://192.168.1.93:9797/chat-service/chat/roominfo/' + roomId)
 
             // API 호출하여 채팅방 정보 가져오기
-            axios.get(this.$backURL + '/chat-service/chat/roominfo/' + roomId).then((response) => {
+            axios.get('http://192.168.1.93:9797/chat-service/chat/roominfo/' + roomId).then((response) => {
                 alert(this.roomId)
                 console.log('&&&&&&&&&&&&&&&&&&&&&&&&&7 ' + response.data)
                 localStorage.setItem(
@@ -110,7 +104,8 @@ export default {
                         productName: response.data.productName,
                         productPrice: response.data.productPrice,
                         receiver: response.data.receiver,
-                        sender: response.data.sender
+                        sender: response.data.sender,
+                        prodnctNo: response.data.productNo
                     })
                 )
             })
