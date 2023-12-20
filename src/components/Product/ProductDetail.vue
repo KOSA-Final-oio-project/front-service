@@ -242,7 +242,7 @@ export default {
 
       // 채팅방 생성 요청
       axios
-        .post('http://192.168.1.93:9797/chat-service/chat/room', data)
+        .post('http://192.168.1.93:9712/chat/room', data)
         .then((response) => {
           console.log('response.data: ', response.data)
           alert(' "' + response.data.roomName + '" 방 개설에 성공하였습니다.')

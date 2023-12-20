@@ -19,12 +19,12 @@ module.exports = {
         client: {
             overlay: true,
             // 웹소켓용 url 지정
-            webSocketURL: 'ws://locaclhost:9797/**'
+            webSocketURL: 'ws://192.168.1.86:9712/**'
         },
         compress: true,
         proxy: {
             '^/chat-service': {
-                target: 'http://localhost:9797',
+                target: 'http://192.168.1.86:9712',
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: { '^/chat-service': '/chat-service' }
