@@ -2,8 +2,8 @@
     <body>
         <section>
             <div class="productContainer">
-                <p>검색어 "{{ searchWord }}"에 대한 대여상품의 평균시세는</p>
-                <p>"{{ avgPrice }}"입니다</p>
+                <p class="search">검색어 <span class="search">"{{ searchWord }}"</span>에 대한 대여상품의 평균시세는</p>
+                <p class="search"><span class="search">{{ avgPrice }}</span>원입니다</p>
                 <div class="dropdown category">
                     <select v-model="selectedCategory" name="category">
                         <option value="" selected disabled hidden>상품카테고리</option>
@@ -267,7 +267,7 @@ export default {
 
     },
     created() {
-        this.searchWord = "a"
+        this.searchWord = this.$route.params.searchWord
         this.getSiDo()
         this.getCategory()
         this.getSearch()
@@ -275,10 +275,31 @@ export default {
 }
 </script>
 <style scoped>
+@font-face {
+    font-family: 'NotoSansKR-VariableFont_wght';
+    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: 'NotoSansKR-VariableFont_wght';
+}
+
 body {
     margin: 0px;
     /* overflow-x: hidden; */
     /* position: relative; */
+}
+
+p.search{
+    text-align: center;
+    font-size: 30px;
+    color:#072a40;
+    
+}
+
+span.search {
+    color:#18b7be;
+    font-size: 40px;
 }
 
 /* Basic styling for the dropdown container */
@@ -347,7 +368,7 @@ a {
 }
 
 .productContainer {
-    margin-top: 150px;
+    margin-top: 200px;
     position: relative;
 }
 

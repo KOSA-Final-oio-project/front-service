@@ -1,141 +1,85 @@
 <template>
   <body class="header-container">
-    <div class="header">
-      <div><img src="../assets/oio.png" alt="Logo" class="logo" /></div>
+      <div class="header">
+          <div><img src="../assets/sample.png" alt="Logo" class="logo" /></div>
 
-            <div class="input-container">
-                <div class="search-icon">
-                    <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
-                </div>
-                <router-link :to="'/product/searchProduct/' + searchWord">
-    <input type="text" class="search-input" v-model="searchWord" placeholder="Search..." />
+          <div class="input-container">
+              <div class="search-icon">
+                  <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+              </div>
+              <router-link :to="`/product/searchProduct/${searchValue}`">
+    <input type="text" class="search-input" v-model="searchValue" placeholder="Search..." />
 </router-link>
-            </div>
+          </div>
 
-            <div class="icons-container">
-                <router-link
-                    to="/member-service/signup"
-                    :class="{ icons: true, loginCheck: loginCheck }"
-                    v-if="!loginChk()"
-                >
-                    <font-awesome-icon :icon="['fas', 'user-plus']" />
-                    <span>join</span>
-                </router-link>
-                <div
-                    @click="logout()"
-                    :class="{ icons: true, loginCheck: loginCheck }"
-                    v-if="loginChk()"
-                >
-                    <font-awesome-icon :icon="['fas', 'right-from-bracket']" />
-                    <span>logout</span>
-                </div>
+          <div class="icons-container">
+              <router-link
+                  to="/member-service/signup"
+                  :class="{ icons: true, loginCheck: loginCheck }"
+                  v-if="!loginChk()"
+              >
+                  <font-awesome-icon :icon="['fas', 'user-plus']" />
+                  <span>join</span>
+              </router-link>
+              <div
+                  @click="logout()"
+                  :class="{ icons: true, loginCheck: loginCheck }"
+                  v-if="loginChk()"
+              >
+                  <font-awesome-icon :icon="['fas', 'right-from-bracket']" />
+                  <span>logout</span>
+              </div>
 
-                <router-link
-                    :class="{ icons: true, loginCheck: loginCheck }"
-                    to="/member-service/login"
-                    v-if="!loginChk()"
-                >
-                    <font-awesome-icon :icon="['fas', 'right-to-bracket']" />
-                    <span>login</span>
-                </router-link>
-                <a href="/mypage" class="icons" v-if="loginChk()">
-                    <font-awesome-icon :icon="['fas', 'user']" />
-                    <span>my</span>
-                </a>
-            </div>
-        </div>
-        <input type="text" class="search-input" placeholder="Search..." />
+              <router-link
+                  :class="{ icons: true, loginCheck: loginCheck }"
+                  to="/member-service/login"
+                  v-if="!loginChk()"
+              >
+                  <font-awesome-icon :icon="['fas', 'right-to-bracket']" />
+                  <span>login</span>
+              </router-link>
+              <a href="/mypage" class="icons" v-if="loginChk()">
+                  <font-awesome-icon :icon="['fas', 'user']" />
+                  <span>my</span>
+              </a>
+          </div>
       </div>
-
-      <div class="icons-container">
-        <router-link
-          to="/member-service/signup"
-          :class="{ icons: true, loginCheck: loginCheck }"
-          v-if="!loginChk()"
-        >
-          <font-awesome-icon :icon="['fas', 'user-plus']" />
-          <span>join</span>
-        </router-link>
-
-        <span class="welcome">nickname</span>
-        <div @click="logout()" :class="{ icons: true, loginCheck: loginCheck }" v-if="loginChk()">
-          <font-awesome-icon :icon="['fas', 'right-from-bracket']" />
-          <span>logout</span>
-        </div>
-
-        <router-link
-          :class="{ icons: true, loginCheck: loginCheck }"
-          to="/member-service/login"
-          v-if="!loginChk()"
-        >
-          <font-awesome-icon :icon="['fas', 'right-to-bracket']" />
-          <span>login</span>
-        </router-link>
-        <a href="/mypage" class="icons" v-if="loginChk()">
-          <font-awesome-icon :icon="['fas', 'user']" />
-          <span>my</span>
-        </a>
-      </div>
-    </div>
-    <nav>
-      <ul class="nav">
-        <li><router-link to="/">홈</router-link></li>
-        <li>
-          <router-link :to="`/post/list/${encodeURIComponent('공지사항')}`">게시판</router-link>
-        </li>
-        <li><router-link to="/location">대여</router-link></li>
-        <li><router-link to="/chat">채팅</router-link></li>
-      </ul>
-    </nav>
+      <nav>
+          <ul class="nav">
+              <li><router-link to="/">홈</router-link></li>
+              <li><router-link to="/">게시판</router-link></li>
+              <li><router-link to="/product/productList">대여</router-link></li>
+              <li><a href="#">채팅</a></li>
+          </ul>
+      </nav>
   </body>
 </template>
 <script>
 export default {
-    data() {
-        return {
-            loginCheck: false,
-            searchValue: ''
-        }
-    },
-
-    methods: {
-        enterJoin() {
-            this.$router.push(`/member-service/signup`)
-        },
-        loginChk() {
-            if (localStorage.getItem('nickname')) {
-                return true
-            }
-        },
-        logout() {
-            localStorage.removeItem('nickname')
-            window.location = '/'
-        }
-    }
+  data() {
+      return {
+          loginCheck: false,
+          searchValue: ''
+      }
   },
 
   methods: {
-    enterJoin() {
-      this.$router.push(`/member-service/signup`)
-    },
-    loginChk() {
-      if (localStorage.getItem('nickname')) {
-        return true
+      enterJoin() {
+          this.$router.push(`/member-service/signup`)
+      },
+      loginChk() {
+          if (localStorage.getItem('nickname')) {
+              return true
+          }
+      },
+      logout() {
+          localStorage.removeItem('nickname')
+          window.location = '/'
       }
-    },
-    logout() {
-      localStorage.removeItem('nickname')
-      window.location = '/'
-    }
   }
 }
 </script>
 <style scoped>
-.welcome {
-  display: flex; /* Add this line to make it a flex container */
-  text-align: right;
-  padding: 0;
-}
 .loginCheck {
   display: none;
 }

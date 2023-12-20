@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+//MAIN
 import TopView from '@/components/Main/TopView.vue'
 import TopRental from '@/components/Main/TopRental.vue'
 import AllProduct from '@/components/Main/AllProduct.vue'
@@ -33,20 +34,14 @@ import Rent from '@/components/MyPage/components/RentedList.vue'
 import Borrow from '@/components/MyPage/components/BorrowedList.vue'
 
 //PRODUCT
-import ProductDetail from '@/components/Product/ProductDetail.vue'
-import ProductList from '@/components/Product/ProductList.vue'
-import SearchProduct from '@/components/Product/SearchProduct.vue'
-import WriteProduct from '@/components/Product/WriteProduct.vue'
-import ModifyProduct from '@/components/Product/ModifyProduct.vue'
-
-//POST
-import MainPost from '@/components/Post/MainPost.vue'
-import PostList from '@/components/Post/PostList.vue'
-import PostView from '@/components/Post/PostView.vue'
-import PostRegister from '@/components/Post/PostRegister.vue'
+import ProductDetail from'@/components/Product/ProductDetail.vue'
+import ProductList from'@/components/Product/ProductList.vue'
+import SearchProduct from'@/components/Product/SearchProduct.vue'
+import WriteProduct from'@/components/Product/WriteProduct.vue'
+import ModifyProduct from'@/components/Product/ModifyProduct.vue'
 
 const router = createRouter({
-  history: createWebHistory(),
+    history: createWebHistory(),
 
     routes: [
         { path: '/', components: { default: TopView, TopRental, AllProduct } },
@@ -85,7 +80,7 @@ const router = createRouter({
         },
         {path: '/product/productDetail/:id', component: ProductDetail},
         {path: '/product/productList', component: ProductList},
-        {path: '/product/searchProduct:searchWord/', component: SearchProduct},
+        {path: '/product/searchProduct/:searchWord', component: SearchProduct},
         {path: '/product/writeProduct', component: WriteProduct},
         {path: '/product/modifyProduct', component: ModifyProduct}
     ]
