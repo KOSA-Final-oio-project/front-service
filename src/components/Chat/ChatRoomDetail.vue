@@ -4,7 +4,7 @@
             <div class="chat-header-container">
                 <!-- 채팅방 이름 -->
                 <div class="chat-name">
-                    <h2 v-if="room">✉️ {{ roomName }} ✉️</h2>
+                    <h2 class="title" v-if="room">✉️ {{ roomName }} ✉️</h2>
                 </div>
 
                 <div class="deal-start-btn">
@@ -63,7 +63,6 @@
 
                             <!-- 읽음 표시 -->
                             <div class="read-sign">
-                                1
                                 <!-- {{ message.isRead }} -->
                             </div>
 
@@ -370,7 +369,7 @@ export default {
 /* ========= 폰트 설정 ========= */
 @font-face {
     font-family: 'NotoSansKR-VariableFont_wght';
-    src: url(../../../public/fonts/NotoSansKR-VariableFont_wght.ttf);
+    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
 }
 
 * {
@@ -378,7 +377,11 @@ export default {
 }
 
 section {
-    margin-top: 150px;
+    padding-top: 150px;
+}
+
+.title {
+    margin-left: 100px;
 }
 
 /* ========= 채팅 전체 영역 ========= */
@@ -420,12 +423,10 @@ section {
 
 /* 상품 정보 */
 .chat-product-container {
-    border: solid black 1px;
     margin-bottom: 40px;
     width: 80%;
     /* max-width: 600px; */
     margin: 0 auto 40px; /* 위 아래 여백은 0, 좌우는 자동으로 설정하여 중앙 정렬 */
-    border: solid black 1px;
     align-self: center; /* Flexbox 아이템을 가로 방향으로 중앙에 배치 */
 }
 
@@ -541,5 +542,29 @@ section {
 .btn.btn-primary {
     background-color: #178ca4;
     border-color: #178ca4;
+}
+
+.product-info {
+    padding: 15px;
+    background-color: #f8f8f8; /* 배경색 */
+    border-radius: 10px; /* 테두리 둥글게 */
+    text-align: center; /* 가운데 정렬 */
+    margin: 10px 0; /* 위아래 여백 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+/* 상품명 */
+.product-info p:first-child {
+    font-size: 1.2em; /* 글자 크기 */
+    font-weight: bold; /* 볼드체 */
+    color: #333; /* 글자색 */
+    margin-bottom: 5px; /* 가격과의 여백 */
+}
+
+/* 상품가격 */
+.product-info p:last-child {
+    font-size: 1em; /* 글자 크기 */
+    color: #18b7be; /* 글자색 */
+    font-weight: 500; /* 가벼운 볼드체 */
 }
 </style>

@@ -199,6 +199,10 @@ export default {
     font-family: 'NotoSansKR-VariableFont_wght';
 }
 
+section {
+    margin-top: 150px;
+}
+
 /* 거래하기 타이틀 */
 .title {
     font-size: 25px;

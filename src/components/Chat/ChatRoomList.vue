@@ -156,7 +156,7 @@ export default {
 /* ========= 폰트 설정 ========= */
 @font-face {
     font-family: 'NotoSansKR-VariableFont_wght';
-    src: url(../../../public/fonts/NotoSansKR-VariableFont_wght.ttf);
+    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
 }
 
 * {
@@ -170,7 +170,7 @@ export default {
 
 section {
     border: 1px solid black;
-    margin-top: 200px;
+    padding-top: 150px;
     width: 100%;
     height: 100%;
 }
