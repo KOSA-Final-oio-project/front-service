@@ -59,12 +59,11 @@
     <div class="col">
       <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap">
         <template v-for="file in setFiles" :key="file">
-          <div class="card col-4">
+          <div class="card col-2">
             <div class="card-header d-flex justify-content-center">
-              {{ file }}
             </div>
-            <div class="card-body" v-if="getImagePath(file)">
-              <img v-if="imageLoaded" :src="imageSrc" alt="image" height="200" width="200"/>
+            <div class="card-body">
+              <img :src="setUrl + file" alt="image" height="150" width="150"/>
             </div>
           </div>
         </template>
@@ -74,8 +73,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { getPost, getImage } from './post'
+import { ref, onMounted, computed } from 'vue'
+import { getPost } from './post'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -87,9 +86,9 @@ const setTitle = ref('')
 const setContent = ref('')
 const isWriter = ref(false)
 const setFiles = ref([])
-const imageSrc = ref('')
-const imageLoaded = ref(false)
-
+const setUrl = 'https://oioproject-bucket.s3.ap-northeast-2.amazonaws.com/'
+// https://oioproject-bucket.s3.ap-northeast-2.amazonaws.com/5a875463-8977-46a3-833c-1dcb4d1d7b35_%EC%B2%AD%EB%85%84%EC%88%98%EB%8B%B9%ED%8C%8C%EC%9D%BC1%20-%20%EB%B3%B5%EC%82%AC%EB%B3%B8.jpg
+// 5a875463-8977-46a3-833c-1dcb4d1d7b35_청년수당파일1 - 복사본.jpg
 const getPostOne = async (postId) => {
   const { data } = await getPost(postId)
   post.value = data
@@ -98,12 +97,9 @@ const getPostOne = async (postId) => {
   setContent.value = post.value.postDto.content
   isWriter.value = post.value.isEquals
   setFiles.value = post.value.postDto.fileNames
-  console.log(setFiles.value)
 }
 
-const getImagePath = async (file) => {
-    const { data } = await getImage(file)
-}
+const splitFileName = computed(() => setFiles.value.map(fileName => fileName.split('_')));
 
 onMounted(() => {
   getPostOne(postId)

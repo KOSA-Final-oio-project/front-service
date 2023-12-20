@@ -23,8 +23,8 @@ export function removeImage(uuid, fileName) {
   return axios.delete(apiUrl+`/remove/${uuid}_${fileName}`)
 }
 
-export function postRegister(data){
-  return axios.post(apiUrl+'/post/register/테스트', data, {
+export function postRegister(formdata){
+  return axios.post(apiUrl+'/post/register/테스트', formdata, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -33,8 +33,4 @@ export function postRegister(data){
 
 export function getPost(postId) {
   return axios.get(apiUrl+`/post/${postId}/테스트`)
-}
-
-export function getImage(fileName){
-  return axios.get(apiUrl+`/view/${fileName}`)
 }

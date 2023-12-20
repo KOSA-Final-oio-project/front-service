@@ -50,11 +50,10 @@
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">Images</span>
               <div class="float-end uploadHidden">
                 <button
                   type="button"
-                  class="btn btn-primary"
+                  class="btn btn-outline-info"
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
                 >
@@ -64,9 +63,9 @@
             </div>
 
             <div class="my-4">
-              <div class="float-end">
-                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
-                <button type="reset" class="btn btn-secondary">Reset</button>
+              <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-outline-info">등록</button>
+                <button type="button" class="btn btn-outline-info mx-2">취소</button>
               </div>
             </div>
           </form>
@@ -78,17 +77,18 @@
     <!-- end col-->
   </div>
   <!-- end row-->
+  <span class="input-group-text">Images</span>
 
   <div class="row mt-3">
     <div class="col">
       <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap">
-        <template v-for="file in fileData" :key="file.uuid">
-          <div v-if="!file.deleted" class="card col-4">
+        <template v-for="(file, index) in fileImage" :key="index">
+          <div class="card col-2">
             <div class="card-header d-flex justify-content-center">
-              {{ file.fileName }}
-              <button class="btn-sm btn-danger" @click="removeBtn(file.uuid, file.fileName)">
-                X
-              </button>
+              <button class="btn-sm btn-danger" @click="removeBtn(file)">X</button>
+            </div>
+            <div class="card-body">
+              <img :src="file" alt="image" height="150" width="150" />
             </div>
           </div>
         </template>
@@ -127,7 +127,7 @@
 </template>
 
 <script setup>
-import { uploadImage, removeImage, postRegister } from './post'
+import { uploadImage, postRegister } from './post'
 import { ref } from 'vue'
 
 const setCategory = ref('')
@@ -138,56 +138,68 @@ const setFileNames = ref([])
 
 const showPasswordInput = ref(false)
 const formObj = new FormData()
-const fileData = ref([])
+const fileOriginal = ref([])
+const fileCopy = ref([])
+const fileImage = ref([])
 
 const handleFileChange = (event) => {
   const files = event.target.files
   for (let i = 0; i < files.length; i++) {
-    formObj.append('files', files[i])
+    // fileImage.value.push(URL.createObjectURL(files[i]))
+    fileCopy.value.push(files[i])
   }
 }
 
 const uploadBtn = async () => {
-  const response = await uploadImage(formObj)
-  console.log(response.data)
-  fileData.value = response.data
+  // const response = await uploadImage(formObj)
+  fileOriginal.value.push(...fileCopy.value)
+  fileImage.value = fileCopy.value.map((file) => URL.createObjectURL(file))
+
+  fileCopy.value = []
 }
 
-const removeBtn = (uuid, fileName) => {
-  console.log(uuid)
-  const index = fileData.value.findIndex((file) => file.uuid === uuid)
+const removeBtn = (file) => {
+  const index = fileImage.value.findIndex((fileName) => fileName === file)
   if (index !== -1) {
-    fileData.value[index].deleted = true
+    fileImage.value.splice(index, 1)
+    fileOriginal.value.splice(index, 1)
   }
+  console.log(fileImage.value)
+}
 
-  removeImage(uuid, fileName)
+const registerApi = async (formdata) => {
+  await postRegister(formdata)
+    .then((response) => {
+      console.log(response)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
 }
 
 const submitForm = async () => {
-  fileData.value = fileData.value.filter((item) => !item.deleted)
-
-  for (let i = 0; i < fileData.value.length; i++) {
-    setFileNames.value.push(fileData.value[i].uuid + '_' + fileData.value[i].fileName)
+  for (let i = 0; i < fileOriginal.value.length; i++) {
+    formObj.append('files', fileOriginal.value[i])
   }
 
-  const data = {
-    category: setCategory.value,
-    key: showPasswordInput.value === true ? 1 : 0,
-    password: setPassword.value,
-    title: setTitle.value,
-    content: setContent.value,
-    fileNames: setFileNames.value
-  }
-  console.log(data)
+  await uploadImage(formObj).then(({ data }) => {
+    console.log(data)
+    for (let i = 0; i < data.length; i++) {
+      setFileNames.value.push(data[i].fileName)
+    }
+    const formdata = {
+      category: setCategory.value,
+      key: showPasswordInput.value === true ? 1 : 0,
+      password: setPassword.value,
+      title: setTitle.value,
+      content: setContent.value,
+      fileNames: setFileNames.value
+    }
+    console.log(formdata)
 
-  postRegister(data).then(response => {
-    console.log(response)
-  }).catch(error => {
-    console.log(error)
+    registerApi(formdata)
+    
   })
-  
-
-
 }
 </script>
 
