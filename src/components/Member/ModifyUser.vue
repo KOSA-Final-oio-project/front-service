@@ -134,8 +134,7 @@ export default {
       emailStatus: 0, // 비밀번호 일치&불일치 여부 결과값 메시지
       showModal: false,
       alertMessage: '',
-      userData: '',
-      showModal: false
+      userData: ''
     }
   },
 
@@ -209,82 +208,29 @@ export default {
         })
         .then((response) => {
           console.log(response.data)
+          alert('변경이 완료되었습니다.')
+          location.reload()
         })
         .catch((error) => {
           console.error('요청 실패:', error)
-          // 실패 시 추가로 실행할 로직 작성
+          alert('다시 시도해주세요.')
         })
     },
 
-    methods: {
-      handleImageUpload(event) {
-        const file = event.target.files[0]
-        this.user.profileImage = file
-        if (file) {
-          const reader = new FileReader()
-          reader.onload = () => {
-            this.user.profileImage2 = reader.result
-          }
-          reader.readAsDataURL(file)
-        }
-      },
+    getUserInfo() {
+      const nickname = localStorage.getItem('nickname')
+      const url = `http://192.168.1.37:9999/oio/member/${nickname}`
 
-      // 비밀번호 유효성 검사
-      checkPasswordValidity() {
-        const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%])[A-Za-z\d!@#$%]{8,16}$/
-        this.isPasswordValid = regex.test(this.user.password)
-      },
-
-      // 비밀번호 중복 확인
-      confirmPassword() {
-        if (this.user.password === this.user.checkPassword) {
-          this.passwordCheckMessage = '🙆🏻‍♀️ 비밀번호가 일치합니다.'
-        } else {
-          this.passwordCheckMessage = '🙅🏻‍♀️ 비밀번호가 일치하지 않습니다.'
-        }
-      },
-
-      // 수정하기
-      submitForm() {
-        // FormData에 이미지 데이터 및 다른 필드들 추가
-        console.log(this.user.profileImage)
-        const formData = new FormData()
-        formData.append('file', this.user.profileImage)
-        formData.append('password', this.user.password)
-
-        const nickname = localStorage.getItem('nickname')
-        // 서버로 데이터 전송
-        axios
-          .put(`http://192.168.1.37:9999/oio/member/${nickname}`, formData, {
-            contentType: false,
-            processData: false
-          })
-          .then((response) => {
-            console.log(response.data)
-            alert('변경이 완료되었습니다.')
-            location.reload()
-          })
-          .catch((error) => {
-            console.error('요청 실패:', error)
-            alert('다시 시도해주세요.')
-          })
-      },
-
-      getUserInfo() {
-        const nickname = localStorage.getItem('nickname')
-        const url = `http://192.168.1.37:9999/oio/member/${nickname}`
-
-        axios
-          .get(url)
-          .then((response) => {
-            this.userData = response.data
-            console.log(this.userData)
-            this.profileImage = this.userData.result.profile
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-      }
+      axios
+        .get(url)
+        .then((response) => {
+          this.userData = response.data
+          console.log(this.userData)
+          this.profileImage = this.userData.result.profile
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
 
     cancelDelete() {
@@ -294,7 +240,9 @@ export default {
     confirmDelete() {
       const memberNickname = localStorage.getItem('nickname')
       axios.delete(`http://localhost:9999/oio/member/${memberNickname}`).then((result) => {
-        console.log('정상 탈퇴되었습니다.')
+        alert('정상 탈퇴되었습니다.')
+        window.location = '/'
+        localStorage.removeItem('nickname')
       })
       this.showModal = false
     }

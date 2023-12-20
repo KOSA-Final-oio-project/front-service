@@ -5,7 +5,12 @@
         <a class="prev" @click="prev" href="#">❮</a>
         <transition-group>
           <div v-for="(img, index) in productImages" :key="index">
-            <img class="slider-image" :src="img" alt="Slide Image" v-show="currentIndex === index" />
+            <img
+              class="slider-image"
+              :src="img"
+              alt="Slide Image"
+              v-show="currentIndex === index"
+            />
           </div>
         </transition-group>
         <a class="next" @click="next" href="#">❯</a>
@@ -14,17 +19,24 @@
       <div v-if="product" class="product">
         <div class="productInfo">
           <li>
-            <a :href="getActionLink()" :class="{ 'report': status === 1 }">
+            <a :href="getActionLink()" :class="{ report: status === 1 }">
               {{ status === 1 ? '신고' : '수정' }}
             </a>
           </li>
           <span>{{ product.postCategory === 0 ? '빌려드려요' : '빌려주세요' }}</span>
-          <span :class="{ 'rented': product.status === 1, 'expired': product.status === 2 }">
-            {{ product.status === 0 ? '미대여' : (product.status === 1 ? '대여중' : '기간만료') }}
+          <span :class="{ rented: product.status === 1, expired: product.status === 2 }">
+            {{ product.status === 0 ? '미대여' : product.status === 1 ? '대여중' : '기간만료' }}
           </span>
-          <p>조회수:{{ product.viewCount }} 대여수:{{ product.rentCount }} 작성일:{{ formatDate(product.postDate) }}</p>
+          <p>
+            조회수:{{ product.viewCount }} 대여수:{{ product.rentCount }} 작성일:{{
+              formatDate(product.postDate)
+            }}
+          </p>
           <h2>{{ product.title }}</h2>
-          <p>{{ product.address.siDo }} {{ product.address.siGunGu }} {{ product.address.eupMyeonRo }}</p>
+          <p>
+            {{ product.address.siDo }} {{ product.address.siGunGu }}
+            {{ product.address.eupMyeonRo }}
+          </p>
           <p>카테고리:{{ product.category.categoryName }}</p>
           <p>{{ product.priceCategory }}: {{ product.price }}원</p>
           <p>대여 기간: {{ formatDate(product.startDate) }} ~ {{ formatDate(product.endDate) }}</p>
@@ -33,7 +45,7 @@
 
         <div class="userInfo">
           <span>{{ product.nickname }}</span>
-            <button  @click="createRoom">채팅하기</button>
+          <button @click="createRoom">채팅하기</button>
         </div>
       </div>
     </div>
@@ -49,10 +61,10 @@
     </div>
   </div>
 </template>
-  
+
 <script>
-import axios from 'axios';
-import sampleImage from "@/assets/sample.png";
+import axios from 'axios'
+import sampleImage from '@/assets/sample.png'
 
 export default {
   name: 'ProductDatail',
@@ -78,12 +90,16 @@ export default {
           addressNo: 0,
           siDo: '',
           siGunGu: '',
-          eupMyeonRo: '',
+          eupMyeonRo: ''
         },
         category: {
           categoryNo: 0,
-          categoryName: '',
-        },
+          categoryName: ''
+        }
+      },
+      ProductList: {
+        productNo: '',
+        nickname: ''
       },
       productImgs: [],
       status: 0,
@@ -96,7 +112,7 @@ export default {
       receiver: '',
       sender: '',
       roomName: ''
-    };
+    }
   },
 
   props: {
@@ -105,74 +121,80 @@ export default {
       default: null
     }
   },
-
+  created() {
+    this.ProductList.productNo = this.$route.params.id
+    this.ProductList.nickname = localStorage.getItem('nickname')
+    console.log(this.product.productNo)
+  },
   mounted() {
-    this.getProductDetail();
-    this.getReviews();
+    this.getProductDetail()
+    this.getReviews()
   },
   methods: {
     //상품 디테일
     next() {
-      this.currentIndex = (this.currentIndex + 1) % this.productImages.length;
+      this.currentIndex = (this.currentIndex + 1) % this.productImages.length
     },
     prev() {
-      this.currentIndex = (this.currentIndex - 1 + this.productImages.length) % this.productImages.length;
+      this.currentIndex =
+        (this.currentIndex - 1 + this.productImages.length) % this.productImages.length
     },
     getProductDetail() {
       let nickname
 
       if (this.ProductList.nickname == null) {
-        nickname = this.ProductList.ownerNickname;
+        nickname = this.ProductList.ownerNickname
       } else {
-        nickname = this.ProductList.nickname;
+        nickname = this.ProductList.nickname
       }
 
       console.log(nickname)
 
       const productNo = this.ProductList.productNo
 
-      const url = `http://192.168.1.86:8889/product/productDetail/${productNo}/${nickname}`;
+      const url = `http://192.168.1.37:8889/product/productDetail/${productNo}/${nickname}`
 
-      axios.get(url)
-        .then(response => {
-          const data = response.data;
-          this.product = data.product;
-          this.productImgs = data.productImgs;
-          const nickname = localStorage.getItem('nickname');
+      axios
+        .get(url)
+        .then((response) => {
+          const data = response.data
+          this.product = data.product
+          this.productImgs = data.productImgs
+          const nickname = localStorage.getItem('nickname')
           console.log(this.ProductList)
 
           if (response.data.product.nickname !== nickname) {
-            this.status = 1;
+            this.status = 1
           } else {
-            this.status = 0;
+            this.status = 0
           }
-
         })
-        .catch(error => {
-          console.error('상품 정보를 불러오는데 실패했습니다.', error);
-        });
+        .catch((error) => {
+          console.error('상품 정보를 불러오는데 실패했습니다.', error)
+        })
     },
     getReviews() {
       const productNo = this.ProductList.productNo
-      const url = `http://192.168.1.86:7575/review/reviews/${productNo}`;
+      const url = `http://192.168.1.86:7575/review/reviews/${productNo}`
 
-      axios.get(url)
-        .then(response => {
-          const data = response.data;
+      axios
+        .get(url)
+        .then((response) => {
+          const data = response.data
           console.log(data)
-          this.reviews = data;
+          this.reviews = data
         })
-        .catch(error => {
-          console.error('리뷰를 불러오는데 실패했습니다.', error);
-        });
+        .catch((error) => {
+          console.error('리뷰를 불러오는데 실패했습니다.', error)
+        })
     },
     formatDate(dateString) {
-      const dateWithoutTime = dateString.split('T')[0];
-      return dateWithoutTime;
+      const dateWithoutTime = dateString.split('T')[0]
+      return dateWithoutTime
     },
     getActionLink() {
       // status에 따라 다른 URL을 반환
-      return this.status === 1 ? '신고 URL' : '수정 URL';
+      return this.status === 1 ? '신고 URL' : '수정 URL'
     },
 
     //채팅
@@ -253,22 +275,20 @@ export default {
           console.log('채팅방 개설에 실패하였습니다. 오류 원인은: ' + error.message)
         })
     }
-
   },
   computed: {
     productImages() {
       if (this.product.thumbnail === null) {
         return [sampleImage]
       } else {
-        return [this.product.thumbnail, ...this.productImgs];
+        return [this.product.thumbnail, ...this.productImgs]
       }
-
     },
     currentImage() {
-      return this.productImages[this.currentIndex];
-    },
-  },
-};
+      return this.productImages[this.currentIndex]
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -300,7 +320,7 @@ a {
 .prev,
 .next {
   font-size: 24px;
-  color: #18B7BE;
+  color: #18b7be;
   /* border: 1px solid #18B7BE;
     border-radius: 10px; */
   position: absolute;
@@ -322,7 +342,7 @@ a {
 }
 
 .productInfo {
-  border-bottom: 5px solid #18B7BE;
+  border-bottom: 5px solid #18b7be;
   width: 800px;
   min-height: 570px;
   padding-left: 10px;
@@ -335,7 +355,7 @@ li {
 .productInfo a {
   margin-left: 750px;
   padding-bottom: 5px;
-  color: #178CA4;
+  color: #178ca4;
   display: inline-block;
   vertical-align: middle;
   transform: perspective(1px) translateZ(0);
@@ -354,14 +374,14 @@ li {
 }
 
 .productInfo a:before {
-  content: "";
+  content: '';
   position: absolute;
   z-index: -1;
   height: 1px;
   left: 0;
   right: 0;
   bottom: 0;
-  background: #178CA4;
+  background: #178ca4;
   -webkit-transform: scaleX(0);
   transform: scaleX(0);
   -webkit-transform-origin: 0 50%;
@@ -386,7 +406,7 @@ li {
 .productInfo span {
   margin-left: 5px;
   color: #ffffff;
-  background-color: #178CA4;
+  background-color: #178ca4;
   padding: 3px 5px;
   border-radius: 10px;
 }
@@ -407,18 +427,17 @@ li {
 }
 
 .userInfo span {
-  color: #072A40;
+  color: #072a40;
   margin-right: 600px;
 }
 
 .userInfo button {
-  background-color: #18B7BE;
+  background-color: #18b7be;
   border-radius: 13px;
   color: #ffffff;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
-
 }
 
 .reviewContainer {
@@ -428,7 +447,7 @@ li {
 .reviewContainer p {
   width: 1300px;
   margin: 0 auto;
-  border-top: 5px solid #18B7BE;
+  border-top: 5px solid #18b7be;
   padding: 20px 0;
   font-weight: bold;
   font-size: large;
@@ -449,7 +468,7 @@ li {
 .review .writer {
   font-size: 14px;
   font-weight: bold;
-  color: #072A40;
+  color: #072a40;
   vertical-align: bottom;
   margin-right: 5px;
 }
@@ -463,8 +482,8 @@ li {
 .review .reviewContent {
   padding-bottom: 10px;
   font-size: 16px;
-  color: #072A40;
-  border-bottom: 1px solid #18B7BE;
+  color: #072a40;
+  border-bottom: 1px solid #18b7be;
 }
 
 .review:last-child .reviewContent {
