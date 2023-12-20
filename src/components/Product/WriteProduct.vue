@@ -60,7 +60,8 @@
                     <div class="content">
                         <p class="product-content">상품의 상세정보를 입력해주세요.</p>
                         <!-- <input type="text" class="product-info" placeholder="상세정보" maxlength="500" v-model="content" required /> -->
-                        <textarea class="product-info" placeholder="상품의 상세정보는 최대 500자까지 입력이 가능합니다." maxlength="500" v-model="content" required></textarea>
+                        <textarea class="product-info" placeholder="상품의 상세정보는 최대 500자까지 입력이 가능합니다." maxlength="500"
+                            v-model="content" required></textarea>
                     </div>
                     <div class="imageUpload">
                         <input class="file-Btn" type="file" ref="imageInput" multiple @change="handleImageChange" />
@@ -70,7 +71,7 @@
                             </div>
                         </div>
                     </div>
-                        
+
                     <div class="button-container">
                         <button class="registBt">등록</button>
                     </div>
@@ -122,9 +123,10 @@ export default {
                 this.isDateRangeValid = true
             }
 
-            // if (this.postCategory === null) {
-            //     alert("빌려드립니다 빌려주세요 중에서 하나를 선택해주세요");
-            // }
+            if (!this.postCategory) {
+                alert("빌려드립니다 빌려주세요 중에서 하나를 선택해주세요");
+                return;
+            }
 
             const formData = new FormData()
             formData.append('title', this.title)
@@ -155,6 +157,7 @@ export default {
                 )
                 .then((response) => {
                     console.log(response.data)
+                    window.location = '/product/productList'
                 })
                 .catch((error) => {
                     console.log(error)
@@ -166,12 +169,6 @@ export default {
             this.images2 = Array.from(event.target.files).map((file) => URL.createObjectURL(file))
             const file = event.target.files
             this.images = file
-        },
-
-        removeImage(index) {
-            // Remove the selected image from the images array
-            this.images.splice(index, 1)
-            this.images2.splice(index, 1)
         },
 
         getSiDo() {
@@ -274,7 +271,7 @@ section {
     display: none;
 }
 
-.product input[type='radio'] + label {
+.product input[type='radio']+label {
     display: inline-block;
     cursor: pointer;
     height: 40px;
@@ -287,7 +284,7 @@ section {
     color: #18b7be;
 }
 
-.product input[type='radio']:checked + label {
+.product input[type='radio']:checked+label {
     background-color: #18b7be;
     color: #ffffff;
 }
@@ -298,7 +295,8 @@ section {
     font-weight: bold;
 }
 
-.dropdown select, .dropdown input {
+.dropdown select,
+.dropdown input {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -318,13 +316,16 @@ section {
 }
 
 .product-info {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 10px;
-        resize: none; /* 사용자가 크기 조절 못하게 함 */
-        text-align: left; /* 텍스트 좌측 정렬 */
-        vertical-align: top; /* 텍스트 상단 정렬 */
-    }
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    resize: none;
+    /* 사용자가 크기 조절 못하게 함 */
+    text-align: left;
+    /* 텍스트 좌측 정렬 */
+    vertical-align: top;
+    /* 텍스트 상단 정렬 */
+}
 
 .product-content {
     margin-top: 20px;
@@ -333,8 +334,9 @@ section {
 }
 
 .button-container {
-        text-align: center; /* 버튼을 중앙 정렬 */
-        margin-bottom: 20px;
+    text-align: center;
+    /* 버튼을 중앙 정렬 */
+    margin-bottom: 20px;
 }
 
 .registBt {
@@ -391,6 +393,4 @@ section {
     color: #fff;
     border: none;
     cursor: pointer;
-}
-
-</style>
+}</style>

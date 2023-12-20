@@ -41,6 +41,7 @@
                     </select>
                     <button @click="selectProduct()" class="selectBt">조회</button>
                 </div>
+                <router-link :to="'/product/writeProduct'"><p class="regist">상품등록</p></router-link>
                 <div class="productList">
                     <div class="products">
                         <div class="product" v-for="(item, index) in products" :key="index">
@@ -337,7 +338,24 @@ select {
 
 /* Hover effect for the button */
 .selectBt:hover {
-    background-color: #0056b3;
+    background-color: #178ca4;
+}
+
+p.regist {
+    margin-left: auto;
+    margin-right: calc(1% + 70px);
+    margin-top: 10px;
+    width: 90px;
+    padding: 8px 15px;
+    background-color: #18b7be;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+p.regist:hover {
+    background-color: #178ca4;
 }
 
 /* Optional: Style the options within the dropdown */
@@ -357,10 +375,12 @@ a {
 .title {
     font-weight: bold;
     font-size: 20px;
+    color: #072a40;
 }
 
 .date {
     font-size: 15px;
+    color: #072a40;
 }
 
 .count {
