@@ -30,3 +30,11 @@ export function postRegister(data){
     }
   })
 }
+
+export function getPost(postId) {
+  return axios.get(apiUrl+`/post/${postId}/테스트`)
+}
+
+export function getImage(fileName){
+  return axios.get(apiUrl+`/view/${fileName}`)
+}
