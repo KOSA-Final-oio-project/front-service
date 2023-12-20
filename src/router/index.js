@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-//MAIN
 import TopView from '@/components/Main/TopView.vue'
 import TopRental from '@/components/Main/TopRental.vue'
 import AllProduct from '@/components/Main/AllProduct.vue'
@@ -20,6 +19,7 @@ import UserInfoBorrow from '@/components/UserInfo/components/BorrowedList.vue'
 import UserInfoRent from '@/components/UserInfo/components/RentedList.vue'
 
 //CHAT
+import Sample from '@/components/Chat/Sample.vue'
 import ChatRoomList from '@/components/Chat/ChatRoomList.vue'
 import ChatRoomDetail from '@/components/Chat/ChatRoomDetail.vue'
 import SelectDatePopup from '@/components/Chat/SelectDatePopup.vue'
@@ -48,10 +48,27 @@ const router = createRouter({
         { path: '/top-rental', components: { default: TopRental, AllProduct } },
         { path: '/member-service/login', name: 'Login', component: Login },
         { path: '/member-service/signup', component: Signup },
-        { path: '/chat-service/chat', component: ChatRoomList }, // ChatRoomList 컴포넌트가 열리는 경로
-        { path: '/chat-service/chat/room/enter/:roomId', component: ChatRoomDetail }, // ChatRoomDetail 컴포넌트가 열리는 경로
-        { path: '/chat-service/chat/date', component: SelectDatePopup }, // SelectDatePopup 컴포넌트가 열리는 경로
         { path: '/findPassword', component: FindPassword },
+        {
+            path: '/chat-service/',
+            name: 'Sample',
+            component: Sample
+        },
+        {
+            path: '/chat-service/chat', // ChatRoomList 컴포넌트가 열리는 경로
+            name: 'ChatRoomList',
+            component: ChatRoomList
+        },
+        {
+            path: '/chat-service/chat/room/enter/:roomId', // ChatRoomDetail 컴포넌트가 열리는 경로
+            name: 'ChatRoomEnter',
+            component: ChatRoomDetail
+        },
+        {
+            path: '/chat-service/chat/date', // SelectDatePopup 컴포넌트가 열리는 경로
+            name: 'SelectDatePopup',
+            component: SelectDatePopup
+        },
         {
             path: '/mypage',
             component: MyPageMain,
