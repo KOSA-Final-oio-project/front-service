@@ -2,7 +2,7 @@
     <div class="review-container">
         <div class="product-detail">
             <div class="product-info">
-                <img src="../../../assets/favicon.ico" alt="대여 물품 사진" />
+                <img alt="대여 물품 사진" :src="thumbnail" />
                 <div class="product-text">
                     <span v-if="review.heart === 0"><i class="bi bi-heart"></i></span>
                     <span v-else-if="review.heart === 1"><i class="bi bi-heart-fill"></i></span>
@@ -44,7 +44,8 @@ export default {
             review: '',
             product: '',
             title: '',
-            profile: ''
+            profile: '',
+            thumbnail:'',
         }
     },
     methods: {
@@ -59,6 +60,7 @@ export default {
                     const responseProduct = response.data
                     console.log(responseProduct)
                     this.product = responseProduct
+                    this.thumbnail = useReviewdata.rentedProduct.product.thumbnail
                 })
                 .catch((error) => {
                     console.error('error : ', error)

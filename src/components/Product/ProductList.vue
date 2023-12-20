@@ -3,13 +3,13 @@
         <section>
             <div class="productContainer">
                 <div class="dropdown">
-                    <select v-model="selectedSido" name="region siDo" @change="resetSelections('siGunGuList', 'eupMyeonRoList')">
+                    <select v-model="selectedSido" name="region siDo">
                         <option value="">전체</option>
                         <option :value="item" v-for="(item, index) in siDoList" :key="index">
                             {{ item }}
                         </option>
                     </select>
-                    <select v-model="selectedSiGunGu" @click="getSiGunGu()" name="region siGunGu" @change="resetEupMyeonRo()" :disabled="selectedSido === ''">
+                    <select v-model="selectedSiGunGu" @click="getSiGunGu()" name="region siGunGu">
                         <option value="">전체</option>
                         <option :value="item" v-for="(item, index) in siGunGuList" :key="index">
                             {{ item }}
@@ -19,9 +19,9 @@
                         v-model="selectedEupMyeonRo"
                         @click="getEupMyeonRo()"
                         name="region eupMyeonRo"
-                        :disabled="selectedSido === '' || selectedSiGunGu === ''">
+                    >
                         <option value="">전체</option>
-                        <option :value="item" v-for="(item, index) in eupMyeonRoList" :key="index" >
+                        <option :value="item" v-for="(item, index) in eupMyeonRoList" :key="index">
                             {{ item }}
                         </option>
                     </select>
@@ -74,9 +74,10 @@ export default {
         },
         selectProduct() {
             if (this.selectedSido == '') {
-                axios.get('http://localhost:8889/product/productList/n').then((result) => {
-                    this.products = result.data.productList
-                })
+                axios.get('http://localhost:8889/product/productList/n')
+                    .then((result) => {
+                        this.products = result.data.productList
+                    })
             } else if (this.selectedSiGunGu == '') {
                 axios
                     .get('http://localhost:8889/product/productList/n?siDo=' + this.selectedSido)
@@ -133,28 +134,7 @@ export default {
             axios.get('http://localhost:8889/product/productList/n').then((result) => {
                 this.products = result.data.productList
             })
-        },
-
-        resetSelections() {
-            this.selectedSiGunGu = '';
-            this.selectedEupMyeonRo = '';
-
-            if (this.selectedSido !== '') {
-                this.getSiGunGu();
-            }
-        },
-
-        resetEupMyeonRo() {
-            if (this.selectedSiGunGu === '') {
-                // '전체'를 선택하면 읍면동 선택 초기화
-                this.selectedEupMyeonRo = '';
-            } else {
-                // 시군구를 선택했을 때 읍면동을 업데이트합니다.
-                this.selectedEupMyeonRo = ''; // 읍면동 선택 초기화
-                this.getEupMyeonRo(); // 읍면동 리스트를 업데이트할 수 있도록 해당 메서드를 호출합니다.
-            }
-        },
-
+        }
     },
     created() {
         this.get()

@@ -2,7 +2,7 @@
     <!-- 회원가입 폼 컨테이너 -->
     <div class="form-container">
         <!-- 서버단에 전송할 데이터 작성 구역 (폼) -->
-        <form @submit.prevent="submitForm">
+        <form @submit.prevent>
             <div class="form-container">
                 <div class="form-group">
                     <div class="flex-container">
@@ -56,7 +56,6 @@
                     <span v-if="passwordCheckMessage" :class="passwordCheckClass">{{ passwordCheckMessage }}</span>
                 </div>
 
-                <!-- 가입하기 버튼 -->
                 <div class="btn-container">
                     <button type="submit" class="submit-btn" @click="submitForm">변경</button>
                     <button class="delete-btn" @click="showModal = true">회원 탈퇴</button>
@@ -180,10 +179,12 @@ export default {
                 })
                 .then((response) => {
                     console.log(response.data)
+                    alert("변경이 완료되었습니다.")
+                    location.reload()
                 })
                 .catch((error) => {
                     console.error('요청 실패:', error)
-                    // 실패 시 추가로 실행할 로직 작성
+                    alert("다시 시도해주세요.")
                 })
         },
 
