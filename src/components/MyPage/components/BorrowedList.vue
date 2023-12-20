@@ -15,7 +15,7 @@
                         </p>
                         <img src="../../../assets/status.png"> {{ item.status }}
                         <span>
-                            <button v-if="showReviewButton(item.reviewStatus, item.status)" @click="openModal(item)"
+                            <button v-if="showReviewButton(item.reviewStatus, item.status)" @click.stop="openModal(item)"
                                 class="review-button">리뷰 작성</button>
                         </span>
                     </div>

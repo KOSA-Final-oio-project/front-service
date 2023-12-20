@@ -10,10 +10,10 @@
         <div class="top" v-for="(item, index) in topViews" :key="index">
             <div class="topImg">
                 <span class="rented"> {{ item.status === 1 ? '대여중' : '미대여' }}</span>
-                <img src="https://oio-bucket.s3.ap-northeast-2.amazonaws.com/logo.png" />
+                <img class="product-img" :src=item.thumbnail />
             </div>
             <p class="count">{{ item.view }}</p>
-            <p class="title">{{ item.content }}</p>
+            <p class="title">{{ item.title }}</p>
             <p class="date">{{ formatDate(item.startDate) }} ~ {{ formatDate(item.endDate) }}</p>
         </div>
     </div>
@@ -24,7 +24,7 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            topViews: []
+            topViews: [],
         }
     },
     methods: {
@@ -40,7 +40,9 @@ export default {
 
             axios.get(url).then((result) => {
                 console.log(result)
+                console.log(result.data.productList)
                 this.topViews = result.data.productList
+                this.thumbnail = result.data.productList.thumbnail
             })
         }
     },
@@ -233,6 +235,8 @@ a {
     width: 200px;
     display: inline-block;
 }
+
+
 
 .rented {
     background-color: #072a40;

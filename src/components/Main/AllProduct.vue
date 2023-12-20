@@ -34,11 +34,9 @@
                                 <span class="rented">{{
                                     item.status === 1 ? '대여중' : '미대여'
                                 }}</span>
-                                <img
-                                    src="https://oio-bucket.s3.ap-northeast-2.amazonaws.com/logo.png"
-                                />
+                                 <img class="product-img" :src=item.thumbnail />
                             </div>
-                            <p class="title">{{ item.content }}</p>
+                            <p class="title">{{ item.title }}</p>
                             <p class="date">
                                 {{ formatDate(item.startDate) }} ~ {{ formatDate(item.endDate) }}
                             </p>

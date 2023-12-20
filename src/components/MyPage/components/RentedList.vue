@@ -14,11 +14,11 @@
                         </p>
                         <img src="../../../assets/status.png" /> {{ item.status }}
                         <span class="button-container">
-                            <button v-if="showReviewButton(item.reviewStatus, item.status)" @click="openModal(item)"
+                            <button v-if="showReviewButton(item.reviewStatus, item.status)" @click.stop="openModal(item)"
                                 class="review-button">
                                 리뷰 작성
                             </button>
-                            <button v-if="showEndRentButton(item.status)" @click="openConfirmationModal(item)"
+                            <button v-if="showEndRentButton(item.status)" @click.stop="openConfirmationModal(item)"
                                 class="rent-button">
                                 대여 완료
                             </button>
@@ -111,6 +111,7 @@ export default {
         },
 
         openConfirmationModal(item) {
+            this.showProductDetailModal = false;
             this.selectedRentedItem = item
             this.showConfirmationModal = true // 모달 열기
         },
@@ -146,6 +147,7 @@ export default {
         },
 
         openModal(item) {
+            this.showProductDetailModal = false;
             this.ReviewList = item
             this.showModal = true
         },
