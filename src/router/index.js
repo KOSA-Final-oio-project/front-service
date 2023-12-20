@@ -33,11 +33,11 @@ import Rent from '@/components/MyPage/components/RentedList.vue'
 import Borrow from '@/components/MyPage/components/BorrowedList.vue'
 
 //PRODUCT
-import ProductDetail from'@/components/Product/ProductDetail.vue'
-import ProductList from'@/components/Product/ProductList.vue'
-import SearchProduct from'@/components/Product/SearchProduct.vue'
-import WriteProduct from'@/components/Product/WriteProduct.vue'
-import ModifyProduct from'@/components/Product/ModifyProduct.vue'
+import ProductDetail from '@/components/Product/ProductDetail.vue'
+import ProductList from '@/components/Product/ProductList.vue'
+import SearchProduct from '@/components/Product/SearchProduct.vue'
+import WriteProduct from '@/components/Product/WriteProduct.vue'
+import ModifyProduct from '@/components/Product/ModifyProduct.vue'
 
 //POST
 import MainPost from '@/components/Post/MainPost.vue'
@@ -45,81 +45,79 @@ import PostList from '@/components/Post/PostList.vue'
 import PostView from '@/components/Post/PostView.vue'
 import PostRegister from '@/components/Post/PostRegister.vue'
 
-
 const router = createRouter({
   history: createWebHistory(),
 
-    routes: [
-        { path: '/', components: { default: TopView, TopRental, AllProduct } },
-        { path: '/top-view', components: { default: TopView, AllProduct } },
-        { path: '/top-rental', components: { default: TopRental, AllProduct } },
-        { path: '/member-service/login', name: 'Login', component: Login },
-        { path: '/member-service/signup', component: Signup },
-        { path: '/findPassword', component: FindPassword },
-        {
-            path: '/chat', // ChatRoomList 컴포넌트가 열리는 경로
-            name: 'ChatRoomList',
-            component: ChatRoomList
-        },
-        {
-            path: '/chat/room/enter/:roomId', // ChatRoomDetail 컴포넌트가 열리는 경로
-            name: 'ChatRoomEnter',
-            component: ChatRoomDetail,
-            props: true,
-        },
-        {
-            path: '/chat/date', // SelectDatePopup 컴포넌트가 열리는 경로
-            name: 'SelectDatePopup',
-            component: SelectDatePopup
-        },
-        {
-            path: '/mypage',
-            component: MyPageMain,
-            children: [
-                { path: '', component: ModifyUser },
-                { path: 'needrent', component: NeedRent },
-                { path: 'needborr', component: NeedBorrow },
-                { path: 'receive', component: Receive },
-                { path: 'write', component: Write },
-                { path: 'rent', component: Rent },
-                { path: 'borrow', component: Borrow },
-                { path: 'modify', component: ModifyUser }
-            ]
-        },
-        {
-            path: '/userinfo',
-            component: UserInfoMain,
-            children: [
-                { path: 'needrent', component: UserInfoNeedRent },
-                { path: 'needborr', component: UserInfoNeedBorrow },
-                { path: 'receive', component: UserInfoReceive },
-                { path: 'borrow', component: UserInfoBorrow },
-                { path: 'rent', component: UserInfoRent }
-            ]
-        },
+  routes: [
+    { path: '/', components: { default: TopView, TopRental, AllProduct } },
+    { path: '/top-view', components: { default: TopView, AllProduct } },
+    { path: '/top-rental', components: { default: TopRental, AllProduct } },
+    { path: '/member-service/login', name: 'Login', component: Login },
+    { path: '/member-service/signup', component: Signup },
+    { path: '/findPassword', component: FindPassword },
+    {
+      path: '/chat', // ChatRoomList 컴포넌트가 열리는 경로
+      name: 'ChatRoomList',
+      component: ChatRoomList
+    },
+    {
+      path: '/chat/room/enter/:roomId', // ChatRoomDetail 컴포넌트가 열리는 경로
+      name: 'ChatRoomEnter',
+      component: ChatRoomDetail,
+      props: true
+    },
+    {
+      path: '/chat/date', // SelectDatePopup 컴포넌트가 열리는 경로
+      name: 'SelectDatePopup',
+      component: SelectDatePopup
+    },
+    {
+      path: '/mypage',
+      component: MyPageMain,
+      children: [
+        { path: '', component: ModifyUser },
+        { path: 'needrent', component: NeedRent },
+        { path: 'needborr', component: NeedBorrow },
+        { path: 'receive', component: Receive },
+        { path: 'write', component: Write },
+        { path: 'rent', component: Rent },
+        { path: 'borrow', component: Borrow },
+        { path: 'modify', component: ModifyUser }
+      ]
+    },
+    {
+      path: '/userinfo',
+      component: UserInfoMain,
+      children: [
+        { path: 'needrent', component: UserInfoNeedRent },
+        { path: 'needborr', component: UserInfoNeedBorrow },
+        { path: 'receive', component: UserInfoReceive },
+        { path: 'borrow', component: UserInfoBorrow },
+        { path: 'rent', component: UserInfoRent }
+      ]
+    },
 
-        {path: '/product/productDetail', component: ProductDetail},
-        {path: '/product/productList', component: ProductList},
-        {path: '/product/searchProduct', component: SearchProduct},
-        {path: '/product/writeProduct', component: WriteProduct},
-        {path: '/product/modifyProduct', component: ModifyProduct},
+    { path: '/product/productDetail', component: ProductDetail },
+    { path: '/product/productList', component: ProductList },
+    { path: '/product/searchProduct', component: SearchProduct },
+    { path: '/product/writeProduct', component: WriteProduct },
+    { path: '/product/modifyProduct', component: ModifyProduct },
 
-        {
-            path: '/location',
-            component: Location
-        },
-        
-        {
-          path: '/post',
-          component: MainPost,
-          children: [
-            { path: 'list/:id', component: PostList },
-            { path: 'view/:id', component: PostView },
-            { path: 'register', component: PostRegister }
-          ]
-        }, 
-
-    ]
+    ,
+    {
+      path: '/product/productDetail/:id?/:ni?',
+      component: ProductDetail
+    },
+    {
+      path: '/post',
+      component: MainPost,
+      children: [
+        { path: 'list/:id', component: PostList },
+        { path: 'view/:id', component: PostView },
+        { path: 'register', component: PostRegister }
+      ]
+    }
+  ]
 })
 
 export default router
