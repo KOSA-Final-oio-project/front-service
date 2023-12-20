@@ -40,10 +40,12 @@
 
           <div class="my-4">
             <div class="d-flex justify-content-end">
-              <button type="button" class="btn btn-outline-info" @click="test">확인</button>
+              <button type="button" class="btn btn-outline-info" @click="confirmBtn">확인</button>
               <template v-if="isWriter">
-                <button type="button" class="btn btn-outline-info mx-2">수정</button>
-                <button type="button" class="btn btn-outline-info">삭제</button>
+                <button type="button" class="btn btn-outline-info mx-2">
+                  <RouterLink :to="`/post/modify/${postId}`" class="link">수정</RouterLink>
+                </button>
+                <button type="button" class="btn btn-outline-info" @click="removeBtn">삭제</button>
               </template>
             </div>
           </div>
@@ -59,12 +61,10 @@
     <div class="col">
       <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap">
         <template v-for="file in setFiles" :key="file">
-          <div class="card col-4">
-            <div class="card-header d-flex justify-content-center">
-              {{ file }}
-            </div>
-            <div class="card-body" v-if="getImagePath(file)">
-              <img v-if="imageLoaded" :src="imageSrc" alt="image" height="200" width="200"/>
+          <div class="card col-2">
+            <div class="card-header d-flex justify-content-center"></div>
+            <div class="card-body">
+              <img :src="setUrl + file" alt="image" height="150" width="150" />
             </div>
           </div>
         </template>
@@ -75,11 +75,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getPost, getImage } from './post'
-import { useRoute } from 'vue-router'
+import { getPost, deletePost } from './post'
+import { useRoute, useRouter } from 'vue-router'
 
+const router = useRouter()
 const route = useRoute()
-
 const postId = route.params.id
 const post = ref([])
 const setCategory = ref('')
@@ -87,8 +87,7 @@ const setTitle = ref('')
 const setContent = ref('')
 const isWriter = ref(false)
 const setFiles = ref([])
-const imageSrc = ref('')
-const imageLoaded = ref(false)
+const setUrl = 'https://oioproject-bucket.s3.ap-northeast-2.amazonaws.com/'
 
 const getPostOne = async (postId) => {
   const { data } = await getPost(postId)
@@ -98,11 +97,17 @@ const getPostOne = async (postId) => {
   setContent.value = post.value.postDto.content
   isWriter.value = post.value.isEquals
   setFiles.value = post.value.postDto.fileNames
-  console.log(setFiles.value)
 }
 
-const getImagePath = async (file) => {
-    const { data } = await getImage(file)
+const confirmBtn = () => {
+  router.push('/post/list/Q&A')
+}
+
+const removeBtn = async () => {
+  await deletePost(postId, setFiles.value).then((response) => {
+    console.log(response)
+    router.push('/post/list/공지사항')
+  })
 }
 
 onMounted(() => {
@@ -117,5 +122,12 @@ onMounted(() => {
 .select-wrapper {
   width: 120px;
   margin-right: 40px;
+}
+.link{
+  text-decoration: none;
+  color:#0dcaf0;
+}
+.link:hover{
+  color:black;
 }
 </style>

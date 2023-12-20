@@ -1,30 +1,29 @@
 import axios from 'axios'
 
-const apiUrl = 'http://127.0.0.1:8889';
-
+const apiUrl = 'http://127.0.0.1:8889'
 
 export function getAllPost(category, page, type, keyword) {
   return axios.get(apiUrl + `/posts/${category}`, { params: { page, type, keyword } })
 }
 
-export function searchAllPost(category,  type, keyword) {
+export function searchAllPost(category, type, keyword) {
   return axios.get(apiUrl + `/posts/${category}`, { params: { type, keyword } })
 }
 
 export function uploadImage(formObj) {
-  return axios.post(apiUrl+'/upload', formObj, {
+  return axios.post(apiUrl + '/upload', formObj, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
-  });
+  })
 }
 
 export function removeImage(uuid, fileName) {
-  return axios.delete(apiUrl+`/remove/${uuid}_${fileName}`)
+  return axios.delete(apiUrl + `/remove/${uuid}_${fileName}`)
 }
 
-export function postRegister(data){
-  return axios.post(apiUrl+'/post/register/테스트', data, {
+export function postRegister(formdata) {
+  return axios.post(apiUrl + '/post/register/테스트', formdata, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -32,9 +31,13 @@ export function postRegister(data){
 }
 
 export function getPost(postId) {
-  return axios.get(apiUrl+`/post/${postId}/테스트`)
+  return axios.get(apiUrl + `/post/${postId}/테스트`)
 }
 
-export function getImage(fileName){
-  return axios.get(apiUrl+`/view/${fileName}`)
+export function deletePost(postId, fileNames) {
+  return axios.delete(apiUrl + `/post/${postId}`, { data: { fileNames } })
+}
+
+export function putPost(postId, formdata) {
+  return axios.put(apiUrl + `/post/${postId}`, formdata  )
 }
