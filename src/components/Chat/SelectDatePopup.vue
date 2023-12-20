@@ -103,6 +103,9 @@ export default {
 
         // 거래 시작 메서드
         startRent() {
+
+            const roomDataJson = JSON.parse(localStorage.getItem('roomData'))
+
             // 날짜 데이터 포맷팅 (YYYY-MM-DD HH:mm 형식)
             const rentStartDate = this.formatDateForRent(this.date[0])
             const rentEndDate = this.formatDateForRent(this.date[1])
@@ -111,8 +114,8 @@ export default {
             console.log(rentEndDate)
 
             // 대여자 및 소유자 닉네임 임시로
-            const ownerNickname = '아무개'
-            const borrowerNickname = '김학윤'
+            const ownerNickname = roomDataJson.receiver
+            const borrowerNickname = roomDataJson.sender
 
             // 백엔드로 전송할 데이터 구성
             const rentData = {
@@ -121,26 +124,27 @@ export default {
                 rentStartDate,
                 rentEndDate
             }
+            const productNo = roomDataJson.productNo
 
-            console.log(rentData)
+            console.log(productNo)
 
             // 백엔드로 데이터 전송
-            // axios
-            //     .post('백엔드 API', rentData)
-            //     .then(response => {
-            //         // 성공시 로직
-            //         console.log('거래 시작 데이터 전송 성공:', response);
-            //     })
-            //     .catch(error => {
-            //         // 실패시 로직
-            //         console.error('거래 시작 데이터 전송 실패:', error);
-            //     });
+            axios
+                .post(`http://192.168.1.86:7575/rent/${productNo}`, rentData)
+                .then(response => {
+                    // 성공시 로직
+                    console.log('거래 시작 데이터 전송 성공:', response);
+                })
+                .catch(error => {
+                    // 실패시 로직
+                    console.error('거래 시작 데이터 전송 실패:', error);
+                });
 
             // -------------------------------------------------------------------
 
             // 웹소켓 연결
             const refer = this // Vue 인스턴스의 this를 변수에 저장
-            const sock = new SockJS(this.$backURL + '/chat-service/ws-stomp')
+            const sock = new SockJS('http://192.168.1.93:9797/chat-service/ws-stomp')
             const ws = Stomp.over(sock, { protocols: ['v1.2'] }) // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
 
             this.roomId = localStorage.getItem('wschat.roomId')
