@@ -44,7 +44,7 @@
 
 
             <tbody>
-                <tr v-for="dto in post.dtoList" :key="dto.pno" @click="postViewClick(dto.pno)">
+                <tr v-for="dto in post.dtoList" :key="dto.pno">
                   <th scope="row">{{ dto.pno }}</th>
                   <td>
                     <RouterLink :to="`/post/view/${dto.pno}`"> <a> {{ dto.title }} </a></RouterLink>
@@ -113,7 +113,6 @@ const post = ref([])
 
 watch(() => route.params.id, (newId) => {
   categoryName.value = newId
-  console.log(route.params.id)
   getPostAll(categoryName.value)
 })
 
@@ -144,15 +143,9 @@ const submitForm = async () => {
   post.value = data
 }
 
-const postViewClick = (pno) => {
-  console.log(pno)
-}
-
 onMounted(() => {
   getPostAll(categoryName.value)
 })
-
-
 </script>
 
 <style scoped></style>
