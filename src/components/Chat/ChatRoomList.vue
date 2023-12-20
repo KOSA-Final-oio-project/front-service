@@ -164,7 +164,7 @@ export default {
 }
 
 section {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     padding-top: 150px;
     width: 100%;
     height: 100%;
