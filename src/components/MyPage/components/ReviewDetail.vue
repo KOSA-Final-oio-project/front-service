@@ -68,7 +68,7 @@ export default {
             const productNo = useReviewdata.rentedProduct.product.productNo;
 
             return {
-                path: `/product-service/productDetail/${productNo}/${productNickname}`,
+                path: `/product/productDetail/${productNo}/${productNickname}`,
                 // 다른 라우터 속성들을 설정할 수 있음
             };
         },
@@ -80,7 +80,7 @@ export default {
             const rentedProductNo = useReviewdata.rentedProductNo
             console.log(useReviewdata.rentedProduct.product.nickname)
 
-            const url = `http://192.168.1.86:7575/rent/detail/${rentedProductNo}`
+            const url = this.$backURL + `rent/detail/${rentedProductNo}`
 
             axios
                 .get(url)
@@ -100,7 +100,7 @@ export default {
             const useReviewdata = this.ReviewData
             const reviewNo = useReviewdata.reviewNo
 
-            const url = `http://192.168.1.86:7575/review/${reviewNo}`
+            const url = this.$backURL + `review/${reviewNo}`
 
             axios
                 .get(url)
@@ -119,7 +119,7 @@ export default {
 
             const nickname = useReviewdata.profile.result.nickname
 
-            const url = `http://192.168.1.37:9999/oio/member/${nickname}`
+            const url = this.$backURL + `oio/member/${nickname}`
 
             axios.get(url).then((response) => {
                 this.profile = response.data.result.profile

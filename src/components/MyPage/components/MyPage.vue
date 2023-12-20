@@ -54,7 +54,7 @@ export default {
     methods: {
         getHeart() {
             const nickname = localStorage.getItem('nickname')
-            const url = `http://192.168.1.86:7575/review/heart?nickname=${nickname}`
+            const url = this.$backURL+`review/heart?nickname=${nickname}`
 
             axios
                 .get(url)
@@ -68,7 +68,7 @@ export default {
         },
         getUserProfile() {
             const nickname = localStorage.getItem('nickname')
-            const url = `http://192.168.1.37:9999/oio/member/${nickname}`
+            const url = this.$backURL+`member/${nickname}`
 
             axios.get(url).then((response) => {
                 console.log(response)

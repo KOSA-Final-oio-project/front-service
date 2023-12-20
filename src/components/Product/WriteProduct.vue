@@ -118,7 +118,7 @@ export default {
            
 
             // 서버로 전송
-            axios.post(`http://127.0.0.1:8889/product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/${nickname}`, formData, {
+            axios.post(this.$backURL + `product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/${nickname}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -145,13 +145,13 @@ export default {
         },
 
         getSiDo() {
-            axios.get('http://localhost:8889/address/siDoList').then((result) => {
+            axios.get(this.$backURL + 'address/siDoList').then((result) => {
                 this.siDoList = result.data
             })
         },
         getSiGunGu() {
             axios
-                .get(`http://localhost:8889/address/siGunGuList/${this.selectedSido}`)
+                .get(this.$backURL + `address/siGunGuList/${this.selectedSido}`)
                 .then((result) => {
                     this.siGunGuList = result.data
                 })
@@ -159,14 +159,14 @@ export default {
         getEupMyeonRo() {
             axios
                 .get(
-                    `http://localhost:8889/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
+                    this.$backURL + `address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
                 )
                 .then((result) => {
                     this.eupMyeonRoList = result.data
                 })
         },
         getCategory() {
-            axios.get('http://localhost:8889/category/categoryList').then((result) => {
+            axios.get(this.$backURL + 'category/categoryList').then((result) => {
                 this.categoryList = result.data
             })
         }

@@ -36,7 +36,7 @@ export default {
             return `${year}-${month}-${day}`
         },
         getTopRental() {
-            const url = 'http://localhost:8889/product/productList/r'
+            const url = this.$backURL + 'product/productList/r'
 
             axios.get(url).then((result) => {
                 console.log(result)

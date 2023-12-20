@@ -74,19 +74,19 @@ export default {
         },
         selectProduct() {
             if (this.selectedSido == '') {
-                axios.get('http://localhost:8889/product/productList/n')
+                axios.get(this.$backURL + 'product/productList/n')
                     .then((result) => {
                         this.products = result.data.productList
                     })
             } else if (this.selectedSiGunGu == '') {
                 axios
-                    .get('http://localhost:8889/product/productList/n?siDo=' + this.selectedSido)
+                    .get(this.$backURL + 'product/productList/n?siDo=' + this.selectedSido)
                     .then((result) => {
                         this.products = result.data.productList
                     })
             } else if (this.selectedEupMyeonRo == '') {
                 axios
-                    .get('http://localhost:8889/product/productList/n', {
+                    .get(this.$backURL + 'product/productList/n', {
                         params: {
                             siDo: this.selectedSido,
                             siGunGu: this.selectedSiGunGu
@@ -97,7 +97,7 @@ export default {
                     })
             } else {
                 axios
-                    .get('http://localhost:8889/product/productList/n', {
+                    .get(this.$backURL + 'product/productList/n', {
                         params: {
                             siDo: this.selectedSido,
                             siGunGu: this.selectedSiGunGu,
@@ -110,13 +110,13 @@ export default {
             }
         },
         getSiDo() {
-            axios.get('http://localhost:8889/address/siDoList').then((result) => {
+            axios.get(this.$backURL + 'address/siDoList').then((result) => {
                 this.siDoList = result.data
             })
         },
         getSiGunGu() {
             axios
-                .get(`http://localhost:8889/address/siGunGuList/${this.selectedSido}`)
+                .get(this.$backURL + `address/siGunGuList/${this.selectedSido}`)
                 .then((result) => {
                     this.siGunGuList = result.data
                 })
@@ -124,14 +124,14 @@ export default {
         getEupMyeonRo() {
             axios
                 .get(
-                    `http://localhost:8889/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
+                    this.$backURL + `address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
                 )
                 .then((result) => {
                     this.eupMyeonRoList = result.data
                 })
         },
         get() {
-            axios.get('http://localhost:8889/product/productList/n').then((result) => {
+            axios.get(this.$backURL + 'product/productList/n').then((result) => {
                 this.products = result.data.productList
             })
         }

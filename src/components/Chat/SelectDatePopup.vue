@@ -130,7 +130,7 @@ export default {
 
             // 백엔드로 데이터 전송
             axios
-                .post(`http://192.168.1.86:7575/rent/${productNo}`, rentData)
+                .post(this.$backURL + `rent/${productNo}`, rentData)
                 .then(response => {
                     // 성공시 로직
                     console.log('거래 시작 데이터 전송 성공:', response);
@@ -144,7 +144,7 @@ export default {
 
             // 웹소켓 연결
             const refer = this // Vue 인스턴스의 this를 변수에 저장
-            const sock = new SockJS('http://192.168.1.93:9797/chat-service/ws-stomp')
+            const sock = new SockJS('http://192.168.1.86:9797/chat-service/ws-stomp')
             const ws = Stomp.over(sock, { protocols: ['v1.2'] }) // 버전 명시 안하면 deprecated 뜸 6-6... 안해도 되긴 하는데 말이쥐,,,
 
             this.roomId = localStorage.getItem('wschat.roomId')

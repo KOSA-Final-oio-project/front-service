@@ -42,7 +42,7 @@ export default {
     methods: {
         findPassword() {
             axios
-                .post(`http://localhost:9999/oio/member/${this.email}`, {
+                .post(this.$backURL + `member/${this.email}`, {
                     email: this.email
                 })
                 .then((result) => {

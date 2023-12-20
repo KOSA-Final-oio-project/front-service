@@ -46,7 +46,7 @@ export default {
     methods: {
         getRentProduct() {
             const nickname = localStorage.getItem('nickname')
-            const url = `http://192.168.1.86:8889/product/myProduct/${nickname}/0`
+            const url = this.$backURL + `product/myProduct/${nickname}/0`
             axios
                 .get(url)
                 .then((response) => {

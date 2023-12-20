@@ -36,7 +36,7 @@ export default {
             return `${year}-${month}-${day}`
         },
         getTopView() {
-            const url = 'http://localhost:8889/product/productList/v'
+            const url = this.$backURL + 'product/productList/v'
 
             axios.get(url).then((result) => {
                 console.log(result)

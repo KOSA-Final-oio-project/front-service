@@ -69,7 +69,7 @@ export default {
             alert('현재 닉네임은: ' + this.sender)
 
             axios
-                .get('http://192.168.1.93:9797/chat-service/chat/rooms/' + this.sender)
+                .get('http://192.168.1.86:9797/chat-service/chat/rooms/' + this.sender)
                 .then((response) => {
                     this.chatRooms = response.data
                     console.log('response.data = ' + response.data) // 서버 응답 확인
@@ -89,10 +89,10 @@ export default {
                 localStorage.setItem('wschat.roomId', roomId)
             }
 
-            alert('전달하는 url은 ' + 'http://192.168.1.93:9797/chat-service/chat/roominfo/' + roomId)
+            alert('전달하는 url은 ' + this.$backURL + 'chat-service/chat/roominfo/' + roomId)
 
             // API 호출하여 채팅방 정보 가져오기
-            axios.get('http://192.168.1.93:9797/chat-service/chat/roominfo/' + roomId).then((response) => {
+            axios.get('http://192.168.1.86:9797/chat-service/chat/roominfo/' + roomId).then((response) => {
                 alert(this.roomId)
                 console.log('&&&&&&&&&&&&&&&&&&&&&&&&&7 ' + response.data)
                 localStorage.setItem(
