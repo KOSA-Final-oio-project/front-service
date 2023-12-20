@@ -2,7 +2,7 @@
     <!-- 회원가입 폼 컨테이너 -->
     <div class="form-container">
         <!-- 서버단에 전송할 데이터 작성 구역 (폼) -->
-        <form>
+        <form @submit.prevent>
             <div class="form-container">
                 <div class="form-group">
                     <div class="flex-container">
@@ -204,7 +204,7 @@ export default {
         },
 
         cancelDelete() {
-            // this.showModal = false;
+            this.showModal = false;
         },
 
         confirmDelete() {

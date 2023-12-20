@@ -40,8 +40,15 @@ import SearchProduct from'@/components/Product/SearchProduct.vue'
 import WriteProduct from'@/components/Product/WriteProduct.vue'
 import ModifyProduct from'@/components/Product/ModifyProduct.vue'
 
+//POST
+import MainPost from '@/components/Post/MainPost.vue'
+import PostList from '@/components/Post/PostList.vue'
+import PostView from '@/components/Post/PostView.vue'
+import PostRegister from '@/components/Post/PostRegister.vue'
+
+
 const router = createRouter({
-    history: createWebHistory(),
+  history: createWebHistory(),
 
     routes: [
         { path: '/', components: { default: TopView, TopRental, AllProduct } },
@@ -78,11 +85,28 @@ const router = createRouter({
                 { path: 'rent', component: UserInfoRent }
             ]
         },
+
         {path: '/product/productDetail', component: ProductDetail},
         {path: '/product/productList', component: ProductList},
         {path: '/product/searchProduct', component: SearchProduct},
         {path: '/product/writeProduct', component: WriteProduct},
-        {path: '/product/modifyProduct', component: ModifyProduct}
+        {path: '/product/modifyProduct', component: ModifyProduct},
+
+        {
+            path: '/location',
+            component: Location
+        },
+        
+        {
+          path: '/post',
+          component: MainPost,
+          children: [
+            { path: 'list/:id', component: PostList },
+            { path: 'view/:id', component: PostView },
+            { path: 'register', component: PostRegister }
+          ]
+        }, 
+
     ]
 })
 
