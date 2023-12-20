@@ -89,7 +89,9 @@ export default {
     methods: {
         getUserInfo() {
             const nickname = localStorage.getItem('user')
+
             const url = `http://192.168.1.37:9999/oio/member/${nickname}`
+            
             axios.get(url).then((result) => {
                 this.userProfile = result.data.result.profile
             })

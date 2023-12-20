@@ -2,7 +2,9 @@
     <div class="review-container">
         <div class="product-detail">
             <div class="product-info">
-                <img src="../../../assets/favicon.ico" alt="대여 물품 사진" />
+                <router-link :to="productDetailLink">
+                    <img alt="대여 물품 사진" :src="thumbnail" />
+                </router-link>
                 <div class="product-text">
                     <span v-if="review.heart === 0"><i class="bi bi-heart"></i></span>
                     <span v-else-if="review.heart === 1"><i class="bi bi-heart-fill"></i></span>
@@ -43,6 +45,7 @@
 import axios from 'axios'
 export default {
     name: 'ReviewDetail',
+
     props: {
         ReviewData: {
             type: Object,
@@ -54,13 +57,28 @@ export default {
             review: '',
             product: '',
             title: '',
-            profile: ''
+            profile: '',
+            thumbnail: '',
         }
     },
+    computed: {
+        productDetailLink() {
+            const useReviewdata = this.ReviewData;
+            const productNickname = useReviewdata.rentedProduct.product.nickname;
+            const productNo = useReviewdata.rentedProduct.product.productNo;
+
+            return {
+                path: `/product-service/productDetail/${productNo}/${productNickname}`,
+                // 다른 라우터 속성들을 설정할 수 있음
+            };
+        },
+    },
+
     methods: {
         getRentedProduct() {
             const useReviewdata = this.ReviewData
             const rentedProductNo = useReviewdata.rentedProductNo
+            console.log(useReviewdata.rentedProduct.product.nickname)
 
             const url = `http://192.168.1.86:7575/rent/detail/${rentedProductNo}`
 
@@ -70,6 +88,9 @@ export default {
                     const responseProduct = response.data
                     console.log(responseProduct)
                     this.product = responseProduct
+                    this.thumbnail = useReviewdata.rentedProduct.product.thumbnail
+                    this.ProductList = responseProduct
+                    console.log(this.ProductList)
                 })
                 .catch((error) => {
                     console.error('error : ', error)
@@ -113,7 +134,8 @@ export default {
 
         closeModal() {
             this.$emit('close-modal')
-        }
+        },
+
     },
 
     mounted() {

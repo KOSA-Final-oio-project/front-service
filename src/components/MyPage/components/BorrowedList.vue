@@ -2,15 +2,17 @@
     <div class="borrowed-list-outer-container">
         <div class="borrowed-list-container">
             <ul class="borrowed-list-ul">
-                <li v-for="item in list" :key="item.id" class="borrowed-item">
+                <li v-for="item in list" :key="item.id" class="borrowed-item" @click="openProductDetailModal(item)">
                     <div class="left">
-                        <img class="product-img" src="../../../assets/oio.png">
+                        <img class="product-img" :src="findThumbnail(item.productNo)">
                     </div>
                     <div class="right">
-                        <p><img src="../../../assets/package.png"> {{ truncateText(getProductTitle(item.productNo), 3) }}<br>
+                        <p><img src="../../../assets/package.png"> {{ truncateText(getProductTitle(item.productNo), 3)
+                        }}<br>
                         </p>
                         <p><img src="../../../assets/user-profile.png"> {{ item.ownerNickname }}<br></p>
-                        <p><img src="../../../assets/calendar.png"> {{ item.rentStartDate }} ~ {{ item.rentEndDate }}<br></p>
+                        <p><img src="../../../assets/calendar.png"> {{ item.rentStartDate }} ~ {{ item.rentEndDate }}<br>
+                        </p>
                         <img src="../../../assets/status.png"> {{ item.status }}
                         <span>
                             <button v-if="showReviewButton(item.reviewStatus, item.status)" @click="openModal(item)"
@@ -23,6 +25,14 @@
         <transition name="overlay-fade">
             <div v-if="showModal || showConfirmationModal" class="modal-overlay" @click="closeModal"></div>
         </transition>
+
+        <div class="product-detail-modal" v-if="showProductDetailModal">
+            <button @click="closeProductDetailModal" class="close-button">닫기</button>
+            <transition name="modal-fade" mode="out-in">
+                <ProductDetail :ProductList="ProductList" @close="closeProductDetailModal" class="modal-wrapper" />
+            </transition>
+        </div>
+
         <transition name="modal-fade" mode="out-in">
             <WriteReview v-if="showModal" @close="closeModal" @reviewSubmitted="refreshData" :ReviewList="ReviewList"
                 class="modal-wrapper" />
@@ -33,9 +43,11 @@
 <script>
 import axios from 'axios'
 import WriteReview from './WriteReview.vue';
+import ProductDetail from '../../Product/ProductDetail.vue'
 export default {
     components: {
-        WriteReview
+        WriteReview,
+        ProductDetail
     },
     name: 'BorrowedList',
     data() {
@@ -44,6 +56,8 @@ export default {
             data: [],
             showModal: false,
             ReviewList: null,
+            ProductList: null,
+            showProductDetailModal: false,
         }
     },
     methods: {
@@ -71,7 +85,7 @@ export default {
                             responses.forEach(response => {
                                 const data = response.data;
                                 this.data = this.data.concat(data);
-                                console.log(data)
+                                console.log(data[0].thumbnail)
                             });
                         })
                         .catch(error => {
@@ -100,6 +114,22 @@ export default {
 
         showReviewButton(reviewStatus, status) {
             return reviewStatus !== "대여받은사람" && reviewStatus !== "모두" && status !== "대여중";
+        },
+
+        openProductDetailModal(item) {
+            this.ProductList = item; // 선택된 상품 정보를 저장
+            this.showProductDetailModal = true; // ProductDetail 모달 표시 상태를 true로 변경
+        },
+
+        // ProductDetail 모달 닫기 메서드
+        closeProductDetailModal() {
+            this.showProductDetailModal = false; // ProductDetail 모달 표시 상태를 false로 변경
+            this.$emit('close');
+        },
+
+        findThumbnail(productNo) {
+            const matchingProduct = this.data.find(item => item.productNo === productNo);
+            return matchingProduct ? matchingProduct.thumbnail : ''; // 해당 제품의 thumbnail 반환 또는 빈 문자열 반환
         },
 
         refreshData() {
@@ -169,6 +199,25 @@ export default {
     width: 20px;
 }
 
+.borrowed-item {
+    display: flex;
+    justify-content: space-between;
+    width: 30%;
+    margin-top: 20px;
+    margin-left: 30px;
+    list-style: none;
+    border: 2px solid #18b7be;
+    border-radius: 5px;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+.borrowed-item:hover {
+    cursor: pointer;
+    background-color: #f0f0f0;
+}
+
+
 .borrowed-item p {
     /* margin-top: 10px; */
     /* height: 15px; */
@@ -215,5 +264,49 @@ export default {
 .overlay-fade-enter,
 .overlay-fade-leave-to {
     opacity: 0;
+}
+
+.product-detail-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    /* 기존 modal-wrapper(z-index: 999)보다 더 위에 표시될 수 있도록 설정 */
+    background-color: #ffffff;
+    border: 4px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    width: 80%;
+    /* 수정: 모달의 너비 조정 */
+    height: 80%;
+
+    overflow-y: auto;
+    /* 내용이 모달 밖으로 넘칠 경우 스크롤 표시 */
+}
+
+.close-button {
+    border: 2px solid #d9d9d9;
+    border-radius: 30px;
+    background-color: #d9d9d9;
+    color: #ffffff;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.close-button:hover {
+    background-color: #ffffff;
+    color: #d9d9d9;
+}
+
+.modal-wrapper {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    /* 배경 오버레이보다 더 앞에 표시되도록 설정 */
 }
 </style>

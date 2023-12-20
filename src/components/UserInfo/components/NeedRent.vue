@@ -2,9 +2,9 @@
     <div class="need-rent-outer-container">
         <div class="need-rent-container">
             <ul class="need-rent-ul">
-                <li v-for="item in data" :key="item.id" class="need-rent-item">
+                <li v-for="item in data" :key="item.id" class="need-rent-item" @click="openProductDetailModal(item)">
                     <div class="left">
-                        <img class="product-img" src="../../../assets/oio.png" />
+                        <img class="product-img" :src="findThumbnail(item.productNo)" />
                     </div>
                     <div class="right">
                         <p><img src="../../../assets/package.png" /> {{ item.title }}<br /></p>
@@ -20,15 +20,27 @@
                 </li>
             </ul>
         </div>
+        <div class="product-detail-modal" v-if="showProductDetailModal">
+            <transition name="modal-fade" mode="out-in">
+                <ProductDetail :ProductList="ProductList" @close="closeProductDetailModal" class="modal-wrapper" />
+            </transition>
+            <button @click="closeProductDetailModal" class="close-button">닫기</button>
+        </div>
     </div>
 </template>
 <script>
 import axios from 'axios'
+import ProductDetail from '../../Product/ProductDetail.vue'
 export default {
     name: 'NeedRent',
+    components: {
+        ProductDetail
+    },
     data() {
         return {
-            data: []
+            data: [],
+            ProductList: null,
+            showProductDetailModal: false,
         }
     },
     methods: {
@@ -55,6 +67,22 @@ export default {
             } else {
                 return '알 수 없음'
             }
+        },
+
+        openProductDetailModal(item) {
+            this.ProductList = item; // 선택된 상품 정보를 저장
+            this.showProductDetailModal = true; // ProductDetail 모달 표시 상태를 true로 변경
+        },
+
+        // ProductDetail 모달 닫기 메서드
+        closeProductDetailModal() {
+            this.showProductDetailModal = false; // ProductDetail 모달 표시 상태를 false로 변경
+            this.$emit('close');
+        },
+
+        findThumbnail(productNo) {
+            const matchingProduct = this.data.find(item => item.productNo === productNo);
+            return matchingProduct ? matchingProduct.thumbnail : ''; // 해당 제품의 thumbnail 반환 또는 빈 문자열 반환
         },
 
         formatDate(dateString) {
@@ -122,5 +150,46 @@ export default {
     border: 2px solid #18b7be;
     border-radius: 5px;
     padding: 10px;
+    transition: all 0.3s ease;
+}
+
+.need-rent-item:hover {
+    cursor: pointer;
+    background-color: #f0f0f0;
+}
+
+.product-detail-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    /* 기존 modal-wrapper(z-index: 999)보다 더 위에 표시될 수 있도록 설정 */
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    width: 80%;
+    /* 수정: 모달의 너비 조정 */
+    height: 80%;
+
+    overflow-y: auto;
+    /* 내용이 모달 밖으로 넘칠 경우 스크롤 표시 */
+}
+
+.close-button {
+    border: 2px solid #d9d9d9;
+    border-radius: 30px;
+    background-color: #d9d9d9;
+    color: #ffffff;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.close-button:hover {
+    background-color: #ffffff;
+    color: #d9d9d9;
 }
 </style>

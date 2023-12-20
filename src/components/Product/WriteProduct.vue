@@ -118,7 +118,7 @@ export default {
            
 
             // 서버로 전송
-            axios.post(`http://127.0.0.1:8889/product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/주소수`, formData, {
+            axios.post(`http://127.0.0.1:8889/product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/${nickname}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

@@ -74,16 +74,17 @@ export default {
         },
         selectProduct() {
             if (this.selectedSido == '') {
-                axios.get('http://localhost:8889/product/productList/n').then((result) => {
-                    this.products = result.data.productList
-                })
+                axios.get('http://localhost:8889/product/productList/n')
+                    .then((result) => {
+                        this.products = result.data.productList
+                    })
             } else if (this.selectedSiGunGu == '') {
                 axios
                     .get('http://localhost:8889/product/productList/n?siDo=' + this.selectedSido)
                     .then((result) => {
                         this.products = result.data.productList
                     })
-            } else if (this.selectedEupMyeonRoeup == '') {
+            } else if (this.selectedEupMyeonRo == '') {
                 axios
                     .get('http://localhost:8889/product/productList/n', {
                         params: {
@@ -147,6 +148,7 @@ body {
     /* overflow-x: hidden; */
     /* position: relative; */
 }
+
 /* Basic styling for the dropdown container */
 .dropdown {
     display: flex;
@@ -408,6 +410,7 @@ a {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 .productContainer {
     position: relative;
 }
@@ -420,6 +423,7 @@ a {
     left: 73%;
     transform: translate(-50%, -50%);
 }
+
 .searchBt img {
     height: 40px;
 }
@@ -428,7 +432,8 @@ a {
     display: flex;
     justify-content: center;
     position: relative;
-    margin-left: 5%; /* 간격을 조절 */
+    margin-left: 5%;
+    /* 간격을 조절 */
 }
 
 .products {
@@ -437,7 +442,8 @@ a {
     justify-content: center;
     /* position: relative; */
     flex-wrap: wrap;
-    gap: 20px; /* 간격을 조절 */
+    gap: 20px;
+    /* 간격을 조절 */
 }
 
 .product {
@@ -494,7 +500,8 @@ footer {
     white-space: nowrap;
     overflow: hidden;
 }
-footer > p {
+
+footer>p {
     margin-left: 10px;
 }
 </style>

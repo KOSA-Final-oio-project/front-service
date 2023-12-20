@@ -78,11 +78,11 @@ const router = createRouter({
                 { path: 'rent', component: UserInfoRent }
             ]
         },
-        {path: '/product-service/productDetail', component: ProductDetail},
-        {path: '/product-service/productList', component: ProductList},
-        {path: '/product-service/searchProduct', component: SearchProduct},
-        {path: '/product-service/writeProduct', component: WriteProduct},
-        {path: '/product-service/modifyProduct', component: ModifyProduct}
+        {path: '/product/productDetail', component: ProductDetail},
+        {path: '/product/productList', component: ProductList},
+        {path: '/product/searchProduct', component: SearchProduct},
+        {path: '/product/writeProduct', component: WriteProduct},
+        {path: '/product/modifyProduct', component: ModifyProduct}
     ]
 })
 
