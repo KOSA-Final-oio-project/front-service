@@ -56,240 +56,114 @@
           <div class="writer">{{ review.writerNickname }}</div>
           <div class="reviewDate">{{ review.postDate }}</div>
         </div>
-        <div class="reviewContent">{{ review.content }}</div>
+        <div class="reviewContent">{{ review.postDate }}</div>
       </div>
     </div>
-  </div>
-</template>
-
-<script>
-import axios from 'axios'
-import sampleImage from '@/assets/sample.png'
-
-export default {
-  name: 'ProductDatail',
-  data() {
-    return {
-      //상품 디테일
-      product: {
-        productNo: '',
-        nickname: '',
-        title: '',
-        content: '',
-        price: 0,
-        startDate: '',
-        endDate: '',
-        status: 0,
-        postDate: '',
-        viewCount: 0,
-        rentCount: 0,
-        postCategory: 0,
-        priceCategory: '',
-        thumbnail: '',
-        address: {
-          addressNo: 0,
-          siDo: '',
-          siGunGu: '',
-          eupMyeonRo: ''
+  </template>
+  
+  <script>
+  import axios from 'axios';
+  import sampleImage from "@/assets/sample.png";
+  
+  export default {
+    name: 'ProductDatail',
+    data() {
+      return {
+        product: {
+          productNo: '',
+          nickname: '',
+          title: '',
+          content: '',
+          price: 0,
+          startDate: '',
+          endDate: '',
+          status: 0,
+          postDate: '',
+          viewCount: 0,
+          rentCount: 0,
+          postCategory: 0,
+          priceCategory: '',
+          thumbnail: '',
+          address: {
+            addressNo: 0,
+            siDo: '',
+            siGunGu: '',
+            eupMyeonRo: '',
+          },
+          category: {
+            categoryNo: 0,
+            categoryName: '',
+          },
         },
-        category: {
-          categoryNo: 0,
-          categoryName: ''
-        }
+        productImgs: [],
+        status: 0,
+        reviews: [],
+        currentIndex: 0,
+      };
+    },
+    mounted() {
+      this.getProductDetail(41);
+      this.getReviews(41);
+    },
+    methods: {
+      next() {
+        this.currentIndex = (this.currentIndex + 1) % this.productImages.length;
       },
-      ProductList: {
-        productNo: '',
-        nickname: ''
+      prev() {
+        this.currentIndex = (this.currentIndex - 1 + this.productImages.length) % this.productImages.length;
       },
-      productImgs: [],
-      status: 0,
-      reviews: [],
-      currentIndex: 0,
-
-      //채팅
-      productName: '',
-      productPrice: '',
-      receiver: '',
-      sender: '',
-      roomName: ''
-    }
-  },
-
-  props: {
-    ProductList: {
-      type: Object,
-      default: null
-    }
-  },
-  created() {
-    this.ProductList.productNo = this.$route.params.id
-    this.ProductList.nickname = localStorage.getItem('nickname')
-    console.log(this.product.productNo)
-  },
-  mounted() {
-    this.getProductDetail()
-    this.getReviews()
-  },
-  methods: {
-    //상품 디테일
-    next() {
-      this.currentIndex = (this.currentIndex + 1) % this.productImages.length
-    },
-    prev() {
-      this.currentIndex =
-        (this.currentIndex - 1 + this.productImages.length) % this.productImages.length
-    },
-    getProductDetail() {
-      let nickname
-
-      if (this.ProductList.nickname == null) {
-        nickname = this.ProductList.ownerNickname
-      } else {
-        nickname = this.ProductList.nickname
-      }
-
-      console.log(nickname)
-
-      const productNo = this.ProductList.productNo
-
-      const url = `http://192.168.1.37:8889/product/productDetail/${productNo}/${nickname}`
-
-      axios
-        .get(url)
-        .then((response) => {
-          const data = response.data
-          this.product = data.product
-          this.productImgs = data.productImgs
-          const nickname = localStorage.getItem('nickname')
-          console.log(this.ProductList)
-
-          if (response.data.product.nickname !== nickname) {
-            this.status = 1
-          } else {
-            this.status = 0
-          }
-        })
-        .catch((error) => {
-          console.error('상품 정보를 불러오는데 실패했습니다.', error)
-        })
-    },
-    getReviews() {
-      const productNo = this.ProductList.productNo
-      const url = `http://192.168.1.86:7575/review/reviews/${productNo}`
-
-      axios
-        .get(url)
-        .then((response) => {
-          const data = response.data
-          console.log(data)
-          this.reviews = data
-        })
-        .catch((error) => {
-          console.error('리뷰를 불러오는데 실패했습니다.', error)
-        })
-    },
-    formatDate(dateString) {
-      const dateWithoutTime = dateString.split('T')[0]
-      return dateWithoutTime
-    },
-    getActionLink() {
-      // status에 따라 다른 URL을 반환
-      return this.status === 1 ? '신고 URL' : '수정 URL'
-    },
-
-    //채팅
-    createRoom() {
-      // 제품 정보, 수신자 닉네임, 사용자 닉네임 가져오기
-      console.log(this.ProductList)
-      const productNo = this.ProductList.productNo
-      const productName = this.ProductList.title
-      const productPrice = this.ProductList.price
-
-      const receiver = this.ProductList.nickname
-      const sender = localStorage.getItem('nickname')
-
-      // 채팅방 제목 입력
-      const roomName = prompt('생성하실 채팅방의 제목을 입력해주세요. (20자 이내)')
-
-      // 채팅방 제목 입력 필수로
-      if (!roomName) {
-        alert('채팅방 제목을 입력해주세요.')
-        return
-      } else if (roomName.length > 20) {
-        alert('채팅방 제목은 20자를 초과할 수 없습니다.')
-        return
-      }
-      console.log('입력된 채팅방 제목:', roomName)
-
-      // 현재 날짜와 시간을 생성
-      const createDate = new Date().toISOString()
-      console.log('방 생성 시도 시간:', createDate)
-
-      // 전송할 데이터 객체 생성
-      const dataToSend = {
-        roomName: roomName,
-        createDate: createDate,
-        productName: productName,
-        productPrice: productPrice,
-        receiver: receiver,
-        sender: sender,
-        productNo: productNo
-      }
-      console.log('전송할 데이터 객체 확인', dataToSend)
-
-      // 파라미터로 보낼 데이터 생성
-      const data = new URLSearchParams(dataToSend)
-
-      // 채팅방 생성 요청
-      axios
-        .post('http://192.168.1.93:9797/chat-service/chat/room', data)
-        .then((response) => {
-          console.log('response.data: ', response.data)
-          alert(' "' + response.data.roomName + '" 방 개설에 성공하였습니다.')
-
-          // localStorage에 데이터 저장
-          localStorage.setItem(
-            'roomData',
-            JSON.stringify({
-              roomName: response.data.roomName,
-              createDate: response.data.createDate,
-              roomId: response.data.roomId,
-              productName: this.ProductList.title,
-              productPrice: this.ProductList.price,
-              receiver: this.ProductList.nickname,
-              sender: sender,
-              productNo: productNo
-            })
-          )
-
-          localStorage.setItem('wschat.sender', sender)
-          localStorage.setItem('wschat.roomId', response.data.roomId)
-
-          // ChatRoomDetail로 라우팅
-          this.$router.push({
-            name: 'ChatRoomEnter',
-            params: { roomId: response.data.roomId }
+      getProductDetail(productNo) {
+        const nickname = localStorage.getItem('nickname');
+        const pno = this.$route.params.id
+        const url = `http://localhost:8889/product/productDetail/${pno}/닉네임이다`;
+  
+        axios.get(url)
+          .then(response => {
+            const data = response.data;
+            this.product = data.product;
+            this.productImgs = data.productImgs;
+            this.status = data.status;
           })
-        })
-        .catch((error) => {
-          console.log('채팅방 개설에 실패하였습니다. 오류 원인은: ' + error.message)
-        })
-    }
-  },
-  computed: {
-    productImages() {
-      if (this.product.thumbnail === null) {
-        return [sampleImage]
-      } else {
-        return [this.product.thumbnail, ...this.productImgs]
-      }
+          .catch(error => {
+            console.error('상품 정보를 불러오는데 실패했습니다.', error);
+          });
+      },
+      getReviews(productNo) {
+        const url = `http://localhost:8889/review/reviews/3`;
+  
+        axios.get(url)
+          .then(response => {
+            const data = response.data;
+            this.reviews = data;
+          })
+          .catch(error => {
+            console.error('리뷰를 불러오는데 실패했습니다.', error);
+          });
+      },
+      formatDate(dateString) {
+        const dateWithoutTime = dateString.split('T')[0];
+        return dateWithoutTime;
+      },
+      getActionLink() {
+        // status에 따라 다른 URL을 반환
+        return this.status === 1 ? '신고 URL' : '수정 URL';
+      },
     },
-    currentImage() {
-      return this.productImages[this.currentIndex]
-    }
-  }
-}
-</script>
+    computed: {
+      productImages() {
+        if (this.product.thumbnail === null) {
+              return[sampleImage]
+            } else {
+              return [this.product.thumbnail, ...this.productImgs];
+            }
+        
+      },
+      currentImage() {
+        return this.productImages[this.currentIndex];
+      },
+    },
+  };
+  </script>
 
 <style scoped>
 a {

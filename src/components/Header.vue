@@ -3,9 +3,46 @@
     <div class="header">
       <div><img src="../assets/oio.png" alt="Logo" class="logo" /></div>
 
-      <div class="input-container">
-        <div class="search-icon">
-          <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+            <div class="input-container">
+                <div class="search-icon">
+                    <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+                </div>
+                <router-link :to="'/product/searchProduct/' + searchWord">
+    <input type="text" class="search-input" v-model="searchWord" placeholder="Search..." />
+</router-link>
+            </div>
+
+            <div class="icons-container">
+                <router-link
+                    to="/member-service/signup"
+                    :class="{ icons: true, loginCheck: loginCheck }"
+                    v-if="!loginChk()"
+                >
+                    <font-awesome-icon :icon="['fas', 'user-plus']" />
+                    <span>join</span>
+                </router-link>
+                <div
+                    @click="logout()"
+                    :class="{ icons: true, loginCheck: loginCheck }"
+                    v-if="loginChk()"
+                >
+                    <font-awesome-icon :icon="['fas', 'right-from-bracket']" />
+                    <span>logout</span>
+                </div>
+
+                <router-link
+                    :class="{ icons: true, loginCheck: loginCheck }"
+                    to="/member-service/login"
+                    v-if="!loginChk()"
+                >
+                    <font-awesome-icon :icon="['fas', 'right-to-bracket']" />
+                    <span>login</span>
+                </router-link>
+                <a href="/mypage" class="icons" v-if="loginChk()">
+                    <font-awesome-icon :icon="['fas', 'user']" />
+                    <span>my</span>
+                </a>
+            </div>
         </div>
         <input type="text" class="search-input" placeholder="Search..." />
       </div>
@@ -54,10 +91,26 @@
 </template>
 <script>
 export default {
-  data() {
-    return {
-      loginCheck: false,
-      nickname: localStorage.getItem('nickname')
+    data() {
+        return {
+            loginCheck: false,
+            searchValue: ''
+        }
+    },
+
+    methods: {
+        enterJoin() {
+            this.$router.push(`/member-service/signup`)
+        },
+        loginChk() {
+            if (localStorage.getItem('nickname')) {
+                return true
+            }
+        },
+        logout() {
+            localStorage.removeItem('nickname')
+            window.location = '/'
+        }
     }
   },
 

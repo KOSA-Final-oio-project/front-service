@@ -2,6 +2,15 @@
     <body>
         <section>
             <div class="productContainer">
+                <div class="dropdown category">
+                    <select v-model="selectedCategory" name="category">
+                        <option value="" selected disabled hidden>상품카테고리</option>
+                        <option value="">전체</option>
+                        <option :value="item" v-for="(item, index) in categoryList" :key="index">
+                            {{ item }}
+                        </option>
+                    </select>
+                </div>
                 <div class="dropdown">
                     <select v-model="selectedSido" name="region siDo">
                         <option value="">전체</option>
@@ -21,7 +30,7 @@
                         name="region eupMyeonRo"
                     >
                         <option value="">전체</option>
-                        <option :value="item" v-for="(item, index) in eupMyeonRoList" :key="index">
+                        <option :value="item" v-for="(item, index) in eupMyeonRoList" :key="index" >
                             {{ item }}
                         </option>
                     </select>
@@ -30,18 +39,18 @@
                 <div class="productList">
                     <div class="products">
                         <div class="product" v-for="(item, index) in products" :key="index">
+                            <router-link :to="`/product/productDetail/${item.productNo}`">
                             <div class="productImg">
-                                <span class="rented">{{
-                                    item.status === 1 ? '대여중' : '미대여'
-                                }}</span>
-                                <img
-                                    src="https://oio-bucket.s3.ap-northeast-2.amazonaws.com/logo.png"
-                                />
+                                <span :class="{ 'rented': item.status === 1, 'expired': item.status === 2 }">
+                                    {{ item.status === 0 ? '미대여' : (item.status === 1 ? '대여중' : '기간만료') }}
+                                </span>
+                                <img :src="item.thumbnail ? item.thumbnail : sampleImage" />
                             </div>
-                            <p class="title">{{ item.content }}</p>
+                            <p class="title">{{ item.title }}</p>
                             <p class="date">
                                 {{ formatDate(item.startDate) }} ~ {{ formatDate(item.endDate) }}
                             </p>
+                            </router-link>
                         </div>
                     </div>
                 </div>
@@ -51,10 +60,13 @@
 </template>
 <script>
 import axios from 'axios'
+import sampleImage from "@/assets/sample.png";
+
 export default {
     data() {
         return {
             products: [],
+            sampleImage: sampleImage,
             siDoList: [],
             siGunGuList: [],
             eupMyeonRoList: [],
@@ -66,11 +78,8 @@ export default {
 
     methods: {
         formatDate(dateString) {
-            const parsedDate = new Date(dateString)
-            const year = parsedDate.getFullYear()
-            const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0')
-            const day = parsedDate.getDate().toString().padStart(2, '0')
-            return `${year}-${month}-${day}`
+            const dateWithoutTime = dateString.split('T')[0];
+            return dateWithoutTime;
         },
         selectProduct() {
             if (this.selectedSido == '') {
@@ -156,6 +165,9 @@ body {
     margin-top: 1%;
     justify-content: right;
     margin-right: 1%;
+}
+.dropdown.category {
+    margin-right: calc(1% + 60px);
 }
 
 /* Styling for the individual selects */
