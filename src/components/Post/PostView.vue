@@ -57,6 +57,31 @@
     <!-- end col-->
   </div>
 
+  <div class="card">
+    <div class="card-header">댓글</div>
+    <div class="card-body">
+      <textarea
+        class="form-control col-sm-5"
+        rows="2"
+        v-model="setReplyText"
+        :readonly="readonly"
+      />
+      <div class="my-4" v-if="isAdmin">
+        <div class="d-flex justify-content-end">
+          <template v-if="!readonly">
+            <button type="submit" class="btn btn-outline-info" @click="submitReply">등록</button>
+          </template>
+          <template v-if="isValue">
+            <button type="button" class="btn btn-outline-info mx-2" @click="toggleEdit">
+              {{ readonly ? '수정' : '취소' }}
+            </button>
+            <button type="button" class="btn btn-outline-info" @click="deleteBtn">삭제</button>
+          </template>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="row mt-3">
     <div class="col">
       <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap">
@@ -75,8 +100,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getPost, deletePost } from './post'
+import { getPost, deletePost, getReply, replyRegister, deleteReply } from './post'
 import { useRoute, useRouter } from 'vue-router'
+
+// const nickName = localStorage.getItem('nickname')
 
 const router = useRouter()
 const route = useRoute()
@@ -88,6 +115,15 @@ const setContent = ref('')
 const isWriter = ref(false)
 const setFiles = ref([])
 const setUrl = 'https://oioproject-bucket.s3.ap-northeast-2.amazonaws.com/'
+
+const reply = ref([])
+const setReply = ref([])
+const isAdmin = ref(false)
+const setReplyText = ref('')
+const readonly = ref(true)
+const originalText = ref()
+const isValue = ref(true)
+const replyId = ref()
 
 const getPostOne = async (postId) => {
   const { data } = await getPost(postId)
@@ -110,8 +146,70 @@ const removeBtn = async () => {
   })
 }
 
+const getReplies = async (postId) => {
+  await getReply(postId)
+    .then(({ data }) => {
+      reply.value = data
+      isAdmin.value = data.isEquals
+      setReply.value = data.resultList
+      setReplyText.value = data.resultList[0].replyText
+      originalText.value = setReplyText.value
+      replyId.value = data.resultList[0].rno
+    })
+    .catch((error) => {
+      console.log(error)
+      readonly.value = false
+      isValue.value = false
+    })
+}
+
+const toggleEdit = () => {
+  readonly.value = !readonly.value
+  setReplyText.value = originalText.value
+  console.log(setReplyText.value)
+}
+
+const submitReply = async () => {
+  if (setReplyText.value.length <= 0) {
+    return
+  }
+
+  const formdata = {
+    pno: postId,
+    replyText: setReplyText.value
+  }
+
+  await replyRegister(formdata)
+    .then(({ data }) => {
+      console.log(data)
+      readonly.value = true
+      isValue.value = true
+      originalText.value = setReplyText.value
+      replyId.value = parseInt(data.msg)
+      console.log(replyId.value)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+
+const deleteBtn = async() => {
+  await deleteReply(replyId.value,postId)
+    .then((response) => {
+      console.log(response)
+      setReplyText.value=''
+      isValue.value = false
+      readonly.value = false
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
 onMounted(() => {
   getPostOne(postId)
+  getReplies(postId)
 })
 </script>
 
@@ -123,11 +221,11 @@ onMounted(() => {
   width: 120px;
   margin-right: 40px;
 }
-.link{
+.link {
   text-decoration: none;
-  color:#0dcaf0;
+  color: #0dcaf0;
 }
-.link:hover{
-  color:black;
+.link:hover {
+  color: black;
 }
 </style>

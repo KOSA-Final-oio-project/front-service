@@ -30,6 +30,7 @@ export function postRegister(formdata) {
   })
 }
 
+// composition 에서는 nickname 제거
 export function getPost(postId) {
   return axios.get(apiUrl + `/post/${postId}/테스트`)
 }
@@ -40,4 +41,21 @@ export function deletePost(postId, fileNames) {
 
 export function putPost(postId, formdata) {
   return axios.put(apiUrl + `/post/${postId}`, formdata  )
+}
+
+export function S3removeFile(fileName){
+  return axios.delete(apiUrl + `/remove/${fileName}`)
+}
+
+// composition 에서는 nickname 제거
+export function getReply(postId){
+  return axios.get(apiUrl + `/replies/${postId}/oio`)
+}
+
+export function replyRegister(formdata){
+  return axios.post(apiUrl + `/reply/register/관리자`, formdata)
+}
+
+export function deleteReply(replyId, postId){
+  return axios.delete(apiUrl + `/reply/${replyId}/${postId}`)
 }
