@@ -131,6 +131,7 @@ export default {
             const currentDate = new Date();
             if(currentDate > this.dateRange[0]) {
                 alert("대여기간은 오늘 이후로 선택가능합니다")
+                return;
             }
             
 
@@ -152,7 +153,7 @@ export default {
 
             axios
                 .post(
-                    `http://192.168.1.86:9797/product-service/product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/주소수`,
+                    `http://192.168.1.86:9797/product-service/product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/셍나`,
                     formData,
                     {
                         headers: {

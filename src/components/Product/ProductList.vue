@@ -50,7 +50,7 @@
                                 </span>
                                 <img :src="item.thumbnail ? item.thumbnail : sampleImage" />
                             </div>
-                            <p class="title">{{ item.content }}</p>
+                            <p class="title">{{ item.title }}</p>
                             <p class="date">
                                 {{ formatDate(item.startDate) }} ~ {{ formatDate(item.endDate) }}
                             </p>
@@ -235,6 +235,13 @@ export default {
                 this.getEupMyeonRo(); // 읍면동 리스트를 업데이트할 수 있도록 해당 메서드를 호출합니다.
             }
         },
+        truncateTitle(title, maxLength) {
+        if (title.length > maxLength) {
+            return title.substring(0, maxLength) + '...';
+        } else {
+            return title;
+        }
+    },
 
     },
     created() {
@@ -333,6 +340,10 @@ a {
     font-weight: bold;
     font-size: 20px;
     color: #072a40;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px;
 }
 
 .date {
@@ -399,6 +410,7 @@ a {
     background-color: #178CA4;
     padding: 3px 5px;
     border-radius: 10px;
+    z-index: 1;
 }
 
 .productImg span.rented {
