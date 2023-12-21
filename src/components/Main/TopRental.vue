@@ -37,7 +37,7 @@ export default {
         },
         getTopRental() {
             // const url = this.$backURL + 'product/productList/r'
-            const url = 'http://192.168.1.74:10002/product/productList/r'
+            const url = 'http://192.168.1.86:9797/product-service/product/productList/r'
 
             axios.get(url).then((result) => {
                 console.log(result)

@@ -84,7 +84,7 @@ export default {
         getProductDetail(productNo) {
             const nickname = localStorage.getItem('nickname');
             const pno = this.$route.params.id
-            const url = `http://localhost:8889/product/productDetail/103/닉네임이다`;
+            const url = `http://192.168.1.86:9797/product-service/product/productDetail/103/${nickname}`;
 
             axios.get(url)
                 .then(response => {
@@ -109,7 +109,7 @@ export default {
                 });
         },
         registProduct() {
-
+            const nickname = localStorage.getItem('nickname');
             const formData = new FormData()
             formData.append('title', this.title)
             formData.append('content', this.content)
@@ -120,7 +120,7 @@ export default {
             // 서버로 전송
             axios
                 .post(
-                    `http://127.0.0.1:8889/product/writeProduct/${this.siDo}/${this.siGunGu}/${this.eupMyeonRo}/${this.category}/주소수`,
+                    `http://192.168.1.86:9797/product-service/${this.siDo}/${this.siGunGu}/${this.eupMyeonRo}/${this.category}/${nickname}`,
                     formData,
                     {
                         headers: {

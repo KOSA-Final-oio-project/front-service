@@ -51,7 +51,7 @@ export default {
     login() {
       axios
         // .post(this.$backURL + 'login', {
-          .post('http://192.168.1.37:10001/login', {
+          .post('http://192.168.1.86:9797/member-service/member-service/login', {
           email: this.user.email,
           password: this.user.password
         })

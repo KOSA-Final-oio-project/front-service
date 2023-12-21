@@ -194,7 +194,8 @@ export default {
             const nickname = localStorage.getItem('nickname')
             // 서버로 데이터 전송
             axios
-                .put(this.$backURL + `member/${nickname}`, formData, {
+                // .put(this.$backURL + `member/${nickname}`, formData, {
+                    .put(`http://192.168.1.86:9797/member-service/member-service/${nickname}`, formData, {
                     contentType: false,
                     processData: false
                 })
@@ -211,7 +212,8 @@ export default {
 
         getUserInfo() {
             const nickname = localStorage.getItem('nickname')
-            const url = this.$backURL + `member/${nickname}`
+            // const url = this.$backURL + `member/${nickname}`
+            const url = `http://192.168.1.86:9797/member-service/member-service/member/${nickname}`
 
             axios
                 .get(url)
@@ -231,7 +233,8 @@ export default {
 
         confirmDelete() {
             const memberNickname = localStorage.getItem('nickname')
-            axios.delete(this.$backURL + `member/${memberNickname}`).then((result) => {
+            // axios.delete(this.$backURL + `member/${memberNickname}`).then((result) => {
+                axios.delete(`http://192.168.1.86:9797/member-service/member-service/${memberNickname}`).then((result) => {
                 alert('정상 탈퇴되었습니다.')
                 window.location = '/'
                 localStorage.removeItem('nickname')

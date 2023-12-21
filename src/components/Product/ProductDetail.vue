@@ -90,10 +90,10 @@ export default {
       reviews: [],
       currentIndex: 0,
 
-      ProductList: {
-        productNo: '',
-        nickname: '',
-      },
+      // product2: {
+      //   productNo: '',
+      //   nickname: '',
+      // },
 
       //채팅
       productName: '',
@@ -115,10 +115,10 @@ export default {
     this.getProductDetail();
     this.getReviews();
   },
-  created() {
-    this.ProductList.productNo = this.$route.params.id
-    this.ProductList.nickname = localStorage.getItem('nickname')
-  },
+  // created() {
+  //   this.ProductList.productNo = this.ProductList.productNo
+  //   this.ProductList.nickname = localStorage.getItem('nickname')
+  // },
 
   methods: {
     //상품 디테일
@@ -130,6 +130,7 @@ export default {
     },
     getProductDetail() {
       let nickname
+      const productNo = this.ProductList.productNo
 
       if (this.ProductList.nickname == null) {
         nickname = this.ProductList.ownerNickname;
@@ -137,11 +138,7 @@ export default {
         nickname = this.ProductList.nickname;
       }
 
-      console.log(nickname)
-
-      const productNo = this.ProductList.productNo
-
-      const url = this.$backURL + `product/productDetail/${productNo}/${nickname}`;
+      const url = `http://192.168.1.86:9797/product-service/product/productDetail/${productNo}/${nickname}`;
 
       axios.get(url)
         .then(response => {
@@ -163,7 +160,7 @@ export default {
     },
     getReviews() {
       const productNo = this.ProductList.productNo
-      const url = this.$backURL + `review/reviews/${productNo}`;
+      const url = `http://192.168.1.86:9797/transaction-service/review/reviews/${productNo}`;
 
       axios.get(url)
         .then(response => {
@@ -231,7 +228,7 @@ export default {
       // 채팅방 생성 요청
       axios
 
-        .post(this.$backURL + 'chat-service/chat/room', data)
+        .post('http://192.168.1.93:9712/chat/room', data)
 
         .then((response) => {
           console.log('response.data: ', response.data)

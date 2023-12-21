@@ -52,7 +52,7 @@ export default {
             const borrowerNickname = this.ReviewList.borrowerNickname
             const productNo = this.ReviewList.productNo
             const rentedProductNo = this.ReviewList.rentedProductNo
-            const url = this.$backURL + `review/${productNo}/${rentedProductNo}`
+            const url = `http://192.168.1.86:9797/transaction-service/review/${productNo}/${rentedProductNo}`
 
             if (writerNickname == ownerNickname) {
                 receiverNickname = borrowerNickname

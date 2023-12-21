@@ -37,7 +37,7 @@ export default {
         },
         getTopView() {
             // const url = this.$backURL + 'product/productList/v'
-            const url = 'http://192.168.1.74:10002/product/productList/v'
+            const url = 'http://192.168.1.86:9797/product-service/product/productList/v'
 
             axios.get(url).then((result) => {
                 console.log(result)

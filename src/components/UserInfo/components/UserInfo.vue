@@ -117,7 +117,7 @@ export default {
         getUserInfo() {
             const nickname = localStorage.getItem('user')
 
-            const url = this.$backURL + `oio/member/${nickname}`
+            const url = `http://192.168.1.86:9797/member-service/member/${nickname}`
             
             axios.get(url).then((result) => {
                 this.userProfile = result.data.result.profile
@@ -137,7 +137,7 @@ export default {
             formData.append('reportedNickname', reportedNickname)
 
             axios
-                .post(this.$backURL + `oio/member/${reportedNickname}/report`, formData, {
+                .post(`http://192.168.1.86:9797/member-service/member/${reportedNickname}/report`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -159,7 +159,7 @@ export default {
         getHeart() {
             const nickname = localStorage.getItem('user')
 
-            const url = this.$backURL + `review/heart?nickname=${nickname}`
+            const url = `http://192.168.1.86:9797/transaction-service/review/heart?nickname=${nickname}`
 
             axios
                 .get(url)

@@ -27,6 +27,7 @@
                     </select>
                     <button @click="selectProduct()" class="selectBt">조회</button>
                 </div>
+                <router-link :to="'/product/writeProduct'"><p class="regist">상품등록</p></router-link>
                 <div class="productList">
                     <div class="products">
                         <div class="product" v-for="(item, index) in products" :key="index">
@@ -66,27 +67,24 @@ export default {
 
     methods: {
         formatDate(dateString) {
-            const parsedDate = new Date(dateString)
-            const year = parsedDate.getFullYear()
-            const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0')
-            const day = parsedDate.getDate().toString().padStart(2, '0')
-            return `${year}-${month}-${day}`
+            const dateWithoutTime = dateString.split('T')[0];
+            return dateWithoutTime;
         },
         selectProduct() {
             if (this.selectedSido == '') {
-                axios.get(this.$backURL + 'product/productList/n')
+                axios.get('http://192.168.1.86:9797/product-service/product/productList/n')
                     .then((result) => {
                         this.products = result.data.productList
                     })
             } else if (this.selectedSiGunGu == '') {
                 axios
-                    .get(this.$backURL + 'product/productList/n?siDo=' + this.selectedSido)
+                    .get('http://192.168.1.86:9797/product-service/product/productList/n?siDo=' + this.selectedSido)
                     .then((result) => {
                         this.products = result.data.productList
                     })
             } else if (this.selectedEupMyeonRo == '') {
                 axios
-                    .get(this.$backURL + 'product/productList/n', {
+                    .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                         params: {
                             siDo: this.selectedSido,
                             siGunGu: this.selectedSiGunGu
@@ -97,7 +95,7 @@ export default {
                     })
             } else {
                 axios
-                    .get(this.$backURL + 'product/productList/n', {
+                    .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                         params: {
                             siDo: this.selectedSido,
                             siGunGu: this.selectedSiGunGu,
@@ -110,13 +108,13 @@ export default {
             }
         },
         getSiDo() {
-            axios.get(this.$backURL + 'address/siDoList').then((result) => {
+            axios.get('http://192.168.1.86:9797/product-service/address/siDoList').then((result) => {
                 this.siDoList = result.data
             })
         },
         getSiGunGu() {
             axios
-                .get(this.$backURL + `address/siGunGuList/${this.selectedSido}`)
+                .get(`http://192.168.1.86:9797/product-service/address/siGunGuList/${this.selectedSido}`)
                 .then((result) => {
                     this.siGunGuList = result.data
                 })
@@ -124,14 +122,14 @@ export default {
         getEupMyeonRo() {
             axios
                 .get(
-                    this.$backURL + `address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
+                    `http://192.168.1.86:9797/product-service/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
                 )
                 .then((result) => {
                     this.eupMyeonRoList = result.data
                 })
         },
         get() {
-            axios.get(this.$backURL + 'product/productList/n').then((result) => {
+            axios.get('http://192.168.1.86:9797/product-service/product/productList/n').then((result) => {
                 this.products = result.data.productList
             })
         }
@@ -180,7 +178,24 @@ select {
 
 /* Hover effect for the button */
 .selectBt:hover {
-    background-color: #0056b3;
+    background-color: #178ca4;
+}
+
+p.regist {
+    margin-left: auto;
+    margin-right: calc(1% + 70px);
+    margin-top: 10px;
+    width: 90px;
+    padding: 8px 15px;
+    background-color: #18b7be;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+p.regist:hover {
+    background-color: #178ca4;
 }
 
 /* Optional: Style the options within the dropdown */
@@ -390,10 +405,12 @@ a {
 .title {
     font-weight: bold;
     font-size: 20px;
+    color: #072a40;
 }
 
 .date {
     font-size: 15px;
+    color: #072a40;
 }
 
 .count {
