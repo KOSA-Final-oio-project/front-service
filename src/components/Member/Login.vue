@@ -23,7 +23,8 @@
           </div>
         </div>
 
-        <a class="findPassword" href="/FindPassword">비밀번호를 잊으셨나요?</a>
+        <a class="findPassword" href="/FindId">아이디 찾기 </a>
+        <a class="findPassword" href="/FindPassword">| 비밀번호 찾기</a>
 
         <!-- 가입하기 버튼 -->
         <div class="btn-container">
@@ -51,7 +52,7 @@ export default {
     login() {
       axios
         // .post(this.$backURL + 'login', {
-          .post('http://192.168.1.86:9797/oio/login', {
+        .post('http://192.168.1.86:9797/oio/login', {
           email: this.user.email,
           password: this.user.password
         })
@@ -74,7 +75,6 @@ export default {
           }
         })
         .error((error) => {
-
           console.log(error)
         })
     }
@@ -83,16 +83,16 @@ export default {
 </script>
 
 <style scoped>
-h2{
-  margin-top:150px ;
+h2 {
+  margin-top: 150px;
 }
 @font-face {
-    font-family: 'NotoSansKR-VariableFont_wght';
-    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
+  font-family: 'NotoSansKR-VariableFont_wght';
+  src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
 }
 
 * {
-    font-family: 'NotoSansKR-VariableFont_wght';
+  font-family: 'NotoSansKR-VariableFont_wght';
 }
 .findPassword {
   text-decoration: none;
