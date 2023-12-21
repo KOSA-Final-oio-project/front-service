@@ -247,7 +247,7 @@ export default {
                     )
                 },
                 function (error) {
-                    alert(error.message)
+                    // alert(error.message)
                 }
             )
 

@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section class="section">
         <div class="container" v-cloak>
             <!-- 타이틀 -->
             <div class="row">
@@ -89,7 +89,11 @@ export default {
                 localStorage.setItem('wschat.roomId', roomId)
             }
 
+<<<<<<< HEAD
             alert('전달하는 url은 ' + this.$backURL + 'chat-service/chat/roominfo/' + roomId)
+=======
+            alert('전달하는 url은 ' + 'http://192.168.1.93:9712/chat/roominfo/' + roomId)
+>>>>>>> ee7819e2a3e3d5debd1db1787f3137e4046dab16
 
             // API 호출하여 채팅방 정보 가져오기
             axios.get('http://192.168.1.93:9712/chat/roominfo/' + roomId).then((response) => {
@@ -164,7 +168,10 @@ export default {
 }
 
 section {
+<<<<<<< HEAD
     /* border: 1px solid black; */
+=======
+>>>>>>> ee7819e2a3e3d5debd1db1787f3137e4046dab16
     padding-top: 150px;
     width: 100%;
     height: 100%;

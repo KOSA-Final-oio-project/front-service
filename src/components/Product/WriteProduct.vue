@@ -71,7 +71,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="button-container">
                         <button class="registBt">등록</button>
                     </div>
