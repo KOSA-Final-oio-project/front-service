@@ -1,13 +1,14 @@
 <template>
     <div class="topProduct">
-        <router-link to="/top-view"
-            ><div @click="getTopView()" class="view"><span>최다 조회수</span></div></router-link
-        >
-        <router-link to="/top-rental"
-            ><div class="rent"><span>최다 대여수</span></div></router-link
-        >
+        <router-link to="/top-view">
+            <div @click="getTopView()" class="view"><span>최다 조회수</span></div>
+        </router-link>
+        <router-link to="/top-rental">
+            <div class="rent"><span>최다 대여수</span></div>
+        </router-link>
 
-        <div class="top" v-for="(item, index) in topViews" :key="index">
+        <router-link :to="`/product/productDetail/${item.productNo}/${this.nickname}`" class="top"
+            v-for="(item, index) in topViews" :key="index" @click="moveDetail">
             <div class="topImg">
                 <span class="rented"> {{ item.status === 1 ? '대여중' : '미대여' }}</span>
                 <img class="product-img" :src=item.thumbnail />
@@ -15,7 +16,7 @@
             <p class="count">{{ item.view }}</p>
             <p class="title">{{ item.title }}</p>
             <p class="date">{{ formatDate(item.startDate) }} ~ {{ formatDate(item.endDate) }}</p>
-        </div>
+        </router-link>
     </div>
 </template>
 
@@ -25,6 +26,7 @@ export default {
     data() {
         return {
             topViews: [],
+            nickname: localStorage.getItem('nickname')
         }
     },
     methods: {
@@ -66,6 +68,7 @@ export default {
 section {
     margin-top: 150px;
 }
+
 body {
     margin: 0px;
     /* overflow-x: hidden; */
@@ -302,6 +305,7 @@ a {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 .productContainer {
     position: relative;
 }
@@ -314,6 +318,7 @@ a {
     left: 73%;
     transform: translate(-50%, -50%);
 }
+
 .searchBt img {
     height: 40px;
 }
@@ -322,7 +327,8 @@ a {
     display: flex;
     justify-content: center;
     position: relative;
-    margin: 50px 0px; /* 간격을 조절 */
+    margin: 50px 0px;
+    /* 간격을 조절 */
 }
 
 .products {
@@ -331,7 +337,8 @@ a {
     justify-content: center;
     /* position: relative; */
     flex-wrap: wrap;
-    gap: 20px; /* 간격을 조절 */
+    gap: 20px;
+    /* 간격을 조절 */
 }
 
 .product {
@@ -388,7 +395,8 @@ footer {
     white-space: nowrap;
     overflow: hidden;
 }
-footer > p {
+
+footer>p {
     margin-left: 10px;
 }
 </style>

@@ -84,7 +84,7 @@ export default {
         getProductDetail(productNo) {
             const nickname = localStorage.getItem('nickname');
             const pno = this.$route.params.id
-            const url = `http://192.168.1.86:9797/product-service/product/productDetail/103/${nickname}`;
+            const url = `http://192.168.1.86:9797/oio/product/productDetail/103/${nickname}`;
 
             axios.get(url)
                 .then(response => {
@@ -120,7 +120,7 @@ export default {
             // 서버로 전송
             axios
                 .post(
-                    `http://192.168.1.86:9797/product-service/${this.siDo}/${this.siGunGu}/${this.eupMyeonRo}/${this.category}/${nickname}`,
+                    `http://192.168.1.86:9797/oio/${this.siDo}/${this.siGunGu}/${this.eupMyeonRo}/${this.category}/${nickname}`,
                     formData,
                     {
                         headers: {

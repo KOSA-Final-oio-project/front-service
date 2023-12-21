@@ -10,6 +10,7 @@ library.add(fas)
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/index.js'
+import axios from 'axios';
 
 import 'bootstrap/dist/css/bootstrap.css'
 import VueDatePicker from '@vuepic/vue-datepicker'
@@ -17,6 +18,12 @@ import '@vuepic/vue-datepicker/dist/main.css'
 
 const app = createApp(App)
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+app.config.globalProperties.$axiosInstance = axios.create({
+    headers: {
+        'Authorization': localStorage.getItem('accessToken'),
+    },
+});
 
 
 // Vue Router 사용

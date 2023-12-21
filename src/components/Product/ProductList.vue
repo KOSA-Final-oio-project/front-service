@@ -185,13 +185,13 @@ export default {
 
         },
         getSiDo() {
-            axios.get('http://192.168.1.86:9797/product-service/address/siDoList').then((result) => {
+            axios.get('http://192.168.1.86:9797/oio/siDoList').then((result) => {
                 this.siDoList = result.data
             })
         },
         getSiGunGu() {
             axios
-                .get(`http://192.168.1.86:9797/product-service/address/siGunGuList/${this.selectedSido}`)
+                .get(`http://192.168.1.86:9797/oio/siGunGuList/${this.selectedSido}`)
                 .then((result) => {
                     this.siGunGuList = result.data
                 })
@@ -199,14 +199,14 @@ export default {
         getEupMyeonRo() {
             axios
                 .get(
-                    `http://192.168.1.86:9797/product-service/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
+                    `http://192.168.1.86:9797/oio/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
                 )
                 .then((result) => {
                     this.eupMyeonRoList = result.data
                 })
         },
         getCategory() {
-            axios.get('http://192.168.1.86:9797/product-service/category/categoryList').then((result) => {
+            axios.get('http://192.168.1.86:9797/oio/category').then((result) => {
                 this.categoryList = result.data
             })
         },

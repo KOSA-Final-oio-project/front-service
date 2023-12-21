@@ -51,27 +51,32 @@ export default {
     login() {
       axios
         // .post(this.$backURL + 'login', {
-          .post('http://192.168.1.86:9797/member-service/member-service/login', {
+          .post('http://192.168.1.86:9797/oio/login', {
           email: this.user.email,
           password: this.user.password
         })
         .then((response) => {
           if (response.data.result == 'withdrawal') {
             alert('탈퇴한 회원입니다.')
-          } else if (!response.headers['accesstoken']) {
+          } else if (response.data.result == 'fail') {
             alert('아이디와 패스워드가 일치하지않습니다.')
           } else {
             let token = response.headers['accesstoken']
+            console.log(token)
             const base64Payload = token.split('.')[1]
             const utf8DecodedPayload = decodeURIComponent(escape(atob(base64Payload)))
             const jsonObject = JSON.parse(utf8DecodedPayload)
+            localStorage.setItem('accessToken', token)
 
             localStorage.setItem('nickname', jsonObject.nickname)
 
             window.location.href = '/'
           }
         })
-        .error((error) => {})
+        .error((error) => {
+
+          console.log(error)
+        })
     }
   }
 }

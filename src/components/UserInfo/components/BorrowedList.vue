@@ -49,7 +49,7 @@ export default {
     methods: {
         getBorrowedList() {
             const nickname = localStorage.getItem("user")
-            const url = `http://192.168.1.86:9797/transaction-service/rent/1?nickname=${nickname}`;
+            const url = `http://192.168.1.86:9797/oio/rent/1?nickname=${nickname}`;
             axios.get(url)
                 .then(response => {
                     const list = response.data;

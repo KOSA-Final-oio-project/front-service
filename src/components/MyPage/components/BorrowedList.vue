@@ -62,9 +62,8 @@ export default {
     },
     methods: {
         getBorrowedList() {
-            const nickname = localStorage.getItem('nickname');
-            const url = `http://192.168.1.86:9797/transaction-service/rent/1?nickname=${nickname}`;
-            axios.get(url)
+            const url = `http://192.168.1.86:9797/oio/1`;
+            this.$axiosInstance.get(url)
                 .then(response => {
                     const list = response.data;
                     this.list = list;
@@ -72,11 +71,11 @@ export default {
 
                     const requests = ownerNickname.map(owner => {
                         const url2 = `http://192.168.1.86:9797/product-service/product/myProduct/${owner}/0`;
-                        return axios.get(url2);
+                        return  this.$axiosInstance.get(url2);
                     });
 
                     this.loadingProducts = true;
-                    
+
 
                     Promise.all(requests)
                         .then(responses => {
@@ -90,7 +89,7 @@ export default {
                         })
                         .catch(error => {
                             this.loadingProducts = false;
-                            console.error('error: ', error.response.data);
+                            console.error('error: ', error);
                         });
                 })
                 .catch(error => {
@@ -148,7 +147,7 @@ export default {
     },
     mounted() {
         this.getBorrowedList();
-    }
+    },
 };
 </script>
 
