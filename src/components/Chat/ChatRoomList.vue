@@ -164,7 +164,7 @@ export default {
 }
 
 section {
-    padding-top: 150px;
+    padding-top: 200px;
     width: 100%;
     height: 100%;
 }

@@ -7,30 +7,22 @@
         <div class="search-icon">
           <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
         </div>
-        <input type="text" class="search-input" placeholder="Search..." />
+        <router-link :to="`/product/searchProduct/${searchValue}`">
+          <input type="text" class="search-input" v-model="searchValue" placeholder="Search..." />
+        </router-link>
       </div>
 
       <div class="icons-container">
-        <router-link
-          to="/member-service/signup"
-          :class="{ icons: true, loginCheck: loginCheck }"
-          v-if="!loginChk()"
-        >
+        <router-link to="/member-service/signup" :class="{ icons: true, loginCheck: loginCheck }" v-if="!loginChk()">
           <font-awesome-icon :icon="['fas', 'user-plus']" />
           <span>join</span>
         </router-link>
-
-        <span class="welcome">nickname</span>
         <div @click="logout()" :class="{ icons: true, loginCheck: loginCheck }" v-if="loginChk()">
           <font-awesome-icon :icon="['fas', 'right-from-bracket']" />
           <span>logout</span>
         </div>
 
-        <router-link
-          :class="{ icons: true, loginCheck: loginCheck }"
-          to="/member-service/login"
-          v-if="!loginChk()"
-        >
+        <router-link :class="{ icons: true, loginCheck: loginCheck }" to="/member-service/login" v-if="!loginChk()">
           <font-awesome-icon :icon="['fas', 'right-to-bracket']" />
           <span>login</span>
         </router-link>
@@ -40,16 +32,18 @@
         </a>
       </div>
     </div>
-    <nav>
-      <ul class="nav">
-        <li><router-link to="/">홈</router-link></li>
-        <li>
-          <router-link :to="`/post/list/${encodeURIComponent('공지사항')}`">게시판</router-link>
-        </li>
-        <li><router-link to="/location">대여</router-link></li>
-        <li><router-link to="/chat">채팅</router-link></li>
-      </ul>
-    </nav>
+    <div class="nav-container">
+      <nav>
+        <ul class="nav">
+          <li><router-link to="/">홈</router-link></li>
+          <li>
+            <router-link :to="`/post/list/${encodeURIComponent('공지사항')}`">게시판</router-link>
+          </li>
+          <li><router-link to="/product/productList">대여</router-link></li>
+          <li><router-link to="/chat">채팅</router-link></li>
+        </ul>
+      </nav>
+    </div>
   </body>
 </template>
 <script>
@@ -78,27 +72,47 @@ export default {
 }
 </script>
 <style scoped>
+@font-face {
+    font-family: 'NotoSansKR-VariableFont_wght';
+    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: 'NotoSansKR-VariableFont_wght';
+}
+
 .welcome {
-  display: flex; /* Add this line to make it a flex container */
+  display: flex;
+  /* Add this line to make it a flex container */
   text-align: right;
   padding: 0;
 }
+
+.header {
+  margin-bottom: 3px;
+  display:flex;
+}
+
 .loginCheck {
   display: none;
 }
+
 .header-container {
+  margin-top: 22px0px;
   position: fixed;
   width: 100%;
-  height: 150px;
+  height: 20%;
   top: 0;
   z-index: 1000;
-  background-color: white; /* Add background color if needed */
+  background-color: white;
 }
+
 .icons-container {
   display: flex;
   position: relative;
   margin-right: 4%;
 }
+
 .icons {
   color: black;
   text-decoration: none;
@@ -109,9 +123,11 @@ export default {
   position: relative;
   top: 5px;
 }
-.icons > div {
+
+.icons>div {
   text-align: center;
 }
+
 .input-container {
   display: flex;
   border: solid black 1px;
@@ -122,20 +138,25 @@ export default {
   height: 6vh;
   margin-left: 7%;
 }
+
 .search-icon {
   margin: 0px 10px;
 }
+
 .search-input {
   outline: none;
   border: none;
   width: 80%;
 }
+
 .search-input:focus {
   border-style: none;
 }
+
 .header {
   display: flex;
 }
+
 body,
 html {
   margin: 0;
@@ -147,28 +168,46 @@ html {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  /* padding: 10px 20px; */
 }
 
 .logo {
-  width: 90px; /* Replace with actual size */
+  width: 130px;
+  margin-top: 20px;
+  margin-left: 50px;
+}
+
+.logo:hover {
+  cursor: pointer;
 }
 
 nav {
   display: flex;
   justify-content: center;
-  margin-bottom: 2%;
+  /* margin-bottom: 5%; */
+  /* margin-top: 35px; */
 }
+
 .nav {
   display: flex;
   list-style-type: none;
 }
-.nav > li > a {
-  font-size: 20px;
+
+.nav>li>a {
+  font-size: 22px;
+  font-weight: 500;
 }
 
 .nav li {
   padding: 0 15px;
+}
+
+.nav li:hover {
+  cursor: pointer;
+}
+
+.nav li:hover a {
+  color: #18B7BE; /* 호버 시 텍스트 색상 변경 */
 }
 
 .nav li a {

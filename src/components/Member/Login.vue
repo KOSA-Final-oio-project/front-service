@@ -50,7 +50,8 @@ export default {
   methods: {
     login() {
       axios
-        .post('http://192.168.1.37:9999/oio/login', {
+        // .post(this.$backURL + 'login', {
+          .post('http://192.168.1.86:9797/member-service/member-service/login', {
           email: this.user.email,
           password: this.user.password
         })
@@ -77,6 +78,14 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+    font-family: 'NotoSansKR-VariableFont_wght';
+    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: 'NotoSansKR-VariableFont_wght';
+}
 .findPassword {
   text-decoration: none;
 }

@@ -22,7 +22,7 @@ export default {
     },
     methods: {
         getProductReviews(productNo) {
-            const url = `http://192.168.1.86:7575/review/reviews/${productNo}`
+            const url = `http://192.168.1.86:9797/transaction-service/review/reviews/${productNo}`
             // GET 요청 보내기
             axios
                 .get(url)

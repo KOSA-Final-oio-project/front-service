@@ -18,6 +18,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 const app = createApp(App)
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
+
 // Vue Router 사용
 app.use(router)
 // DatePicker 라이브러리 사용
@@ -26,7 +27,7 @@ app.component('VueDatePicker', VueDatePicker)
 app.component('font-awesome-icon', FontAwesomeIcon)
 
 // 전역변수 설정
-app.config.globalProperties.$backURL = 'http://localhost:9797'
+app.config.globalProperties.$backURL = 'http://192.168.1.86:9797/oio/'
 
 // 앱 마운트
 app.mount('#app')

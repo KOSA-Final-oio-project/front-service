@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const apiUrl = 'http://127.0.0.1:8889'
+const apiUrl = 'http://192.168.1.86:9797/content-service'
 
 export function getAllPost(category, page, type, keyword) {
   return axios.get(apiUrl + `/posts/${category}`, { params: { page, type, keyword } })

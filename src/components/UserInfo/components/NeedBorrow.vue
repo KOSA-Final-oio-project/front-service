@@ -46,7 +46,7 @@ export default {
     methods: {
         getBorrowProduct() {
             const nickname = localStorage.getItem('user')
-            const url = `http://192.168.1.86:8889/product/myProduct/${nickname}/1`
+            const url = `http://192.168.1.86:9797/product-service/product/myProduct/${nickname}/1`
             axios
                 .get(url)
                 .then((response) => {

@@ -259,7 +259,8 @@ export default {
         alert('이메일에는 언더스코어(_)를 포함할 수 없습니다.')
       } else {
         axios
-          .post('http://localhost:9999/oio/email-chk', {
+          // .post(this.$backURL + 'email-chk', {
+            .post('http://192.168.1.86:9797/member-service/member-service/email-chk', {
             email: this.user.email
           })
           .then((result) => {
@@ -280,7 +281,8 @@ export default {
     requestEmailCertificate() {
       alert('이메일로 인증번호가 발송되었습니다.')
       axios
-        .post('http://localhost:9999/oio/send-email', {
+        // .post(this.$backURL + 'send-email', {
+          .post('http://192.168.1.86:9797/member-service/member-service/send-email', {
           email: this.user.email
         })
         .then((result) => {
@@ -318,7 +320,8 @@ export default {
     // 닉네임 중복확인
     nicknameDuplicateCheck() {
       axios
-        .post('http://localhost:9999/oio/nickname-chk', {
+        // .post(this.$backURL + 'nickname-chk', {
+          .post('http://192.168.1.86:9797/member-service/member-service/nickname-chk', {
           nickname: this.user.nickname
         })
         .then((result) => {
@@ -333,7 +336,7 @@ export default {
     phoneDuplicateCheck() {
       axios
         .post(
-          'http://localhost:9999/oio/phone-chk',
+          this.$backURL + 'phone-chk',
           {
             phoneNumber: this.user.phone
           },
@@ -360,7 +363,8 @@ export default {
     // 핸드폰 인증요청
     requestPhoneCertificate() {
       axios
-        .post('http://localhost:9999/oio/send-phone', {
+        // .post(this.$backURL + 'send-phone', {
+          .post('http://192.168.1.86:9797/member-service/member-service/send-sms', {
           phoneNumber: this.user.phone
         })
         .then((result) => {
@@ -399,7 +403,8 @@ export default {
 
         // 서버로 데이터 전송
         axios
-          .post('http://192.168.1.37:9999/oio/signup', formData, {
+          // .post(this.$backURL + 'signup', formData, {
+            .post('http://192.168.1.86:9797/member-service/member-service/signup', formData, {
             contentType: false,
             processData: false
           })
@@ -418,6 +423,15 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+    font-family: 'NotoSansKR-VariableFont_wght';
+    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: 'NotoSansKR-VariableFont_wght';
+}
+
 .button {
   margin-left: 3%;
   display: flex;

@@ -15,7 +15,7 @@
                         </p>
                         <img src="../../../assets/status.png"> {{ item.status }}
                         <span>
-                            <button v-if="showReviewButton(item.reviewStatus, item.status)" @click="openModal(item)"
+                            <button v-if="showReviewButton(item.reviewStatus, item.status)" @click.stop="openModal(item)"
                                 class="review-button">리뷰 작성</button>
                         </span>
                     </div>
@@ -63,20 +63,20 @@ export default {
     methods: {
         getBorrowedList() {
             const nickname = localStorage.getItem('nickname');
-            const url = `http://192.168.1.86:7575/rent/1?nickname=${nickname}`;
+            const url = `http://192.168.1.86:9797/transaction-service/rent/1?nickname=${nickname}`;
             axios.get(url)
                 .then(response => {
                     const list = response.data;
                     this.list = list;
-
                     const ownerNickname = [...new Set(list.map(item => item.ownerNickname))];
 
                     const requests = ownerNickname.map(owner => {
-                        const url2 = `http://192.168.1.86:8889/product/myProduct/${owner}/0`;
+                        const url2 = `http://192.168.1.86:9797/product-service/product/myProduct/${owner}/0`;
                         return axios.get(url2);
                     });
 
                     this.loadingProducts = true;
+                    
 
                     Promise.all(requests)
                         .then(responses => {
@@ -119,6 +119,7 @@ export default {
         openProductDetailModal(item) {
             this.ProductList = item; // 선택된 상품 정보를 저장
             this.showProductDetailModal = true; // ProductDetail 모달 표시 상태를 true로 변경
+            console.log(this.ProductList)
         },
 
         // ProductDetail 모달 닫기 메서드
