@@ -295,4 +295,5 @@ onMounted(() => {
 .pwd-wrapper {
   width: 150px;
 }
+@import './PostModify.css';
 </style>

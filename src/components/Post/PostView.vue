@@ -100,7 +100,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getPost, deletePost, getReply, replyRegister, deleteReply } from './post'
+import { getPost, deletePost, getReply, replyRegister, deleteReply, putReply } from './post'
 import { useRoute, useRouter } from 'vue-router'
 
 // const nickName = localStorage.getItem('nickname')
@@ -140,8 +140,7 @@ const confirmBtn = () => {
 }
 
 const removeBtn = async () => {
-  await deletePost(postId, setFiles.value).then((response) => {
-    console.log(response)
+  await deletePost(postId, setFiles.value).then(() => {
     router.push('/post/list/공지사항')
   })
 }
@@ -156,8 +155,7 @@ const getReplies = async (postId) => {
       originalText.value = setReplyText.value
       replyId.value = data.resultList[0].rno
     })
-    .catch((error) => {
-      console.log(error)
+    .catch(() => {
       readonly.value = false
       isValue.value = false
     })
@@ -166,45 +164,50 @@ const getReplies = async (postId) => {
 const toggleEdit = () => {
   readonly.value = !readonly.value
   setReplyText.value = originalText.value
-  console.log(setReplyText.value)
 }
 
 const submitReply = async () => {
   if (setReplyText.value.length <= 0) {
     return
   }
-
-  const formdata = {
-    pno: postId,
-    replyText: setReplyText.value
+  if (isValue.value === true) {
+    console.log('수정 눌림')
+    const formdata = {
+      replyText: setReplyText.value
+    }
+    await putReply(replyId.value, formdata)
+      .then(({ data }) => {
+        console.log(data)
+        readonly.value = true
+        isValue.value = true
+        originalText.value = setReplyText.value
+      })
+      .catch(() => {})
+  } else {
+    console.log('등록 눌림')
+    const formdata = {
+      pno: postId,
+      replyText: setReplyText.value
+    }
+    await replyRegister(formdata)
+      .then(({ data }) => {
+        readonly.value = true
+        isValue.value = true
+        originalText.value = setReplyText.value
+        replyId.value = parseInt(data.msg)
+      })
+      .catch(() => {})
   }
-
-  await replyRegister(formdata)
-    .then(({ data }) => {
-      console.log(data)
-      readonly.value = true
-      isValue.value = true
-      originalText.value = setReplyText.value
-      replyId.value = parseInt(data.msg)
-      console.log(replyId.value)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
 }
 
-
-const deleteBtn = async() => {
-  await deleteReply(replyId.value,postId)
-    .then((response) => {
-      console.log(response)
-      setReplyText.value=''
+const deleteBtn = async () => {
+  await deleteReply(replyId.value, postId)
+    .then(() => {
+      setReplyText.value = ''
       isValue.value = false
       readonly.value = false
     })
-    .catch((error) => {
-      console.log(error)
-    })
+    .catch(() => {})
 }
 
 onMounted(() => {
@@ -228,4 +231,5 @@ onMounted(() => {
 .link:hover {
   color: black;
 }
+@import './PostView.css';
 </style>

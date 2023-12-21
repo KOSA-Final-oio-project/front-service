@@ -217,4 +217,5 @@ const submitForm = async () => {
 .pwd-wrapper {
   width: 150px;
 }
+@import './PostRegister.css';
 </style>

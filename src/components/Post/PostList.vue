@@ -148,4 +148,6 @@ onMounted(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+@import './PostList.css';
+</style>
