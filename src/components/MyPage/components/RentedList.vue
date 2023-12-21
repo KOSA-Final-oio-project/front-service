@@ -94,7 +94,7 @@ export default {
 
                 // 데이터를 가져오는 데 필요한 API 호출
                 const [rentedListResponse, myProductResponse] = await Promise.all([
-                    axios.get(`http://192.168.1.86:9797/transaction-service/rent/0?nickname=${nickname}`),
+                    this.$axiosInstance.get(`http://192.168.1.86:9797/oio/0`),
                     axios.get(`http://192.168.1.86:9797/product-service/product/myProduct/${nickname}/0`)
                 ])
 
@@ -124,7 +124,7 @@ export default {
         async confirmEndRent() {
             if (this.selectedRentedItem) {
                 const rentedProductNo = this.selectedRentedItem.rentedProductNo
-                const url = `http://192.168.1.86:9797/transaction-service/rent/${rentedProductNo}`
+                const url = `http://192.168.1.86:9797/oio/rent/${rentedProductNo}`
 
                 try {
                     // 모달 창 닫기

@@ -54,35 +54,36 @@ export default {
     methods: {
         getHeart() {
             const nickname = localStorage.getItem('nickname')
-            const url = `http://192.168.1.86:9797/transaction-service/review/heart?nickname=${nickname}`
+            const url = `http://192.168.1.86:9797/oio/review/heart?nickname=${nickname}`
 
             axios
                 .get(url)
                 .then((response) => {
-                        console.log(response.data)
-                        this.heart = response.data.msg
-                    })
-            .catch((error) => {
-                console.log(error.data)
+                    console.log(response.data)
+                    this.heart = response.data.msg
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        },
+        
+        getUserProfile() {
+            const nickname = localStorage.getItem('nickname')
+            const url = `http://192.168.1.86:9797/oio/member/${nickname}`
+
+            axios.get(url).then((response) => {
+                console.log(response)
+                this.profile = response.data.result.profile
             })
+        }
     },
-    getUserProfile() {
-        const nickname = localStorage.getItem('nickname')
-        const url = `http://192.168.1.86:9797/member-service/member-service/member/${nickname}`
 
-        axios.get(url).then((response) => {
-            console.log(response)
-            this.profile = response.data.result.profile
-        })
+    mounted() {
+        this.getUserProfile()
+        this.getHeart()
+        this.nickname = localStorage.getItem('nickname')
+        // this.profile =
     }
-},
-
-mounted() {
-    this.getUserProfile()
-    this.getHeart()
-    this.nickname = localStorage.getItem('nickname')
-    // this.profile =
-}
 }
 </script>
 

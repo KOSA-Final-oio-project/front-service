@@ -7,7 +7,13 @@
             ><div class="rent"><span>최다 대여수</span></div></router-link
         >
 
-        <div class="top" v-for="(item, index) in topRentals" :key="index">
+        <router-link
+              :to="`/product/productDetail/${item.productNo}/${this.nickname}`"
+              class="top"
+              v-for="(item, index) in topRentals"
+              :key="index"
+              @click="moveDetail"
+            >
             <div class="topImg">
                 <span class="rented"> {{ item.status === 1 ? '대여중' : '미대여' }}</span>
                 <img class="product-img" :src=item.thumbnail />
@@ -15,7 +21,7 @@
             <p class="count">{{ item.view }}</p>
             <p class="title">{{ item.title }}</p>
             <p class="date">{{ formatDate(item.startDate) }} ~ {{ formatDate(item.endDate) }}</p>
-        </div>
+        </router-link>
     </div>
 </template>
 
@@ -24,7 +30,8 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            topRentals: []
+            topRentals: [],
+            nickname: localStorage.getItem('nickname')
         }
     },
     methods: {

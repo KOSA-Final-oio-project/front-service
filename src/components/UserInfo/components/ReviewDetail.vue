@@ -53,7 +53,7 @@ export default {
             const useReviewdata = this.ReviewData
             const rentedProductNo = useReviewdata.rentedProductNo
 
-            const url = `http://192.168.1.86:9797/transaction-service/rent/detail/${rentedProductNo}`
+            const url = `http://192.168.1.86:9797/oio/rentedProduct/${rentedProductNo}`
             axios
                 .get(url)
                 .then((response) => {
@@ -70,7 +70,7 @@ export default {
             const useReviewdata = this.ReviewData
             const reviewNo = useReviewdata.reviewNo
 
-            const url = `http://192.168.1.86:9797/transaction-service/review/${reviewNo}`
+            const url = `http://192.168.1.86:9797/oio/review/${reviewNo}`
             axios
                 .get(url)
                 .then((response) => {
@@ -92,7 +92,7 @@ export default {
         getProfile() {
             const useReviewdata = this.ReviewData
             const nickname = useReviewdata.writerNickname
-            const url = `http://192.168.1.86:9797/member-service/member/${nickname}`
+            const url = `http://192.168.1.86:9797/oio/member/${nickname}`
 
             axios.get(url)
                 .then((response) => {

@@ -58,16 +58,17 @@ export default {
         async getWriteReviews() {
             try {
                 const nickname = localStorage.getItem('nickname')
-                const url = `http://192.168.1.86:9797/transaction-service/review/myreviews/0?nickname=${nickname}`
-                const response = await axios.get(url)
+                const url = `http://192.168.1.86:9797/oio/myreviews/0`
+                const response = await this.$axiosInstance.get(url)
                 const responseReview = response.data
 
                 const updatedReviews = []
 
                 for (const review of responseReview) {
                     const rentedProductNo = review.rentedProductNo
-                    const url2 = `http://192.168.1.86:9797/transaction-service/rent/detail/${rentedProductNo}`
+                    const url2 = `http://192.168.1.86:9797/oio/rentedProduct/${rentedProductNo}`
 
+                    
                     const responseRentedProduct = await axios.get(url2)
                     const ownerNickname = responseRentedProduct.data.ownerNickname
 
@@ -76,7 +77,7 @@ export default {
                     const productData = responseProduct.data
 
                     const receiverNickname = review.receiverNickname
-                    const url4 = `http://192.168.1.86:9797/member-service/member-service/member/${receiverNickname}`
+                    const url4 = `http://192.168.1.86:9797/oio/member/${receiverNickname}`
                     const responseProfile = await axios.get(url4)
                     const profileData = responseProfile.data
                     console.log(profileData)

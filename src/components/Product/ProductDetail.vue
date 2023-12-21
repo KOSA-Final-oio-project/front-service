@@ -179,7 +179,7 @@ export default {
         productNo = this.ProductList.productNo
       }
 
-      const url = `http://192.168.1.86:9797/transaction-service/review/reviews/${productNo}`;
+      const url = `http://192.168.1.86:9797/oio/reviews/${productNo}`;
 
       axios.get(url)
         .then(response => {
