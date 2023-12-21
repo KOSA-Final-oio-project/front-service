@@ -139,7 +139,6 @@ const pagingClick = async (page) => {
 
 const submitForm = async () => {
   const { data } = await searchAllPost(categoryName.value, setType.value, setKeyword.value)
-  console.log(data)
   post.value = data
 }
 
@@ -149,5 +148,4 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import './PostList.css';
 </style>

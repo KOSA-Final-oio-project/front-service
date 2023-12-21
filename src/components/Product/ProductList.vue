@@ -40,6 +40,7 @@
                     <button @click="selectProduct()" class="selectBt">조회</button>
                     <router-link :to="'/product/writeProduct'"><p class="regist">상품등록</p></router-link>
                 </div>
+                <router-link :to="'/product/writeProduct'"><p class="regist">상품등록</p></router-link>
                 <div class="productList">
                     <div class="products">
                         <div class="product" v-for="(item, index) in products" :key="index">
@@ -50,7 +51,7 @@
                                 </span>
                                 <img :src="item.thumbnail ? item.thumbnail : sampleImage" />
                             </div>
-                            <p class="title">{{ item.content }}</p>
+                            <p class="title">{{ item.title }}</p>
                             <p class="date">
                                 {{ formatDate(item.startDate) }} ~ {{ formatDate(item.endDate) }}
                             </p>
@@ -185,13 +186,13 @@ export default {
 
         },
         getSiDo() {
-            axios.get('http://192.168.1.86:9797/oio/siDoList').then((result) => {
+            axios.get('http://192.168.1.86:9797/product-service/address/siDoList').then((result) => {
                 this.siDoList = result.data
             })
         },
         getSiGunGu() {
             axios
-                .get(`http://192.168.1.86:9797/oio/siGunGuList/${this.selectedSido}`)
+                .get(`http://192.168.1.86:9797/product-service/address/siGunGuList/${this.selectedSido}`)
                 .then((result) => {
                     this.siGunGuList = result.data
                 })
@@ -199,14 +200,14 @@ export default {
         getEupMyeonRo() {
             axios
                 .get(
-                    `http://192.168.1.86:9797/oio/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
+                    `http://192.168.1.86:9797/product-service/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
                 )
                 .then((result) => {
                     this.eupMyeonRoList = result.data
                 })
         },
         getCategory() {
-            axios.get('http://192.168.1.86:9797/oio/category').then((result) => {
+            axios.get('http://192.168.1.86:9797/product-service/category/categoryList').then((result) => {
                 this.categoryList = result.data
             })
         },
@@ -235,6 +236,13 @@ export default {
                 this.getEupMyeonRo(); // 읍면동 리스트를 업데이트할 수 있도록 해당 메서드를 호출합니다.
             }
         },
+        truncateTitle(title, maxLength) {
+        if (title.length > maxLength) {
+            return title.substring(0, maxLength) + '...';
+        } else {
+            return title;
+        }
+    },
 
     },
     created() {
@@ -287,6 +295,10 @@ body {
     /* margin-right: calc(1% + 60px); */
 }
 
+.dropdown.category {
+    margin-right: calc(1% + 60px);
+}
+
 /* Styling for the individual selects */
 select {
     padding: 8px;
@@ -316,7 +328,11 @@ p.regist {
     margin-top: 16px;
     margin-left: 10px;
     /* margin-right: 50px; */
-    padding: 8px 15px;
+    margin-left: auto;
+    /*margin-right: calc(1% + 70px);
+    margin-top: 10px;
+    width: 90px;
+    padding: 8px 15px;*/
     background-color: #18b7be;
     color: #fff;
     border: none;
@@ -346,6 +362,10 @@ a {
     font-weight: bold;
     font-size: 20px;
     color: #072a40;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px;
 }
 
 .date {
@@ -412,6 +432,7 @@ a {
     background-color: #178CA4;
     padding: 3px 5px;
     border-radius: 10px;
+    z-index: 1;
 }
 
 .productImg span.rented {

@@ -1,7 +1,7 @@
 <template>
   <body class="header-container">
     <div class="header">
-      <div class="logo-container"><img src="../assets/sample.png" alt="Logo" class="logo" /></div>
+      <a href="/"><img src="../assets/oio.png" alt="Logo" class="logo" /></a>
 
       <div class="input-container">
         <div class="search-icon">
@@ -49,29 +49,30 @@
 <script>
 export default {
   data() {
-    return {
-      loginCheck: false,
-      nickname: localStorage.getItem('nickname')
-    }
+      return {
+          loginCheck: false,
+          searchValue: ''
+      }
   },
 
   methods: {
-    enterJoin() {
-      this.$router.push(`/member-service/signup`)
-    },
-    loginChk() {
-      if (localStorage.getItem('nickname')) {
-        return true
+      enterJoin() {
+          this.$router.push(`/member-service/signup`)
+      },
+      loginChk() {
+          if (localStorage.getItem('nickname')) {
+              return true
+          }
+      },
+      logout() {
+          localStorage.removeItem('nickname')
+          window.location = '/'
       }
-    },
-    logout() {
-      localStorage.removeItem('nickname')
-      window.location = '/'
-    }
   }
 }
 </script>
 <style scoped>
+<<<<<<< HEAD
 @font-face {
     font-family: 'NotoSansKR-VariableFont_wght';
     src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
@@ -93,6 +94,8 @@ export default {
   display:flex;
 }
 
+=======
+>>>>>>> hayoung2
 .loginCheck {
   display: none;
 }

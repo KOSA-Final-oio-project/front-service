@@ -1,0 +1,14 @@
+.select-check-wrapper {
+  display: flex;
+}
+.select-wrapper {
+  width: 120px;
+  margin-right: 40px;
+}
+.link {
+  text-decoration: none;
+  color: #0dcaf0;
+}
+.link:hover {
+  color: black;
+}

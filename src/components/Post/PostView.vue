@@ -24,12 +24,12 @@
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text">Title</span>
+            <span class="input-group-text">제목</span>
             <input type="text" v-model="setTitle" class="form-control" readonly />
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text">Content</span>
+            <span class="input-group-text">내용</span>
             <textarea
               class="form-control col-sm-5"
               rows="5"
@@ -217,19 +217,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.select-check-wrapper {
-  display: flex;
-}
-.select-wrapper {
-  width: 120px;
-  margin-right: 40px;
-}
-.link {
-  text-decoration: none;
-  color: #0dcaf0;
-}
-.link:hover {
-  color: black;
-}
 @import './PostView.css';
 </style>

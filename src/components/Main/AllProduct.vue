@@ -184,6 +184,10 @@ body {
     /* position: relative; */
 }
 
+section {
+    padding-top: 80px;
+}
+
 /* Basic styling for the dropdown container */
 .dropdown {
     display: flex;
@@ -505,6 +509,21 @@ a {
     height: 180px;
     width: 180px;
     display: inline-block;
+}
+.productImg span {
+  margin-left: 5px;
+  color: #ffffff;
+  background-color: #178CA4;
+  padding: 3px 5px;
+  border-radius: 10px;
+}
+
+.productImg span.rented {
+  background-color: red;
+}
+
+.productImg span.expired {
+  background-color: #d1d1d1;
 }
 
 .product img {
