@@ -130,7 +130,7 @@ export default {
 
             // 백엔드로 데이터 전송
             axios
-                .post(`http://192.168.1.86:7575/rent/${productNo}`, rentData)
+                .post(this.$backURL + `rent/${productNo}`, rentData)
                 .then(response => {
                     // 성공시 로직
                     console.log('거래 시작 데이터 전송 성공:', response);

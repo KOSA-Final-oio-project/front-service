@@ -68,7 +68,7 @@ export default {
             const productNo = useReviewdata.rentedProduct.product.productNo;
 
             return {
-                path: `/product-service/productDetail/${productNo}/${productNickname}`,
+                path: `http://192.168.1.86:9797/product-service/product/productDetail/${productNo}/${productNickname}`,
                 // 다른 라우터 속성들을 설정할 수 있음
             };
         },
@@ -78,9 +78,9 @@ export default {
         getRentedProduct() {
             const useReviewdata = this.ReviewData
             const rentedProductNo = useReviewdata.rentedProductNo
-            console.log(useReviewdata.rentedProduct.product.nickname)
+            console.log(useReviewdata)
 
-            const url = `http://192.168.1.86:7575/rent/detail/${rentedProductNo}`
+            const url = `http://192.168.1.86:9797/transaction-service/rent/detail/${rentedProductNo}`
 
             axios
                 .get(url)
@@ -100,7 +100,7 @@ export default {
             const useReviewdata = this.ReviewData
             const reviewNo = useReviewdata.reviewNo
 
-            const url = `http://192.168.1.86:7575/review/${reviewNo}`
+            const url = `http://192.168.1.86:9797/transaction-service/review/${reviewNo}`
 
             axios
                 .get(url)
@@ -119,7 +119,7 @@ export default {
 
             const nickname = useReviewdata.profile.result.nickname
 
-            const url = `http://192.168.1.37:9999/oio/member/${nickname}`
+            const url = `http://192.168.1.86:9797/member-service/member-service/member/${nickname}`
 
             axios.get(url).then((response) => {
                 this.profile = response.data.result.profile
@@ -254,9 +254,11 @@ export default {
 .bi-heart-fill {
     color: red;
     float: right;
+    margin-right: 20px;
 }
 
 .bi-heart {
     float: right;
+    margin-right: 20px;
 }
 </style>

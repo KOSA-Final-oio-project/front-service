@@ -14,11 +14,11 @@
                         </p>
                         <img src="../../../assets/status.png" /> {{ item.status }}
                         <span class="button-container">
-                            <button v-if="showReviewButton(item.reviewStatus, item.status)" @click="openModal(item)"
+                            <button v-if="showReviewButton(item.reviewStatus, item.status)" @click.stop="openModal(item)"
                                 class="review-button">
                                 리뷰 작성
                             </button>
-                            <button v-if="showEndRentButton(item.status)" @click="openConfirmationModal(item)"
+                            <button v-if="showEndRentButton(item.status)" @click.stop="openConfirmationModal(item)"
                                 class="rent-button">
                                 대여 완료
                             </button>
@@ -94,8 +94,8 @@ export default {
 
                 // 데이터를 가져오는 데 필요한 API 호출
                 const [rentedListResponse, myProductResponse] = await Promise.all([
-                    axios.get(`http://192.168.1.86:7575/rent/0?nickname=${nickname}`),
-                    axios.get(`http://192.168.1.86:8889/product/myProduct/${nickname}/0`)
+                    axios.get(`http://192.168.1.86:9797/transaction-service/rent/0?nickname=${nickname}`),
+                    axios.get(`http://192.168.1.86:9797/product-service/product/myProduct/${nickname}/0`)
                 ])
 
                 const rentedList = rentedListResponse.data
@@ -111,6 +111,7 @@ export default {
         },
 
         openConfirmationModal(item) {
+            this.showProductDetailModal = false;
             this.selectedRentedItem = item
             this.showConfirmationModal = true // 모달 열기
         },
@@ -123,7 +124,7 @@ export default {
         async confirmEndRent() {
             if (this.selectedRentedItem) {
                 const rentedProductNo = this.selectedRentedItem.rentedProductNo
-                const url = `http://192.168.1.86:7575/rent/${rentedProductNo}`
+                const url = `http://192.168.1.86:9797/transaction-service/rent/${rentedProductNo}`
 
                 try {
                     // 모달 창 닫기
@@ -146,6 +147,7 @@ export default {
         },
 
         openModal(item) {
+            this.showProductDetailModal = false;
             this.ReviewList = item
             this.showModal = true
         },

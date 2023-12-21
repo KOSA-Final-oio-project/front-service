@@ -42,7 +42,8 @@ export default {
     methods: {
         findPassword() {
             axios
-                .post(`http://localhost:9999/oio/member/${this.email}`, {
+                // .post(this.$backURL + `member/${this.email}`, {
+                    .post(`http://192.168.1.86:9797/member-service/member-service/member/${this.email}`, {
                     email: this.email
                 })
                 .then((result) => {
@@ -57,6 +58,14 @@ export default {
 }
 </script>
 <style scoped>
+@font-face {
+    font-family: 'NotoSansKR-VariableFont_wght';
+    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: 'NotoSansKR-VariableFont_wght';
+}
 .findPassword {
     text-decoration: none;
 }

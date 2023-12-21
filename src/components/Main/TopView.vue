@@ -10,10 +10,10 @@
         <div class="top" v-for="(item, index) in topViews" :key="index">
             <div class="topImg">
                 <span class="rented"> {{ item.status === 1 ? '대여중' : '미대여' }}</span>
-                <img src="https://oio-bucket.s3.ap-northeast-2.amazonaws.com/logo.png" />
+                <img class="product-img" :src=item.thumbnail />
             </div>
             <p class="count">{{ item.view }}</p>
-            <p class="title">{{ item.content }}</p>
+            <p class="title">{{ item.title }}</p>
             <p class="date">{{ formatDate(item.startDate) }} ~ {{ formatDate(item.endDate) }}</p>
         </div>
     </div>
@@ -24,7 +24,7 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            topViews: []
+            topViews: [],
         }
     },
     methods: {
@@ -36,11 +36,14 @@ export default {
             return `${year}-${month}-${day}`
         },
         getTopView() {
-            const url = 'http://localhost:8889/product/productList/v'
+            // const url = this.$backURL + 'product/productList/v'
+            const url = 'http://192.168.1.86:9797/product-service/product/productList/v'
 
             axios.get(url).then((result) => {
                 console.log(result)
+                console.log(result.data.productList)
                 this.topViews = result.data.productList
+                this.thumbnail = result.data.productList.thumbnail
             })
         }
     },
@@ -51,6 +54,15 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+    font-family: 'NotoSansKR-VariableFont_wght';
+    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: 'NotoSansKR-VariableFont_wght';
+}
+
 section {
     margin-top: 150px;
 }
@@ -233,6 +245,8 @@ a {
     width: 200px;
     display: inline-block;
 }
+
+
 
 .rented {
     background-color: #072a40;

@@ -90,7 +90,6 @@ export default {
             }
 
             alert('전달하는 url은 ' + 'http://192.168.1.93:9712/chat/roominfo/' + roomId)
-
             // API 호출하여 채팅방 정보 가져오기
             axios.get('http://192.168.1.93:9712/chat/roominfo/' + roomId).then((response) => {
                 alert(this.roomId)
@@ -164,7 +163,7 @@ export default {
 }
 
 section {
-    padding-top: 150px;
+    padding-top: 200px;
     width: 100%;
     height: 100%;
 }
