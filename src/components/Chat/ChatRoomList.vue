@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section class="section">
         <div class="container" v-cloak>
             <!-- 타이틀 -->
             <div class="row">
@@ -164,7 +164,6 @@ export default {
 }
 
 section {
-    /* border: 1px solid black; */
     padding-top: 150px;
     width: 100%;
     height: 100%;

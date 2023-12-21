@@ -4,7 +4,7 @@
         <router-view></router-view>
         <router-view name="AllProduct"></router-view>
     </div>
-    <!-- <Footer /> -->
+    <Footer />
 </template>
 
 <script>
