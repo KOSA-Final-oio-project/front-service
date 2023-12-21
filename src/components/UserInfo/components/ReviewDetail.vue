@@ -222,9 +222,11 @@ export default {
 .bi-heart-fill {
     color: red;
     float: right;
+    margin-right: 20px;
 }
 
 .bi-heart {
     float: right;
+    margin-right: 20px;
 }
 </style>

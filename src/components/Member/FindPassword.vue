@@ -58,6 +58,14 @@ export default {
 }
 </script>
 <style scoped>
+@font-face {
+    font-family: 'NotoSansKR-VariableFont_wght';
+    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: 'NotoSansKR-VariableFont_wght';
+}
 .findPassword {
     text-decoration: none;
 }

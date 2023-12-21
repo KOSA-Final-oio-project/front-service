@@ -44,6 +44,7 @@ import MainPost from '@/components/Post/MainPost.vue'
 import PostList from '@/components/Post/PostList.vue'
 import PostView from '@/components/Post/PostView.vue'
 import PostRegister from '@/components/Post/PostRegister.vue'
+import PostModify from '@/components/Post/PostModify.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -112,6 +113,7 @@ const router = createRouter({
             component: MainPost,
             children: [
                 { path: 'list/:id', component: PostList },
+                { path: 'modify/:id', component: PostModify },
                 { path: 'view/:id', component: PostView },
                 { path: 'register', component: PostRegister }
             ]

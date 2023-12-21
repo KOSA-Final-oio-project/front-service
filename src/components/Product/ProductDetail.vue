@@ -41,8 +41,12 @@
       <p>리뷰</p>
       <div v-for="review in reviews" :key="review.id" class="review">
         <div class="info">
-          <div class="writer">{{ review.writerNickname }}</div>
-          <div class="reviewDate">{{ review.postDate }}</div>
+          <div class="writer">{{ review.writerNickname }}
+          </div>
+          <div class="reviewDate">{{ review.postDate }}
+            <span v-if="review.heart === 0"></span>
+            <span v-else-if="review.heart === 1"><i class="bi bi-heart-fill"></i></span>
+          </div>
         </div>
         <div class="reviewContent">{{ review.content }}</div>
       </div>
@@ -90,10 +94,10 @@ export default {
       reviews: [],
       currentIndex: 0,
 
-      // product2: {
-      //   productNo: '',
-      //   nickname: '',
-      // },
+      product2: {
+        productNo: '',
+        nickname: '',
+      },
 
       //채팅
       productName: '',
@@ -115,10 +119,10 @@ export default {
     this.getProductDetail();
     this.getReviews();
   },
-  // created() {
-  //   this.ProductList.productNo = this.ProductList.productNo
-  //   this.ProductList.nickname = localStorage.getItem('nickname')
-  // },
+  created() {
+    this.product2.productNo = this.$route.params.id
+    this.product2.nickname = localStorage.getItem('nickname')
+  },
 
   methods: {
     //상품 디테일
@@ -129,13 +133,21 @@ export default {
       this.currentIndex = (this.currentIndex - 1 + this.productImages.length) % this.productImages.length;
     },
     getProductDetail() {
+      console.log(this.product2)
+      console.log(this.ProductList)
       let nickname
-      const productNo = this.ProductList.productNo
+      let productNo
 
-      if (this.ProductList.nickname == null) {
-        nickname = this.ProductList.ownerNickname;
+      if (this.ProductList == null) {
+        nickname = this.product2.nickname;
       } else {
         nickname = this.ProductList.nickname;
+      }
+
+      if (this.ProductList == null) {
+        productNo = this.product2.productNo
+      } else {
+        productNo = this.ProductList.productNo
       }
 
       const url = `http://192.168.1.86:9797/product-service/product/productDetail/${productNo}/${nickname}`;
@@ -159,7 +171,14 @@ export default {
         });
     },
     getReviews() {
-      const productNo = this.ProductList.productNo
+      let productNo
+
+      if (this.ProductList == null) {
+        productNo = this.product2.productNo
+      } else {
+        productNo = this.ProductList.productNo
+      }
+
       const url = `http://192.168.1.86:9797/transaction-service/review/reviews/${productNo}`;
 
       axios.get(url)
@@ -185,12 +204,19 @@ export default {
     createRoom() {
       // 제품 정보, 수신자 닉네임, 사용자 닉네임 가져오기
       console.log(this.ProductList)
-      const productNo = this.ProductList.productNo
+      let productNo
+
+      if (this.ProductList == null) {
+        productNo = this.product2.productNo
+      } else {
+        productNo = this.ProductList.productNo
+      }
+
       const productName = this.product.title
       const productPrice = this.product.price
 
       const receiver = this.product.nickname
-    
+
       const sender = localStorage.getItem('nickname')
 
       // 채팅방 제목 입력
@@ -281,6 +307,15 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+    font-family: 'NotoSansKR-VariableFont_wght';
+    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: 'NotoSansKR-VariableFont_wght';
+}
+
 a {
   text-decoration: none;
 }
@@ -478,5 +513,10 @@ li {
 
 .review:last-child .reviewContent {
   border-bottom: none;
+}
+
+.bi-heart-fill {
+  color: red;
+  margin-left: 5px;
 }
 </style>

@@ -423,6 +423,15 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+    font-family: 'NotoSansKR-VariableFont_wght';
+    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: 'NotoSansKR-VariableFont_wght';
+}
+
 .button {
   margin-left: 3%;
   display: flex;
