@@ -147,7 +147,7 @@ export default {
             // 서버로 전송
             axios
                 .post(
-                    `http://127.0.0.1:8889/product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/주소수`,
+                    `http://192.168.1.86:9797/product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/주소수`,
                     formData,
                     {
                         headers: {
@@ -172,26 +172,26 @@ export default {
         },
 
         getSiDo() {
-            axios.get('http://localhost:8889/address/siDoList').then((result) => {
+            axios.get('http://192.168.1.86:9797/product-service/address/siDoList').then((result) => {
                 this.siDoList = result.data
             })
         },
         getSiGunGu() {
-            axios.get(`http://localhost:8889/address/siGunGuList/${this.selectedSido}`).then((result) => {
+            axios.get(`http://192.168.1.86:9797/product-service/address/siGunGuList/${this.selectedSido}`).then((result) => {
                 this.siGunGuList = result.data
             })
         },
         getEupMyeonRo() {
             axios
                 .get(
-                    `http://localhost:8889/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
+                    `http://192.168.1.86:9797/product-service/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
                 )
                 .then((result) => {
                     this.eupMyeonRoList = result.data
                 })
         },
         getCategory() {
-            axios.get('http://localhost:8889/category/categoryList').then((result) => {
+            axios.get('http://192.168.1.86:9797/product-service/category/categoryList').then((result) => {
                 this.categoryList = result.data
             })
         }

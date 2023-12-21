@@ -84,7 +84,7 @@ export default {
         getProductDetail(productNo) {
             const nickname = localStorage.getItem('nickname');
             const pno = this.$route.params.id
-            const url = `http://localhost:8889/product/productDetail/103/닉네임이다`;
+            const url = `http://192.168.1.86:9797/product/productDetail/103/닉네임이다`;
 
             axios.get(url)
                 .then(response => {

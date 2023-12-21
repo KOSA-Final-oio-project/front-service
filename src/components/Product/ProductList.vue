@@ -80,7 +80,7 @@ export default {
                     })
             } else if (this.selectedSiGunGu == '') {
                 axios
-                    .get(this.$backURL + 'product/productList/n?siDo=' + this.selectedSido)
+                    .get('http://192.168.1.86:9797/product-service/product/productList/n?siDo=' + this.selectedSido)
                     .then((result) => {
                         this.products = result.data.productList
                     })
