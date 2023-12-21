@@ -1,5 +1,5 @@
 <template>
-    <h2>비밀번호 찾기</h2>
+    <h2>아이디 찾기</h2>
     <!-- 회원가입 폼 컨테이너 -->
     <div class="form-container">
         <!-- 서버단에 전송할 데이터 작성 구역 (폼) -->
@@ -9,21 +9,14 @@
 
                 <!-- 닉네임 -->
                 <div class="form-group">
-                    <label for="nickname">이메일</label>
+                    <label for="nickname">전화번호</label>
                     <div class="flex-container">
-                        <input
-                            v-model="email"
-                            type="nickname"
-                            id="nickname"
-                            placeholder="가입 시 등록하신 이메일로 임시 비밀번호를 발송해 드립니다."
-                        />
+                        <input v-model="phone" type="nickname" id="nickname" placeholder="가입 시 등록하신 번호로 아이디를 발송해드립니다." />
                     </div>
                 </div>
 
                 <div class="btn-container">
-                    <button type="submit" class="submit-btn" @click="findPassword">
-                        임시 비밀번호 발급
-                    </button>
+                    <button type="submit" class="submit-btn" @click="findId">아이디 찾기</button>
                 </div>
             </div>
         </form>
@@ -35,49 +28,43 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            email: '',
-            newPassword: ''
+            phone: ''
         }
     },
     methods: {
-        findPassword() {
+        findId() {
+            console.log(this.phone)
             axios
-                // .post(this.$backURL + `member/${this.email}`, {
-                    .post(`http://192.168.1.86:9797/oio/member/member/${this.email}`, {
-                    email: this.email
+                .post(`http://localhost:9999/oio/find-email`, {
+                    phoneNumber: this.phone
                 })
                 .then((result) => {
-                    alert('해당 이메일로 임시 비밀번호가 발송되었습니다.')
-                    console.log
+                    alert('해당 전화번호로 이메일이 발송되었습니다.')
+                    console.log(result)
                 })
                 .catch(() => {
-                    alert('유효하지 않은 이메일입니다.')
+                    alert('없는 전화번호입니다.')
                 })
         }
     }
 }
 </script>
 <style scoped>
-@font-face {
-    font-family: 'NotoSansKR-VariableFont_wght';
-    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
-}
-
-* {
-    font-family: 'NotoSansKR-VariableFont_wght';
-}
 .findPassword {
     text-decoration: none;
 }
+
 .btn-container {
     margin-right: 20%;
 }
+
 /* 제목 타이틀 */
 h2 {
     margin-top: 200px;
     text-align: center;
     margin-bottom: 50px;
 }
+
 .form-container {
     margin-left: 22%;
     /* 폼 컨테이너 너비 조절용 */
@@ -111,7 +98,8 @@ form label {
     flex-basis: 20%;
     text-align: left;
     margin-top: 15px;
-    margin-bottom: 0; /* 수평 정렬을 위해 하단 마진 제거 */
+    margin-bottom: 0;
+    /* 수평 정렬을 위해 하단 마진 제거 */
 }
 
 /* 입력창들 스타일 */

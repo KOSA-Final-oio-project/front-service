@@ -1,5 +1,6 @@
 <template>
   <!-- 회원가입 폼 컨테이너 -->
+  <h2>회원가입</h2>
   <div class="form-container">
     <!-- 서버단에 전송할 데이터 작성 구역 (폼) -->
     <form @submit.prevent="submitForm">
@@ -319,6 +320,9 @@ export default {
 
     // 닉네임 중복확인
     nicknameDuplicateCheck() {
+      if (this.user.nickname.includes('_')) {
+        alert('닉네임에는 언더스코어(_)를 포함할 수 없습니다.')
+      }else{
       axios
         // .post(this.$backURL + 'nickname-chk', {
           .post('http://192.168.1.86:9797/oio/nickname-chk', {
@@ -332,7 +336,7 @@ export default {
             alert('사용가능한 닉네임입니다.')
           }
         })
-    },
+    }},
     phoneDuplicateCheck() {
       axios
         .post(
@@ -389,7 +393,7 @@ export default {
 
     // 가입하기
     submitForm() {
-      if (this.count != 2) {
+      if (this.count < 2) {
         alert('이메일 혹은 휴대폰인증이 완료되지 않았습니다.')
       } else {
         // FormData에 이미지 데이터 및 다른 필드들 추가
@@ -478,22 +482,21 @@ export default {
 }
 /* 제목 타이틀 */
 h2 {
-  margin-top: 200px;
+  margin-top: 220px;
   text-align: center;
-  margin-bottom: 50px;
 }
 .form-container {
   /* 폼 컨테이너 너비 조절용 */
   max-width: 80%;
   margin-left: 21%;
-  margin-top: 180px;
+  margin-top: 20px;
 }
 
 /* 각 입력창 영역 공통 스타일 */
 .form-group {
   align-items: center;
   justify-content: space-between;
-
+margin-top: 20px;
   margin-bottom: 20px;
 }
 

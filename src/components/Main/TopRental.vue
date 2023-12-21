@@ -58,6 +58,7 @@ export default {
 }
 </script>
 <style scoped>
+
 @font-face {
     font-family: 'NotoSansKR-VariableFont_wght';
     src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
@@ -120,6 +121,12 @@ a {
 
 .menu img {
     height: 40px;
+}
+
+
+.product-img{
+    width: 100%;
+    height: 140px;
 }
 
 .menu li:not(:last-child) {
@@ -250,9 +257,18 @@ a {
     display: inline-block;
 }
 
+.topImg span {
+    margin-left: 5px;
+    color: #ffffff;
+    background-color: #178CA4;
+    padding: 3px 5px;
+    border-radius: 10px;
+    z-index: 1;
+}
+
 .rented {
-    background-color: #072a40;
-    border: 3px solid #072a40;
+    /* background-color: #072a40;
+    border: 3px solid #072a40; */
     border-radius: 20px;
     color: #ffffff;
 }

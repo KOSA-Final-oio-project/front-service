@@ -11,7 +11,7 @@
                     <button
                         class="btn deal-start-btn"
                         type="button"
-                        
+                        v-if="!isSender"
                         @click="openDateSelectionPopup"
                     >
                         거래하기
@@ -384,7 +384,7 @@ export default {
 }
 
 section {
-    padding-top: 150px;
+    margin-top: 200px;
 }
 
 .title {
