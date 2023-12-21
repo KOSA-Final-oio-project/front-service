@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+//MAIN
 import TopView from '@/components/Main/TopView.vue'
 import TopRental from '@/components/Main/TopRental.vue'
 import AllProduct from '@/components/Main/AllProduct.vue'
@@ -101,11 +102,11 @@ const router = createRouter({
         { path: 'rent', component: UserInfoRent }
       ]
     },
-    { path: '/product/productDetail', component: ProductDetail },
-    { path: '/product/productList', component: ProductList },
-    { path: '/product/searchProduct', component: SearchProduct },
-    { path: '/product/writeProduct', component: WriteProduct },
-    { path: '/product/modifyProduct', component: ModifyProduct },
+    {path: '/product/productDetail/:id', component: ProductDetail},
+    {path: '/product/productList', component: ProductList},
+    {path: '/product/searchProduct/:searchWord', component: SearchProduct},
+    {path: '/product/writeProduct', component: WriteProduct},
+    {path: '/product/modifyProduct/:id', component: ModifyProduct},
     {
       path: '/product/productDetail/:id?/:ni?',
       component: ProductDetail

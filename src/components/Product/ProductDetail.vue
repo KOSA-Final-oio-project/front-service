@@ -1,55 +1,47 @@
 <template>
-  <div class="container">
-    <div class="productContainer">
-      <div class="imageContainer">
-        <a class="prev" @click="prev" href="#">❮</a>
-        <transition-group>
-          <div v-for="(img, index) in productImages" :key="index">
-            <img class="slider-image" :src="img" alt="Slide Image" v-show="currentIndex === index" />
-          </div>
-        </transition-group>
-        <a class="next" @click="next" href="#">❯</a>
+  <div class="productContainer">
+    <div class="imageContainer">
+      <a class="prev" @click="prev" href="#">❮</a>
+      <transition-group>
+        <div v-for="(img, index) in productImages" :key="index">
+          <img class="slider-image" :src="img" alt="Slide Image" v-show="currentIndex === index" />
+        </div>
+      </transition-group>
+      <a class="next" @click="next" href="#">❯</a>
+    </div>
+
+    <div v-if="product" class="product">
+      <div class="productInfo">
+        <router-link v-if="status === 0 && product.status === 0" :to="`/product/modifyProduct/${product.productNo}`">
+          <p class="modify">수정</p>
+        </router-link>
+        <span>{{ product.postCategory === 0 ? '빌려드려요' : '빌려주세요' }}</span>
+        <span :class="{ 'rented': product.status === 1, 'expired': product.status === 2 }">
+          {{ product.status === 0 ? '미대여' : (product.status === 1 ? '대여중' : '기간만료') }}
+        </span>
+        <p>조회수:{{ product.viewCount }} 대여수:{{ product.rentCount }} 작성일:{{ formatDate(product.postDate) }}</p>
+        <h2>{{ product.title }}</h2>
+        <p>{{ product.address.siDo }} {{ product.address.siGunGu }} {{ product.address.eupMyeonRo }}</p>
+        <p>카테고리:{{ product.category.categoryName }}</p>
+        <p>{{ product.priceCategory }}: {{ product.price }}원</p>
+        <p>대여 기간: {{ formatDate(product.startDate) }} ~ {{ formatDate(product.endDate) }}</p>
+        <p>{{ product.content }}</p>
       </div>
 
-      <div v-if="product" class="product">
-        <div class="productInfo">
-          <li>
-            <a :href="getActionLink()" :class="{ 'report': status === 1 }">
-              {{ status === 1 ? '신고' : '수정' }}
-            </a>
-          </li>
-          <span>{{ product.postCategory === 0 ? '빌려드려요' : '빌려주세요' }}</span>
-          <span :class="{ 'rented': product.status === 1, 'expired': product.status === 2 }">
-            {{ product.status === 0 ? '미대여' : (product.status === 1 ? '대여중' : '기간만료') }}
-          </span>
-          <p>조회수:{{ product.viewCount }} 대여수:{{ product.rentCount }} 작성일:{{ formatDate(product.postDate) }}</p>
-          <h2>{{ product.title }}</h2>
-          <p>{{ product.address.siDo }} {{ product.address.siGunGu }} {{ product.address.eupMyeonRo }}</p>
-          <p>카테고리:{{ product.category.categoryName }}</p>
-          <p>{{ product.priceCategory }}: {{ product.price }}원</p>
-          <p>대여 기간: {{ formatDate(product.startDate) }} ~ {{ formatDate(product.endDate) }}</p>
-          <p class="content">{{ product.content }}</p>
-        </div>
-
-        <div class="userInfo">
-          <span>{{ product.nickname }}</span>
-          <button @click="createRoom">채팅하기</button>
-        </div>
+      <div class="userInfo">
+        <span>{{ product.nickname }}</span>
+        <button>채팅하기</button>
       </div>
     </div>
-    <div class="reviewContainer">
-      <p>리뷰</p>
-      <div v-for="review in reviews" :key="review.id" class="review">
-        <div class="info">
-          <div class="writer">{{ review.writerNickname }}
-          </div>
-          <div class="reviewDate">{{ review.postDate }}
-            <span v-if="review.heart === 0"></span>
-            <span v-else-if="review.heart === 1"><i class="bi bi-heart-fill"></i></span>
-          </div>
-        </div>
-        <div class="reviewContent">{{ review.content }}</div>
+  </div>
+  <div class="reviewContainer">
+    <p>리뷰</p>
+    <div v-for="review in reviews" :key="review.id" class="review">
+      <div class="info">
+        <div class="writer">{{ review.writerNickname }}</div>
+        <div class="reviewDate">{{ review.postDate }}</div>
       </div>
+      <div class="reviewContent">{{ review.postDate }}</div>
     </div>
   </div>
 </template>
@@ -62,7 +54,6 @@ export default {
   name: 'ProductDatail',
   data() {
     return {
-      //상품 디테일
       product: {
         productNo: '',
         nickname: '',
@@ -93,31 +84,11 @@ export default {
       status: 0,
       reviews: [],
       currentIndex: 0,
-
-      product2: {
-        productNo: '',
-        nickname: '',
-      },
-
-      //채팅
-      productName: '',
-      productPrice: '',
-      receiver: '',
-      sender: '',
-      roomName: ''
     };
   },
-
-  props: {
-    ProductList: {
-      type: Object,
-      default: null
-    }
-  },
-
   mounted() {
-    this.getProductDetail();
-    this.getReviews();
+    this.getProductDetail(41);
+    this.getReviews(41);
   },
   created() {
     this.product2.productNo = this.$route.params.id
@@ -125,66 +96,34 @@ export default {
   },
 
   methods: {
-    //상품 디테일
     next() {
       this.currentIndex = (this.currentIndex + 1) % this.productImages.length;
     },
     prev() {
       this.currentIndex = (this.currentIndex - 1 + this.productImages.length) % this.productImages.length;
     },
-    getProductDetail() {
-      console.log(this.product2)
-      console.log(this.ProductList)
-      let nickname
-      let productNo
-
-      if (this.ProductList == null) {
-        nickname = this.product2.nickname;
-      } else {
-        nickname = this.ProductList.nickname;
-      }
-
-      if (this.ProductList == null) {
-        productNo = this.product2.productNo
-      } else {
-        productNo = this.ProductList.productNo
-      }
-
-      const url = `http://192.168.1.86:9797/product-service/product/productDetail/${productNo}/${nickname}`;
+    getProductDetail(productNo) {
+      const nickname = localStorage.getItem('nickname');
+      const pno = this.$route.params.id
+      const url = `http://192.168.1.86:9797/product-service/product/productDetail/${pno}/주소수`;
 
       axios.get(url)
         .then(response => {
           const data = response.data;
           this.product = data.product;
           this.productImgs = data.productImgs;
-          const nickname = localStorage.getItem('nickname');
-
-          if (response.data.product.nickname !== nickname) {
-            this.status = 1;
-          } else {
-            this.status = 0;
-          }
-
+          this.status = data.status;
         })
         .catch(error => {
           console.error('상품 정보를 불러오는데 실패했습니다.', error);
         });
     },
-    getReviews() {
-      let productNo
-
-      if (this.ProductList == null) {
-        productNo = this.product2.productNo
-      } else {
-        productNo = this.ProductList.productNo
-      }
-
-      const url = `http://192.168.1.86:9797/oio/reviews/${productNo}`;
+    getReviews(productNo) {
+      const url = `http://localhost:8889/review/reviews/3`;
 
       axios.get(url)
         .then(response => {
           const data = response.data;
-          console.log(data)
           this.reviews = data;
         })
         .catch(error => {
@@ -194,99 +133,6 @@ export default {
     formatDate(dateString) {
       const dateWithoutTime = dateString.split('T')[0];
       return dateWithoutTime;
-    },
-    getActionLink() {
-      // status에 따라 다른 URL을 반환
-      return this.status === 1 ? '신고 URL' : '수정 URL';
-    },
-
-    //채팅
-    createRoom() {
-      // 제품 정보, 수신자 닉네임, 사용자 닉네임 가져오기
-      console.log(this.ProductList)
-      let productNo
-
-      if (this.ProductList == null) {
-        productNo = this.product2.productNo
-      } else {
-        productNo = this.ProductList.productNo
-      }
-
-      const productName = this.product.title
-      const productPrice = this.product.price
-
-      const receiver = this.product.nickname
-
-      const sender = localStorage.getItem('nickname')
-
-      // 채팅방 제목 입력
-      const roomName = prompt('생성하실 채팅방의 제목을 입력해주세요. (20자 이내)')
-
-      // 채팅방 제목 입력 필수로
-      if (!roomName) {
-        alert('채팅방 제목을 입력해주세요.')
-        return
-      } else if (roomName.length > 20) {
-        alert('채팅방 제목은 20자를 초과할 수 없습니다.')
-        return
-      }
-      console.log('입력된 채팅방 제목:', roomName)
-      console.log(receiver)
-      // 현재 날짜와 시간을 생성
-      const createDate = new Date().toISOString()
-      console.log('방 생성 시도 시간:', createDate)
-
-      // 전송할 데이터 객체 생성
-      const dataToSend = {
-        roomName: roomName,
-        createDate: createDate,
-        productName: productName,
-        productPrice: productPrice,
-        receiver: receiver,
-        sender: sender,
-        productNo: productNo
-      }
-      console.log('전송할 데이터 객체 확인', dataToSend)
-
-      // 파라미터로 보낼 데이터 생성
-      const data = new URLSearchParams(dataToSend)
-
-      // 채팅방 생성 요청
-      axios
-
-        .post('http://192.168.1.93:9712/chat/room', data)
-
-        .then((response) => {
-          console.log('response.data: ', response.data)
-          alert(' "' + response.data.roomName + '" 방 개설에 성공하였습니다.')
-
-          // localStorage에 데이터 저장
-          localStorage.setItem(
-            'roomData',
-            JSON.stringify({
-              roomName: response.data.roomName,
-              createDate: response.data.createDate,
-              roomId: response.data.roomId,
-              productName: this.product.title,
-              productPrice: this.product.price,
-              receiver: receiver,
-              sender: sender,
-              productNo: productNo
-            })
-          )
-
-          localStorage.setItem('wschat.sender', sender)
-          localStorage.setItem('wschat.roomId', response.data.roomId)
-
-          // ChatRoomDetail로 라우팅
-          this.$router.push({
-            name: 'ChatRoomEnter',
-            params: { roomId: response.data.roomId }
-          })
-        })
-        .catch((error) => {
-          console.log('채팅방 개설에 실패하였습니다. 오류 원인은: ' + error.message)
-        })
     }
 
   },
@@ -308,12 +154,12 @@ export default {
 
 <style scoped>
 @font-face {
-    font-family: 'NotoSansKR-VariableFont_wght';
-    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
+  font-family: 'NotoSansKR-VariableFont_wght';
+  src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
 }
 
 * {
-    font-family: 'NotoSansKR-VariableFont_wght';
+  font-family: 'NotoSansKR-VariableFont_wght';
 }
 
 a {
@@ -337,8 +183,8 @@ a {
 }
 
 .slider-image {
-  max-width: 450px;
-  max-height: 550px;
+  max-width: 500px;
+  max-height: 650px;
 }
 
 .prev,
@@ -346,7 +192,7 @@ a {
   font-size: 24px;
   color: #18B7BE;
   /* border: 1px solid #18B7BE;
-    border-radius: 10px; */
+  border-radius: 10px; */
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -369,62 +215,23 @@ a {
   border-bottom: 5px solid #18B7BE;
   width: 800px;
   min-height: 570px;
-  padding-left: 10px;
 }
 
-li {
-  list-style-type: none;
+p.modify {
+  margin-left: auto;
+  margin-right: calc(1% + 70px);
+  margin-top: 10px;
+  width: 60px;
+  padding: 8px 15px;
+  background-color: #18b7be;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.productInfo a {
-  margin-left: 750px;
-  padding-bottom: 5px;
-  color: #178CA4;
-  display: inline-block;
-  vertical-align: middle;
-  transform: perspective(1px) translateZ(0);
-  -webkit-transition-property: color;
-  transition-property: color;
-  -webkit-transition-duration: 0.5s;
-  transition-duration: 0.5s;
-}
-
-.productInfo a.report {
-  color: red;
-}
-
-.productInfo a.report::before {
-  background-color: red;
-}
-
-.productInfo a:before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  height: 1px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #178CA4;
-  -webkit-transform: scaleX(0);
-  transform: scaleX(0);
-  -webkit-transform-origin: 0 50%;
-  transform-origin: 0 50%;
-  -webkit-transition-property: transform;
-  transition-property: transform;
-  -webkit-transition-duration: 0.5s;
-  transition-duration: 0.5s;
-  -webkit-transition-timing-function: ease-out;
-  transition-timing-function: ease-out;
-}
-
-.productInfo a:hover:before,
-.productInfo a:focus:before,
-.productInfo a:active:before {
-  -webkit-transform: scaleX(1);
-  transform: scaleX(1);
-  -webkit-transition-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
-  transition-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
+p.modify:hover {
+  background-color: #178ca4;
 }
 
 .productInfo span {
@@ -513,10 +320,5 @@ li {
 
 .review:last-child .reviewContent {
   border-bottom: none;
-}
-
-.bi-heart-fill {
-  color: red;
-  margin-left: 5px;
 }
 </style>
