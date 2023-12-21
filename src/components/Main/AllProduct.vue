@@ -184,6 +184,10 @@ body {
     /* position: relative; */
 }
 
+section {
+    padding-top: 80px;
+}
+
 /* Basic styling for the dropdown container */
 .dropdown {
     display: flex;
