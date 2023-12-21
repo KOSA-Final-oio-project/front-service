@@ -105,7 +105,7 @@ export default {
                         productPrice: response.data.productPrice,
                         receiver: response.data.receiver,
                         sender: response.data.sender,
-                        prodnctNo: response.data.productNo
+                        productNo: response.data.productNo
                     })
                 )
             })

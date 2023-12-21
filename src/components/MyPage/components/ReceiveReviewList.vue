@@ -9,7 +9,7 @@
                         <span v-else-if="review.heart === 1"><i class="bi bi-heart-fill"></i></span>
                         <p>
                             <img src="../../../assets/package.png" />
-                            {{ review.rentedProduct.product.title }}<br />
+                            {{ truncateText(review.rentedProduct.product.title, 10 ) }}<br />
                         </p>
                         <p>
                             <img src="../../../assets/user-profile.png" /> {{ review.writerNickname
@@ -51,7 +51,7 @@ export default {
         async getReceiveReviews() {
             try {
                 const nickname = localStorage.getItem('nickname')
-                const url = `http://192.168.1.86:9797/oio/myreviews/1`
+                const url = `http://192.168.1.86:9797/oio/myreviews/1?nickname=${nickname}`
                 const response = await this.$axiosInstance.get(url)
                 const responseReview = response.data
 
@@ -124,7 +124,8 @@ export default {
 
         closeModal() {
             this.showModal = false // 모달 창을 닫습니다.
-        }
+        },
+        
     },
     mounted() {
         this.getReceiveReviews()

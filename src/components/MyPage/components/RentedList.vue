@@ -92,9 +92,8 @@ export default {
             try {
                 const nickname = localStorage.getItem('nickname')
 
-                // 데이터를 가져오는 데 필요한 API 호출
                 const [rentedListResponse, myProductResponse] = await Promise.all([
-                    this.$axiosInstance.get(`http://192.168.1.86:9797/oio/0`),
+                    axios.get(`http://192.168.1.86:9797/oio/0?nickname=${nickname}`),
                     axios.get(`http://192.168.1.86:9797/product-service/product/myProduct/${nickname}/0`)
                 ])
 
@@ -124,7 +123,7 @@ export default {
         async confirmEndRent() {
             if (this.selectedRentedItem) {
                 const rentedProductNo = this.selectedRentedItem.rentedProductNo
-                const url = `http://192.168.1.86:9797/oio/rent/${rentedProductNo}`
+                const url = `http://192.168.1.86:9797/oio/${rentedProductNo}`
 
                 try {
                     // 모달 창 닫기
@@ -215,6 +214,7 @@ export default {
 
 .product-img {
     width: 90px;
+    max-height: 90px;
 }
 
 .rented-item {

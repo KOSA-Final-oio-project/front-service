@@ -7,7 +7,7 @@
                         <img class="product-img" :src="findThumbnail(item.productNo)">
                     </div>
                     <div class="right">
-                        <p><img src="../../../assets/package.png"> {{ truncateText(getProductTitle(item.productNo), 3)
+                        <p><img src="../../../assets/package.png"> {{ truncateText(getProductTitle(item.productNo), 10)
                         }}<br>
                         </p>
                         <p><img src="../../../assets/user-profile.png"> {{ item.ownerNickname }}<br></p>
@@ -62,8 +62,9 @@ export default {
     },
     methods: {
         getBorrowedList() {
-            const url = `http://192.168.1.86:9797/oio/1`;
-            this.$axiosInstance.get(url)
+            const nickname = localStorage.getItem('nickname')
+            const url = `http://192.168.1.86:9797/oio/1?nickname=${nickname}`;
+            axios.get(url)
                 .then(response => {
                     const list = response.data;
                     this.list = list;
@@ -71,11 +72,10 @@ export default {
 
                     const requests = ownerNickname.map(owner => {
                         const url2 = `http://192.168.1.86:9797/product-service/product/myProduct/${owner}/0`;
-                        return  this.$axiosInstance.get(url2);
+                        return axios.get(url2);
                     });
 
                     this.loadingProducts = true;
-
 
                     Promise.all(requests)
                         .then(responses => {
@@ -93,7 +93,7 @@ export default {
                         });
                 })
                 .catch(error => {
-                    console.error('error : ', error.response.data);
+                    console.error('error : ', error);
                 });
         },
 
@@ -168,6 +168,7 @@ export default {
 .product-img {
     margin-top: 30px;
     width: 90px;
+    max-height: 90px;
 }
 
 .borrowed-item {

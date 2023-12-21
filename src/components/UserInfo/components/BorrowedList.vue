@@ -7,7 +7,7 @@
                         <img class="product-img" :src="findThumbnail(item.productNo)">
                     </div>
                     <div class="right">
-                        <p><img src="../../../assets/package.png"> {{ truncateText(getProductTitle(item.productNo), 3)
+                        <p><img src="../../../assets/package.png"> {{ truncateText(getProductTitle(item.productNo), 10)
                         }}<br>
                         </p>
                         <p><img src="../../../assets/user-profile.png"> {{ item.ownerNickname }}<br></p>
@@ -49,7 +49,7 @@ export default {
     methods: {
         getBorrowedList() {
             const nickname = localStorage.getItem("user")
-            const url = `http://192.168.1.86:9797/oio/rent/1?nickname=${nickname}`;
+            const url = `http://192.168.1.86:9797/oio/1?nickname=${nickname}`;
             axios.get(url)
                 .then(response => {
                     const list = response.data;
@@ -58,7 +58,7 @@ export default {
                     const ownerNickname = [...new Set(list.map(item => item.ownerNickname))];
 
                     const requests = ownerNickname.map(owner => {
-                        const url2 = `http://192.168.1.86:9797/product-service/product/myProduct/${owner}/0`;
+                        const url2 = `http://192.168.1.86:9797/product-service/product/myProduct/${nickname}/0`;
                         return axios.get(url2);
                     });
 
@@ -141,6 +141,7 @@ export default {
 .product-img {
     margin-top: 30px;
     width: 90px;
+    max-height: 90px;
 }
 
 .borrowed-item {

@@ -11,7 +11,7 @@
                     >
                         <p>
                             <img src="../../../assets/package.png" />
-                            {{ review.rentedProduct.product.title }}<br />
+                            {{ truncateText(review.rentedProduct.product.title, 10 ) }}<br />
                         </p>
                         <p>
                             <img src="../../../assets/user-profile.png" />
@@ -58,7 +58,7 @@ export default {
         async getWriteReviews() {
             try {
                 const nickname = localStorage.getItem('nickname')
-                const url = `http://192.168.1.86:9797/oio/myreviews/0`
+                const url = `http://192.168.1.86:9797/oio/myreviews/0?nickname=${nickname}`
                 const response = await this.$axiosInstance.get(url)
                 const responseReview = response.data
 
@@ -131,7 +131,9 @@ export default {
 
         closeModal() {
             this.showModal = false // 모달 창을 닫습니다.
-        }
+        },
+
+        
     },
 
     mounted() {

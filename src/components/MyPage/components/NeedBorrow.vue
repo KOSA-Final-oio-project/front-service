@@ -7,7 +7,7 @@
                         <img class="product-img" :src="findThumbnail(item.productNo)" />
                     </div>
                     <div class="right">
-                        <p><img src="../../../assets/package.png" /> {{ item.title }}<br /></p>
+                        <p><img src="../../../assets/package.png" /> {{ truncateText(item.title, 10) }}<br /></p>
                         <p>
                             <img src="../../../assets/calendar.png" />
                             {{ formatDate(item.startDate) }} ~ {{ formatDate(item.endDate) }}<br />
@@ -89,6 +89,14 @@ export default {
             const date = new Date(dateString)
             const formattedDate = date.toISOString().split('T')[0]
             return formattedDate
+        },
+
+        truncateText(text, maxLength) {
+            if (text.length > maxLength) {
+                return text.slice(0, maxLength) + '...'
+            } else {
+                return text
+            }
         }
     },
 
@@ -120,6 +128,7 @@ export default {
 .product-img {
     margin-top: 10px;
     width: 90px;
+    max-height: 90px;
 }
 
 .left {

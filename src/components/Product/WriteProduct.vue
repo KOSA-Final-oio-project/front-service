@@ -153,7 +153,7 @@ export default {
 
             axios
                 .post(
-                    `http://192.168.1.86:9797/product-service/product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/셍나`,
+                    `http://192.168.1.86:9797/product-service/product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/${nickname}`,
                     formData,
                     {
                         headers: {
