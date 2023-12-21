@@ -50,7 +50,8 @@ export default {
   methods: {
     login() {
       axios
-        .post(this.$backURL + 'login', {
+        // .post(this.$backURL + 'login', {
+          .post('http://192.168.1.37:10001/login', {
           email: this.user.email,
           password: this.user.password
         })

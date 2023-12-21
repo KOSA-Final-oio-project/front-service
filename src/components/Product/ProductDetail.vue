@@ -230,7 +230,9 @@ export default {
 
       // 채팅방 생성 요청
       axios
+
         .post(this.$backURL + 'chat-service/chat/room', data)
+
         .then((response) => {
           console.log('response.data: ', response.data)
           alert(' "' + response.data.roomName + '" 방 개설에 성공하였습니다.')

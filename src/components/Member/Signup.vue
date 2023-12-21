@@ -259,7 +259,8 @@ export default {
         alert('이메일에는 언더스코어(_)를 포함할 수 없습니다.')
       } else {
         axios
-          .post(this.$backURL + 'email-chk', {
+          // .post(this.$backURL + 'email-chk', {
+            .post('http://192.168.1.37:10001/email-chk', {
             email: this.user.email
           })
           .then((result) => {
@@ -280,7 +281,8 @@ export default {
     requestEmailCertificate() {
       alert('이메일로 인증번호가 발송되었습니다.')
       axios
-        .post(this.$backURL + 'send-email', {
+        // .post(this.$backURL + 'send-email', {
+          .post('http://192.168.1.37:10001/send-email', {
           email: this.user.email
         })
         .then((result) => {
@@ -318,7 +320,8 @@ export default {
     // 닉네임 중복확인
     nicknameDuplicateCheck() {
       axios
-        .post(this.$backURL + 'nickname-chk', {
+        // .post(this.$backURL + 'nickname-chk', {
+          .post('http://192.1.168.37:10001/nickname-chk', {
           nickname: this.user.nickname
         })
         .then((result) => {
@@ -360,7 +363,8 @@ export default {
     // 핸드폰 인증요청
     requestPhoneCertificate() {
       axios
-        .post(this.$backURL + 'send-phone', {
+        // .post(this.$backURL + 'send-phone', {
+          .post('http://192.168.1.37:10001/send-phone', {
           phoneNumber: this.user.phone
         })
         .then((result) => {
@@ -399,7 +403,8 @@ export default {
 
         // 서버로 데이터 전송
         axios
-          .post(this.$backURL + 'signup', formData, {
+          // .post(this.$backURL + 'signup', formData, {
+            .post('http://192.168.1.37:10001/signup', formData, {
             contentType: false,
             processData: false
           })

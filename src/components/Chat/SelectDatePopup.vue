@@ -204,7 +204,7 @@ export default {
 }
 
 section {
-    margin-top: 150px;
+    padding-top: 150px;
 }
 
 /* 거래하기 타이틀 */

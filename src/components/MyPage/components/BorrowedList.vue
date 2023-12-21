@@ -63,7 +63,7 @@ export default {
     methods: {
         getBorrowedList() {
             const nickname = localStorage.getItem('nickname');
-            const url = this.$backURL + `1?nickname=${nickname}`;
+            const url = `http://192.168.1.86:10003/1?nickname=${nickname}`;
             axios.get(url)
                 .then(response => {
                     const list = response.data;
@@ -72,7 +72,7 @@ export default {
                     const ownerNickname = [...new Set(list.map(item => item.ownerNickname))];
 
                     const requests = ownerNickname.map(owner => {
-                        const url2 = this.$backURL + `product/myProduct/${owner}/0`;
+                        const url2 = `http://192.168.1.74:product/myProduct/${owner}/0`;
                         return axios.get(url2);
                     });
 

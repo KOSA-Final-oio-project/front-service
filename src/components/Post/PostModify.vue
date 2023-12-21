@@ -2,17 +2,25 @@
   <div class="row mt-3">
     <div class="col">
       <div class="card">
-        <div class="card-header">게시글 등록</div>
+        <div class="card-header">게시글 수정</div>
         <div class="card-body">
           <form @submit.prevent="submitForm">
             <div class="select-wrapper">
-              <select
-                class="form-select form-select-sm mb-3"
-                v-model="setCategory"
-                aria-label="Small select example"
-              >
-                <option value="공지사항">공지사항</option>
-                <option value="Q&A">Q&A</option>
+              <select class="form-select form-select-sm mb-3" aria-label="Small select example">
+                <option
+                  value="공지사항"
+                  :disabled="setCategory !== '공지사항'"
+                  :selected="setCategory == '공지사항'"
+                >
+                  공지사항
+                </option>
+                <option
+                  value="Q&A"
+                  :disabled="setCategory !== 'Q&A'"
+                  :selected="setCategory == 'Q&A'"
+                >
+                  Q&A
+                </option>
               </select>
             </div>
 
@@ -22,6 +30,7 @@
                 type="checkbox"
                 id="flexCheckDefault"
                 v-model="showPasswordInput"
+                disabled
               />
               <label class="form-check-label" for="flexCheckDefault"> 비공개 </label>
             </div>
@@ -64,8 +73,10 @@
 
             <div class="my-4">
               <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-outline-info">등록</button>
-                <button type="button" class="btn btn-outline-info mx-2">취소</button>
+                <button type="submit" class="btn btn-outline-info">수정</button>
+                <button type="button" class="btn btn-outline-info mx-2" @click="cancelBtn">
+                  취소
+                </button>
               </div>
             </div>
           </form>
@@ -78,6 +89,27 @@
   </div>
   <!-- end row-->
   <span class="input-group-text">Images</span>
+
+  <div class="row mt-3">
+    <div class="col">
+      <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap">
+        <template v-if="isFiles">
+          <button @click="revokeFile">원본 파일</button>
+        </template>
+        <template v-for="(file, index) in setFiles" :key="index">
+          <div class="card col-2">
+            <div class="card-header d-flex justify-content-center">
+              원본파일
+              <button class="btn-sm btn-danger" @click="removeOriginalBtn(index)">X</button>
+            </div>
+            <div class="card-body">
+              <img :src="setUrl + file" alt="image" height="150" width="150" />
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
 
   <div class="row mt-3">
     <div class="col">
@@ -127,23 +159,43 @@
 </template>
 
 <script setup>
-import { uploadImage, postRegister } from './post'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { getPost, uploadImage, putPost, S3removeFile } from './post'
 
 const router = useRouter()
+const route = useRoute()
+const postId = route.params.id
 
+const post = ref([])
+const formObj = new FormData()
 const setCategory = ref('')
 const setTitle = ref('')
 const setContent = ref('')
+const isWriter = ref(false)
+const setFiles = ref([])
 const setPassword = ref('')
-const setFileNames = ref([])
-
-const showPasswordInput = ref(false)
-const formObj = new FormData()
 const fileOriginal = ref([])
 const fileCopy = ref([])
 const fileImage = ref([])
+const s3OriginalFile = ref([])
+const isFiles = ref(false)
+const setFileNames = ref([])
+
+const showPasswordInput = ref(false)
+const setUrl = 'https://oioproject-bucket.s3.ap-northeast-2.amazonaws.com/'
+
+const getPostOne = async (postId) => {
+  const { data } = await getPost(postId)
+  console.log(data)
+  post.value = data
+  setCategory.value = post.value.postDto.category
+  setTitle.value = post.value.postDto.title
+  setContent.value = post.value.postDto.content
+  isWriter.value = post.value.isEquals
+  setFiles.value = post.value.postDto.fileNames
+  setPassword.value = post.value.postDto.password
+}
 
 const handleFileChange = (event) => {
   const files = event.target.files
@@ -152,7 +204,6 @@ const handleFileChange = (event) => {
     fileCopy.value.push(files[i])
   }
 }
-
 const uploadBtn = async () => {
   // const response = await uploadImage(formObj)
   fileOriginal.value.push(...fileCopy.value)
@@ -170,40 +221,67 @@ const removeBtn = (file) => {
   console.log(fileImage.value)
 }
 
-const registerApi = async (formdata) => {
-  await postRegister(formdata)
-    .then((response) => {
-      console.log(response)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+const removeOriginalBtn = (index) => {
+  s3OriginalFile.value.push(setFiles.value[index])
+  setFiles.value.splice(index, 1)
+  if (setFiles.value.length <= 0) {
+    isFiles.value = true
+  }
+  console.log(s3OriginalFile.value)
+}
+
+const revokeFile = () => {
+  isFiles.value = false
+  setFiles.value = s3OriginalFile.value
+  s3OriginalFile.value = []
+}
+
+const modifyApi = async (postId, formdata) => {
+  await putPost(postId, formdata)
+    .then(() => {})
+    .catch(() => {})
 }
 
 const submitForm = async () => {
   for (let i = 0; i < fileOriginal.value.length; i++) {
     formObj.append('files', fileOriginal.value[i])
   }
+  // 삭제된 원본 파일 완전 삭제 api
+  if (s3OriginalFile.value.length > 0) {
+    await S3removeFile(s3OriginalFile.value)
+  }
 
+  //
   await uploadImage(formObj).then(({ data }) => {
-    console.log(data)
     for (let i = 0; i < data.length; i++) {
       setFileNames.value.push(data[i].fileName)
     }
+
+    if (setFiles.value.length > 0) {
+      for (let i = 0; i < setFiles.value.length; i++) {
+        setFileNames.value.push(setFiles.value[i])
+      }
+    }
+
     const formdata = {
-      category: setCategory.value,
-      key: showPasswordInput.value === true ? 1 : 0,
-      password: setPassword.value,
       title: setTitle.value,
       content: setContent.value,
       fileNames: setFileNames.value
     }
 
-    registerApi(formdata)
-    
-    router.push('/post/list/공지사항');
+    modifyApi(postId, formdata)
+
+    router.push('/post/list/공지사항')
   })
 }
+
+const cancelBtn = () => {
+  router.push(`/post/view/${postId}`)
+}
+
+onMounted(() => {
+  getPostOne(postId)
+})
 </script>
 
 <style scoped>
@@ -217,5 +295,5 @@ const submitForm = async () => {
 .pwd-wrapper {
   width: 150px;
 }
-@import './PostRegister.css';
+@import './PostModify.css';
 </style>

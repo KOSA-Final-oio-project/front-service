@@ -44,6 +44,7 @@ import MainPost from '@/components/Post/MainPost.vue'
 import PostList from '@/components/Post/PostList.vue'
 import PostView from '@/components/Post/PostView.vue'
 import PostRegister from '@/components/Post/PostRegister.vue'
+import PostModify from '@/components/POST/PostModify.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -96,14 +97,11 @@ const router = createRouter({
         { path: 'rent', component: UserInfoRent }
       ]
     },
-
     { path: '/product/productDetail', component: ProductDetail },
     { path: '/product/productList', component: ProductList },
     { path: '/product/searchProduct', component: SearchProduct },
     { path: '/product/writeProduct', component: WriteProduct },
     { path: '/product/modifyProduct', component: ModifyProduct },
-
-    ,
     {
       path: '/product/productDetail/:id?/:ni?',
       component: ProductDetail
@@ -114,6 +112,7 @@ const router = createRouter({
       children: [
         { path: 'list/:id', component: PostList },
         { path: 'view/:id', component: PostView },
+        { path: 'modify/:id', component: PostModify },
         { path: 'register', component: PostRegister }
       ]
     }
