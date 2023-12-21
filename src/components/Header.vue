@@ -8,12 +8,22 @@
           <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
         </div>
         <router-link :to="`/product/searchProduct/${searchValue}`">
-          <input type="text" class="search-input" v-model="searchValue" placeholder="Search..."  @keyup.enter="searchOnEnter"/>
+          <input
+            type="text"
+            class="search-input"
+            v-model="searchValue"
+            placeholder="Search..."
+            @keyup.enter="searchOnEnter"
+          />
         </router-link>
       </div>
 
       <div class="icons-container">
-        <router-link to="/member/signup" :class="{ icons: true, loginCheck: loginCheck }" v-if="!loginChk()">
+        <router-link
+          to="/member/signup"
+          :class="{ icons: true, loginCheck: loginCheck }"
+          v-if="!loginChk()"
+        >
           <font-awesome-icon :icon="['fas', 'user-plus']" />
           <span>join</span>
         </router-link>
@@ -22,7 +32,11 @@
           <span>logout</span>
         </div>
 
-        <router-link :class="{ icons: true, loginCheck: loginCheck }" to="/member/login" v-if="!loginChk()">
+        <router-link
+          :class="{ icons: true, loginCheck: loginCheck }"
+          to="/member/login"
+          v-if="!loginChk()"
+        >
           <font-awesome-icon :icon="['fas', 'right-to-bracket']" />
           <span>login</span>
         </router-link>
@@ -48,46 +62,44 @@
 </template>
 <script>
 export default {
-  
   data() {
-      return {
-          loginCheck: false,
-          searchValue: ''
-      }
+    return {
+      loginCheck: false,
+      searchValue: ''
+    }
   },
 
   methods: {
     searchProducts() {
-      this.$router.push(`/product/searchProduct/${this.searchValue}`);
+      this.$router.push(`/product/searchProduct/${this.searchValue}`)
     },
     // 엔터 키 입력 시 검색 기능이 동작하도록 하는 메소드입니다.
     searchOnEnter() {
-      this.searchProducts();
+      this.searchProducts()
     },
-      enterJoin() {
-          this.$router.push(`/member/signup`)
-      },
-      loginChk() {
-          if (localStorage.getItem('nickname')) {
-              return true
-          }
-      },
-      logout() {
-          localStorage.removeItem('nickname')
-          window.location = '/'
-      },
-      
+    enterJoin() {
+      this.$router.push(`/member/signup`)
+    },
+    loginChk() {
+      if (localStorage.getItem('nickname')) {
+        return true
+      }
+    },
+    logout() {
+      localStorage.clear()
+      window.location = '/'
+    }
   }
 }
 </script>
 <style scoped>
 @font-face {
-    font-family: 'NotoSansKR-VariableFont_wght';
-    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
+  font-family: 'NotoSansKR-VariableFont_wght';
+  src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
 }
 
 * {
-    font-family: 'NotoSansKR-VariableFont_wght';
+  font-family: 'NotoSansKR-VariableFont_wght';
 }
 
 .welcome {
@@ -99,7 +111,7 @@ export default {
 
 .header {
   margin-bottom: 3px;
-  display:flex;
+  display: flex;
 }
 
 .loginCheck {
@@ -133,7 +145,7 @@ export default {
   top: 5px;
 }
 
-.icons>div {
+.icons > div {
   text-align: center;
 }
 
@@ -202,11 +214,10 @@ nav {
   list-style-type: none;
 }
 
-.nav-container{
+.nav-container {
   margin-bottom: 150px;
 }
-.nav>li>a {
-
+.nav > li > a {
   font-size: 22px;
   font-weight: 500;
 }
@@ -220,7 +231,7 @@ nav {
 }
 
 .nav li:hover a {
-  color: #18B7BE; /* 호버 시 텍스트 색상 변경 */
+  color: #18b7be; /* 호버 시 텍스트 색상 변경 */
 }
 
 .nav li a {

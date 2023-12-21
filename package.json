@@ -22,7 +22,7 @@
     "cors": "^2.8.5",
     "kakao": "^0.4.1",
     "sockjs-client": "^1.6.1",
-    "vue": "^3.3.12",
+    "vue": "^3.3.13",
     "vue-carousel": "^0.18.0",
     "vue-geolocation-api": "^0.1.21",
     "vue-router": "^4.2.5",

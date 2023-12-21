@@ -67,13 +67,13 @@ const router = createRouter({
       name: 'ChatRoomList',
       component: ChatRoomList,
       beforeEnter: (to, from, next) => {
-        const loggedIn = localStorage.getItem('nickname');
+        const loggedIn = localStorage.getItem('nickname')
         if (!loggedIn) {
-          alert('로그인 후 이용 가능합니다.');
+          alert('로그인 후 이용 가능합니다.')
           // 로그인되지 않은 경우 다른 경로로 리디렉션 또는 기타 작업 수행 가능
-          next('/');
+          next('/')
         } else {
-          next(); // 로그인되어 있으면 다음 라우트로 이동
+          next() // 로그인되어 있으면 다음 라우트로 이동
         }
       }
     },
@@ -115,24 +115,28 @@ const router = createRouter({
       ]
     },
     {
-      path: '/product/productDetail/:id', component: ProductDetail, beforeEnter: (to, from, next) => {
-        const loggedIn = localStorage.getItem('nickname');
+      path: '/product/productDetail/:id',
+      component: ProductDetail,
+      beforeEnter: (to, from, next) => {
+        const loggedIn = localStorage.getItem('nickname')
         if (!loggedIn) {
-          alert('로그인 후 이용 가능합니다.');
-          next('/');
+          alert('로그인 후 이용 가능합니다.')
+          next('/')
         } else {
-          next();
+          next()
         }
       }
     },
     {
-      path: '/product/productList', component: ProductList, beforeEnter: (to, from, next) => {
-        const loggedIn = localStorage.getItem('nickname');
+      path: '/product/productList',
+      component: ProductList,
+      beforeEnter: (to, from, next) => {
+        const loggedIn = localStorage.getItem('nickname')
         if (!loggedIn) {
-          alert('로그인 후 이용 가능합니다.');
-          next('/');
+          alert('로그인 후 이용 가능합니다.')
+          next('/')
         } else {
-          next();
+          next()
         }
       }
     },
@@ -143,13 +147,13 @@ const router = createRouter({
       path: '/product/productDetail/:id?/:ni?',
       component: ProductDetail,
       beforeEnter: (to, from, next) => {
-        const loggedIn = localStorage.getItem('nickname');
+        const loggedIn = localStorage.getItem('nickname')
         if (!loggedIn) {
-          alert('로그인 후 이용 가능합니다.');
+          alert('로그인 후 이용 가능합니다.')
           // 로그인되지 않은 경우 다른 경로로 리디렉션 또는 기타 작업 수행 가능
-          next('/');
+          next('/')
         } else {
-          next(); // 로그인되어 있으면 다음 라우트로 이동
+          next() // 로그인되어 있으면 다음 라우트로 이동
         }
       }
     },
@@ -158,15 +162,16 @@ const router = createRouter({
       component: MainPost,
       children: [
         {
-          path: 'list/:id', component: PostList,
+          path: 'list/:id',
+          component: PostList,
           beforeEnter: (to, from, next) => {
-            const loggedIn = localStorage.getItem('nickname');
+            const loggedIn = localStorage.getItem('nickname')
             if (!loggedIn) {
-              alert('로그인 후 이용 가능합니다.');
+              alert('로그인 후 이용 가능합니다.')
               // 로그인되지 않은 경우 다른 경로로 리디렉션 또는 기타 작업 수행 가능
-              next('/');
+              next('/')
             } else {
-              next(); // 로그인되어 있으면 다음 라우트로 이동
+              next() // 로그인되어 있으면 다음 라우트로 이동
             }
           }
         },
@@ -177,7 +182,8 @@ const router = createRouter({
     },
 
     { path: '/admin', component: AdminList },
-    { path: '/admin/view/:id', component: AdminView }
+    { path: '/admin/view/:id', component: AdminView },
+    { path: '/findId', component: FindId }
   ]
 })
 
