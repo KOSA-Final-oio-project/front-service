@@ -83,6 +83,9 @@ export default {
 </script>
 
 <style scoped>
+h2{
+  margin-top:150px ;
+}
 @font-face {
     font-family: 'NotoSansKR-VariableFont_wght';
     src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
@@ -99,7 +102,7 @@ export default {
 }
 /* 제목 타이틀 */
 h2 {
-  margin-top: 200px;
+  margin-top: 260px;
   text-align: center;
   margin-bottom: 50px;
 }

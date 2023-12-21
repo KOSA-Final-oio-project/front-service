@@ -2,7 +2,8 @@
     <body>
         <section>
             <div class="productContainer">
-                <div class="dropdown category">
+                <div class="dropdown">
+                    <div class="dropdown category">
                     <select v-model="selectedCategory" name="category">
                         <option value="" selected disabled hidden>상품카테고리</option>
                         <option value="">전체</option>
@@ -11,7 +12,6 @@
                         </option>
                     </select>
                 </div>
-                <div class="dropdown">
                     <select v-model="selectedSido" name="region siDo" @change="resetSelections('siGunGuList', 'eupMyeonRoList')">
                         <option value="" selected disabled hidden>시/도</option>
                         <option value="">전체</option>
@@ -40,7 +40,6 @@
                     <button @click="selectProduct()" class="selectBt">조회</button>
                     <router-link :to="'/product/writeProduct'"><p class="regist">상품등록</p></router-link>
                 </div>
-                <router-link :to="'/product/writeProduct'"><p class="regist">상품등록</p></router-link>
                 <div class="productList">
                     <div class="products">
                         <div class="product" v-for="(item, index) in products" :key="index">
@@ -237,12 +236,12 @@ export default {
             }
         },
         truncateTitle(title, maxLength) {
-        if (title.length > maxLength) {
-            return title.substring(0, maxLength) + '...';
-        } else {
-            return title;
-        }
-    },
+            if (title.length > maxLength) {
+                return title.substring(0, maxLength) + '...';
+            } else {
+                return title;
+            }
+        },
 
     },
     created() {
@@ -262,6 +261,16 @@ export default {
     font-family: 'NotoSansKR-VariableFont_wght';
 }
 
+.product p.title {
+    margin: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* 텍스트가 넘칠 경우 '...'으로 표시 */
+    white-space: nowrap;
+    /* 텍스트가 한 줄로만 표시되도록 설정 */
+    max-width: 100%;
+}
+
 section {
     padding-top: 80px;
 }
@@ -276,9 +285,10 @@ body {
 .dropdown {
     display: flex;
     align-items: center;
-    margin-top: 1%;
-    justify-content: center;
+    /* margin-top: 1%; */
+    justify-content: left;
     /* margin-right: 1%; */
+    margin-left: 13%;
 }
 
 .dropdown.category {
@@ -286,7 +296,7 @@ body {
 }
 
 .dropdown.category {
-    margin-right: calc(1% + 60px);
+    /* margin-right: calc(1% + 60px); */
 }
 
 /* Styling for the individual selects */
@@ -316,13 +326,9 @@ select {
 
 p.regist {
     margin-top: 16px;
-    margin-left: 10px;
+    margin-left: 350px;
     /* margin-right: 50px; */
-    margin-left: auto;
-    /*margin-right: calc(1% + 70px);
-    margin-top: 10px;
-    width: 90px;
-    padding: 8px 15px;*/
+    padding: 8px 15px;
     background-color: #18b7be;
     color: #fff;
     border: none;

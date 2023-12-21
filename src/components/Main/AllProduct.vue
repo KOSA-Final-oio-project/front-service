@@ -37,10 +37,12 @@
               @click="moveDetail"
             >
               <div class="productImg">
-                <span class="rented">{{ item.status === 1 ? '대여중' : '미대여' }}</span>
-                <img class="thumbnail" :src=item.thumbnail />
+                <span :class="{ 'rented': item.status === 1, 'expired': item.status === 2 }">
+                                    {{ item.status === 0 ? '미대여' : (item.status === 1 ? '대여중' : '기간만료') }}
+                                </span>
+                                <img :src="item.thumbnail ? item.thumbnail : sampleImage" />
               </div>
-              <p class="title">{{ item.content }}</p>
+              <p class="title">{{ item.title }}</p>
               <p class="date">{{ formatDate(item.startDate) }} ~ {{ formatDate(item.endDate) }}</p>
             </router-link>
                     </div>
@@ -51,6 +53,7 @@
 </template>
 <script>
 import axios from 'axios'
+import sampleImage from "@/assets/sample.png";
 export default {
     data() {
         return {
@@ -182,10 +185,6 @@ body {
     margin: 0px;
     /* overflow-x: hidden; */
     /* position: relative; */
-}
-
-section {
-    padding-top: 80px;
 }
 
 /* Basic styling for the dropdown container */
@@ -395,9 +394,18 @@ a {
     display: inline-block;
 }
 
+.productImg span {
+    margin-left: 5px;
+    color: #ffffff;
+    background-color: #178CA4;
+    padding: 3px 5px;
+    border-radius: 10px;
+    z-index: 1;
+}
+
 .rented {
-    background-color: #072a40;
-    border: 3px solid #072a40;
+    /* background-color: #072a40; */
+    /* border: 3px solid #072a40; */
     border-radius: 20px;
     color: #ffffff;
 }
@@ -510,21 +518,6 @@ a {
     width: 180px;
     display: inline-block;
 }
-.productImg span {
-  margin-left: 5px;
-  color: #ffffff;
-  background-color: #178CA4;
-  padding: 3px 5px;
-  border-radius: 10px;
-}
-
-.productImg span.rented {
-  background-color: red;
-}
-
-.productImg span.expired {
-  background-color: #d1d1d1;
-}
 
 .product img {
     position: absolute;
@@ -537,6 +530,16 @@ a {
 
 .product p {
     margin: 3px;
+}
+
+.product p.title {
+    margin: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* 텍스트가 넘칠 경우 '...'으로 표시 */
+    white-space: nowrap;
+    /* 텍스트가 한 줄로만 표시되도록 설정 */
+    max-width: 100%;
 }
 
 .product p:last-child {

@@ -30,7 +30,7 @@
 
       <div class="userInfo">
         <span>{{ product.nickname }}</span>
-        <button>채팅하기</button>
+        <button @click="createRoom">채팅하기</button>
       </div>
     </div>
   </div>
@@ -40,6 +40,8 @@
       <div class="info">
         <div class="writer">{{ review.writerNickname }}</div>
         <div class="reviewDate">{{ review.postDate }}</div>
+        <span v-if="review.heart === 0"></span>
+        <span v-else-if="review.heart === 1"><i class="bi bi-heart-fill"></i></span>
       </div>
       <div class="reviewContent">{{ review.postDate }}</div>
     </div>
@@ -54,6 +56,7 @@ export default {
   name: 'ProductDatail',
   data() {
     return {
+      //상품 디테일
       product: {
         productNo: '',
         nickname: '',
@@ -84,12 +87,33 @@ export default {
       status: 0,
       reviews: [],
       currentIndex: 0,
+
+      product2: {
+        productNo: '',
+        nickname: '',
+      },
+
+      //채팅
+      productName: '',
+      productPrice: '',
+      receiver: '',
+      sender: '',
+      roomName: ''
     };
   },
-  mounted() {
-    this.getProductDetail(41);
-    this.getReviews(41);
+
+  props: {
+    ProductList: {
+      type: Object,
+      default: null
+    }
   },
+
+  mounted() {
+    this.getProductDetail();
+    this.getReviews();
+  },
+
   created() {
     this.product2.productNo = this.$route.params.id
     this.product2.nickname = localStorage.getItem('nickname')
@@ -99,27 +123,59 @@ export default {
     next() {
       this.currentIndex = (this.currentIndex + 1) % this.productImages.length;
     },
+
     prev() {
       this.currentIndex = (this.currentIndex - 1 + this.productImages.length) % this.productImages.length;
     },
-    getProductDetail(productNo) {
-      const nickname = localStorage.getItem('nickname');
-      const pno = this.$route.params.id
-      const url = `http://192.168.1.86:9797/product-service/product/productDetail/${pno}/주소수`;
+
+    getProductDetail() {
+      console.log(this.product2)
+      console.log(this.ProductList)
+      let nickname
+      let productNo
+
+      if (this.ProductList == null) {
+        nickname = this.product2.nickname;
+      } else {
+        nickname = this.ProductList.nickname;
+      }
+
+      if (this.ProductList == null) {
+        productNo = this.product2.productNo
+      } else {
+        productNo = this.ProductList.productNo
+      }
+
+      const url = `http://192.168.1.86:9797/product-service/product/productDetail/${productNo}/${nickname}`;
 
       axios.get(url)
         .then(response => {
           const data = response.data;
           this.product = data.product;
           this.productImgs = data.productImgs;
-          this.status = data.status;
+          const nickname = localStorage.getItem('nickname');
+
+          if (response.data.product.nickname !== nickname) {
+            this.status = 1;
+          } else {
+            this.status = 0;
+          }
+
         })
         .catch(error => {
           console.error('상품 정보를 불러오는데 실패했습니다.', error);
         });
     },
-    getReviews(productNo) {
-      const url = `http://localhost:8889/review/reviews/3`;
+    getReviews() {
+      let productNo
+
+      if (this.ProductList == null) {
+        productNo = this.product2.productNo
+      } else {
+        productNo = this.ProductList.productNo
+      }
+
+      const url = `http://192.168.1.86:9797/oio/reviews/${productNo}`;
 
       axios.get(url)
         .then(response => {
@@ -130,9 +186,104 @@ export default {
           console.error('리뷰를 불러오는데 실패했습니다.', error);
         });
     },
+
     formatDate(dateString) {
       const dateWithoutTime = dateString.split('T')[0];
       return dateWithoutTime;
+    },
+
+    getActionLink() {
+      // status에 따라 다른 URL을 반환
+      return this.status === 1 ? '신고 URL' : '수정 URL';
+    },
+
+    //채팅
+    createRoom() {
+      // 제품 정보, 수신자 닉네임, 사용자 닉네임 가져오기
+      console.log(this.ProductList)
+      let productNo
+
+      if (this.ProductList == null) {
+        productNo = this.product2.productNo
+      } else {
+        productNo = this.ProductList.productNo
+      }
+
+      const productName = this.product.title
+      const productPrice = this.product.price
+
+      const receiver = this.product.nickname
+
+      const sender = localStorage.getItem('nickname')
+
+      // 채팅방 제목 입력
+      const roomName = prompt('생성하실 채팅방의 제목을 입력해주세요. (20자 이내)')
+
+      // 채팅방 제목 입력 필수로
+      if (!roomName) {
+        alert('채팅방 제목을 입력해주세요.')
+        return
+      } else if (roomName.length > 20) {
+        alert('채팅방 제목은 20자를 초과할 수 없습니다.')
+        return
+      }
+      console.log('입력된 채팅방 제목:', roomName)
+      console.log(receiver)
+      // 현재 날짜와 시간을 생성
+      const createDate = new Date().toISOString()
+      console.log('방 생성 시도 시간:', createDate)
+
+      // 전송할 데이터 객체 생성
+      const dataToSend = {
+        roomName: roomName,
+        createDate: createDate,
+        productName: productName,
+        productPrice: productPrice,
+        receiver: receiver,
+        sender: sender,
+        productNo: productNo
+      }
+      console.log('전송할 데이터 객체 확인', dataToSend)
+
+      // 파라미터로 보낼 데이터 생성
+      const data = new URLSearchParams(dataToSend)
+
+      // 채팅방 생성 요청
+      axios
+
+        .post('http://192.168.1.93:9712/chat/room', data)
+
+        .then((response) => {
+          console.log('response.data: ', response.data)
+          alert(' "' + response.data.roomName + '" 방 개설에 성공하였습니다.')
+
+          // localStorage에 데이터 저장
+          localStorage.setItem(
+            'roomData',
+            JSON.stringify({
+              roomName: response.data.roomName,
+              createDate: response.data.createDate,
+              roomId: response.data.roomId,
+              productName: this.product.title,
+              productPrice: this.product.price,
+              receiver: receiver,
+              sender: sender,
+              productNo: productNo
+            })
+          )
+
+          localStorage.setItem('wschat.sender', sender)
+          localStorage.setItem('wschat.roomId', response.data.roomId)
+
+          // ChatRoomDetail로 라우팅
+          this.$router.push({
+            name: 'ChatRoomEnter',
+            params: { roomId: response.data.roomId }
+          })
+        })
+        .catch((error) => {
+          console.log('채팅방 개설에 실패하였습니다. 오류 원인은: ' + error.message)
+        })
     }
 
   },
@@ -170,7 +321,7 @@ a {
   display: flex;
   justify-content: center;
   position: relative;
-  margin-top: 200px;
+  margin-top: 220px;
 }
 
 .imageContainer {
@@ -183,8 +334,8 @@ a {
 }
 
 .slider-image {
-  max-width: 500px;
-  max-height: 650px;
+  max-width: 450px;
+  max-height: 450px;
 }
 
 .prev,
@@ -320,5 +471,10 @@ p.modify:hover {
 
 .review:last-child .reviewContent {
   border-bottom: none;
+}
+
+.bi-heart-fill {
+  color: red;
+  margin-left: 5px;
 }
 </style>
