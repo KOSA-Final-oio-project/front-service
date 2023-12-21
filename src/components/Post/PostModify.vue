@@ -161,7 +161,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getPost, uploadImage, putPost } from './post'
+import { getPost, uploadImage, putPost, S3removeFile } from './post'
 
 const router = useRouter()
 const route = useRoute()
@@ -247,6 +247,9 @@ const submitForm = async () => {
     formObj.append('files', fileOriginal.value[i])
   }
   // 삭제된 원본 파일 완전 삭제 api
+  if (s3OriginalFile.value.length > 0) {
+    await S3removeFile(s3OriginalFile.value)
+  }
 
   //
   await uploadImage(formObj).then(({ data }) => {
@@ -292,4 +295,5 @@ onMounted(() => {
 .pwd-wrapper {
   width: 150px;
 }
+@import './PostModify.css';
 </style>
