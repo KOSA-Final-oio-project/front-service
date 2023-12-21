@@ -1,7 +1,7 @@
 <template>
   <body class="header-container">
     <div class="header">
-      <div><img src="../assets/oio.png" alt="Logo" class="logo" /></div>
+      <a href="/"><img src="../assets/oio.png" alt="Logo" class="logo" /></a>
 
       <div class="input-container">
         <div class="search-icon">
