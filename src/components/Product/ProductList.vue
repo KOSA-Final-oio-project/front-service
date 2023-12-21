@@ -254,6 +254,16 @@ export default {
     font-family: 'NotoSansKR-VariableFont_wght';
 }
 
+.product p.title {
+    margin: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* 텍스트가 넘칠 경우 '...'으로 표시 */
+    white-space: nowrap;
+    /* 텍스트가 한 줄로만 표시되도록 설정 */
+    max-width: 100%;
+}
+
 section {
     padding-top: 80px;
 }

@@ -260,7 +260,7 @@ export default {
       } else {
         axios
           // .post(this.$backURL + 'email-chk', {
-            .post('http://192.168.1.86:9797/oio/member-service/email-chk', {
+            .post('http://192.168.1.86:9797/oio/email-chk', {
             email: this.user.email
           })
           .then((result) => {
@@ -282,7 +282,7 @@ export default {
       alert('이메일로 인증번호가 발송되었습니다.')
       axios
         // .post(this.$backURL + 'send-email', {
-          .post('http://192.168.1.86:9797/oio/member-service/send-email', {
+          .post('http://192.168.1.86:9797/oio/send-email', {
           email: this.user.email
         })
         .then((result) => {
@@ -321,7 +321,7 @@ export default {
     nicknameDuplicateCheck() {
       axios
         // .post(this.$backURL + 'nickname-chk', {
-          .post('http://192.168.1.86:9797/oio/member-service/nickname-chk', {
+          .post('http://192.168.1.86:9797/oio/nickname-chk', {
           nickname: this.user.nickname
         })
         .then((result) => {
@@ -364,7 +364,7 @@ export default {
     requestPhoneCertificate() {
       axios
         // .post(this.$backURL + 'send-phone', {
-          .post('http://192.168.1.86:9797/oio/member-service/send-sms', {
+          .post('http://192.168.1.86:9797/oio/send-phone', {
           phoneNumber: this.user.phone
         })
         .then((result) => {
@@ -404,7 +404,7 @@ export default {
         // 서버로 데이터 전송
         axios
           // .post(this.$backURL + 'signup', formData, {
-            .post('http://192.168.1.86:9797/oio/member-service/signup', formData, {
+            .post('http://192.168.1.86:9797/oio/signup', formData, {
             contentType: false,
             processData: false
           })

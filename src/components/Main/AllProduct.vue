@@ -520,6 +520,16 @@ a {
     margin: 3px;
 }
 
+.product p.title {
+    margin: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* 텍스트가 넘칠 경우 '...'으로 표시 */
+    white-space: nowrap;
+    /* 텍스트가 한 줄로만 표시되도록 설정 */
+    max-width: 100%;
+}
+
 .product p:last-child {
     margin-bottom: 20px;
 }
