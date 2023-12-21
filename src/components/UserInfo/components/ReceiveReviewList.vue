@@ -13,7 +13,7 @@
                         <span v-else-if="review.heart === 1"><i class="bi bi-heart-fill"></i></span>
                         <p>
                             <img src="../../../assets/package.png" />
-                            {{ review.rentedProduct.product.title }}<br />
+                            {{ truncateText(review.rentedProduct.product.title, 10 ) }}<br />
                         </p>
                         <p>
                             <img src="../../../assets/user-profile.png" /> {{ review.writerNickname

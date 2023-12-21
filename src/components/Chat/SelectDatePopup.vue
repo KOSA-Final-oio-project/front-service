@@ -105,6 +105,7 @@ export default {
         startRent() {
 
             const roomDataJson = JSON.parse(localStorage.getItem('roomData'))
+            console.log(roomDataJson)
 
             // 날짜 데이터 포맷팅 (YYYY-MM-DD HH:mm 형식)
             const rentStartDate = this.formatDateForRent(this.date[0])
@@ -130,7 +131,7 @@ export default {
 
             // 백엔드로 데이터 전송
             axios
-                .post(this.$backURL + `rent/${productNo}`, rentData)
+                .post(this.$backURL + `${productNo}`, rentData)
                 .then(response => {
                     // 성공시 로직
                     console.log('거래 시작 데이터 전송 성공:', response);
@@ -183,7 +184,7 @@ export default {
                     })
                 )
 
-                refer.closePopup()
+                // refer.closePopup()
             })
         },
         closePopup() {

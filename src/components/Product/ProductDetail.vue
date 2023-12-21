@@ -229,6 +229,7 @@ export default {
       }
       console.log('입력된 채팅방 제목:', roomName)
       console.log(receiver)
+      console.log(sender)
       // 현재 날짜와 시간을 생성
       const createDate = new Date().toISOString()
       console.log('방 생성 시도 시간:', createDate)
@@ -248,11 +249,15 @@ export default {
       // 파라미터로 보낼 데이터 생성
       const data = new URLSearchParams(dataToSend)
 
+      console.log(data)
+
+      for (const pair of data.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+
       // 채팅방 생성 요청
       axios
-
         .post('http://192.168.1.93:9712/chat/room', data)
-
         .then((response) => {
           console.log('response.data: ', response.data)
           alert(' "' + response.data.roomName + '" 방 개설에 성공하였습니다.')

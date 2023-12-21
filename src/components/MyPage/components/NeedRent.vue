@@ -7,7 +7,7 @@
                         <img class="product-img" :src="findThumbnail(item.productNo)" />
                     </div>
                     <div class="right">
-                        <p><img src="../../../assets/package.png" /> {{ item.title }}<br /></p>
+                        <p><img src="../../../assets/package.png" /> {{ truncateText(item.title, 10) }}<br /></p>
                         <p>
                             <img src="../../../assets/calendar.png" />
                             {{ formatDate(item.startDate) }} ~ {{ formatDate(item.endDate) }}<br />
@@ -89,6 +89,14 @@ export default {
             const date = new Date(dateString)
             const formattedDate = date.toISOString().split('T')[0]
             return formattedDate
+        },
+
+        truncateText(text, maxLength) {
+            if (text.length > maxLength) {
+                return text.slice(0, maxLength) + '...'
+            } else {
+                return text
+            }
         }
     },
 
@@ -120,6 +128,7 @@ export default {
 .product-img {
     margin-top: 10px;
     width: 90px;
+    max-height: 90px;
 }
 
 .left {
@@ -142,7 +151,7 @@ export default {
 .need-rent-item {
     display: flex;
     justify-content: space-between;
-    width: 24%;
+    max-width: 23%;
     margin-top: 20px;
     margin-left: 10px;
     /* margin-bottom: 35px; */
@@ -151,6 +160,7 @@ export default {
     border-radius: 5px;
     padding: 10px;
     transition: all 0.3s ease;
+    /* white-space: nowrap; */
 }
 
 .need-rent-item:hover {
