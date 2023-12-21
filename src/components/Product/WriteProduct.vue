@@ -1,76 +1,84 @@
 <template>
-    <div class="productContainer">
-        <form @submit.prevent="registProduct">
-            <div class="product">
-                <div class="title">
-                    <input type="text" placeholder="제목" v-model="title">
-                </div>
-                <div class="postCategory">
-                    <input type="radio" id="select" name="post" value="0" v-model="postCategory">
-                    <label for="select">빌려드립니다</label>
-                    <input type="radio" id="select2" name="post" value="1" v-model="postCategory">
-                    <label for="select2">빌려주세요</label>
-                </div>
-                <div class="dropdown">
-                    <select v-model="selectedSido" name="region siDo">
-                        <option value="" selected disabled hidden>시/도</option>
-                        <option :value="item" v-for="(item, index) in siDoList" :key="index">
-                            {{ item }}
-                        </option>
-                    </select>
-                    <select v-model="selectedSiGunGu" @click="getSiGunGu()" name="region siGunGu">
-                        <option value="" selected disabled hidden>시/군/구</option>
-                        <option :value="item" v-for="(item, index) in siGunGuList" :key="index">
-                            {{ item }}
-                        </option>
-                    </select>
-                    <select
-                        v-model="selectedEupMyeonRo"
-                        @click="getEupMyeonRo()"
-                        name="region eupMyeonRo"
-                    >
-                    <option value="" selected disabled hidden>읍/면/로</option>
-                        <option :value="item" v-for="(item, index) in eupMyeonRoList" :key="index">
-                            {{ item }}
-                        </option>
-                    </select>
-                </div>
-                <div class="dropdown">
-                    <select v-model="selectedCategory" name="category">
-                        <option value="" selected disabled hidden>상품카테고리</option>
-                        <option :value="item" v-for="(item, index) in categoryList" :key="index">
-                            {{ item }}
-                        </option>
-                    </select>
-                </div>
-                <div class="dropdown">
-                    <select name="priceCategory" v-model="priceCategory">
-                        <option value="" selected disabled hidden>시간단위</option>
-                        <option value="시간">시간</option>
-                        <option value="일">일</option>
-                        <option value="주">주</option>
-                        <option value="월">월</option>
-                    </select>
-                    <input type="text" placeholder="가격" v-model="price">
-                </div>
-                <div class="content">
-                    <input type="text" placeholder="상세정보" v-model="content">
-                </div>
-                <div class="imageUpload">
-                    <input type="file" ref="imageInput" multiple @change="handleImageChange">
-                    <div class="imagePreview" v-if="images2.length > 0">
-                        <div v-for="(image, index) in images2" :key="index" class="previewItem">
-                            <img :src="image" alt="Preview">
-                            <button @click="removeImage(index)">삭제</button>
+    <section>
+        <div class="productContainer">
+            <form @submit.prevent="registProduct">
+                <div class="product">
+                    <div class="flex-container">
+                        <div class="title">
+                            <input class="title-input" type="text" placeholder="제목을 입력해주세요." v-model="title" required />
+                        </div>
+                        <div class="postCategory">
+                            <input type="radio" id="select" name="post" value="0" v-model="postCategory" />
+                            <label for="select" class="label-style">빌려드립니다</label>
+                            <input type="radio" id="select2" name="post" value="1" v-model="postCategory" />
+                            <label for="select2" class="label-style">빌려주세요</label>
                         </div>
                     </div>
+                    <div class="dropdown">
+                        <p class="category">카테고리를 선택해주세요.</p>
+                        <select v-model="selectedSido" name="region siDo" required>
+                            <option value="" selected disabled hidden>시/도</option>
+                            <option :value="item" v-for="(item, index) in siDoList" :key="index">
+                                {{ item }}
+                            </option>
+                        </select>
+                        <select v-model="selectedSiGunGu" @click="getSiGunGu()" name="region siGunGu" required>
+                            <option value="" selected disabled hidden>시/군/구</option>
+                            <option :value="item" v-for="(item, index) in siGunGuList" :key="index">
+                                {{ item }}
+                            </option>
+                        </select>
+                        <select v-model="selectedEupMyeonRo" @click="getEupMyeonRo()" name="region eupMyeonRo" required>
+                            <option value="" selected disabled hidden>읍/면/로</option>
+                            <option :value="item" v-for="(item, index) in eupMyeonRoList" :key="index">
+                                {{ item }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="dropdown">
+                        <select v-model="selectedCategory" name="category" required>
+                            <option value="" selected disabled hidden>상품카테고리</option>
+                            <option :value="item" v-for="(item, index) in categoryList" :key="index">
+                                {{ item }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="dropdown">
+                        <select name="priceCategory" v-model="priceCategory" required>
+                            <option value="" selected disabled hidden>시간단위</option>
+                            <option value="시간">시간</option>
+                            <option value="일">일</option>
+                            <option value="주">주</option>
+                            <option value="월">월</option>
+                        </select>
+                        <input type="text" placeholder="가격" v-model="price" required />
+                    </div>
+                    <div class="datePicker">
+                        <p class="rent-date">대여기간을 선택해주세요.</p>
+                        <VueDatePicker v-model="dateRange" type="date" range placeholder="YYYY-MM-DD"></VueDatePicker>
+                    </div>
+                    <div class="content">
+                        <p class="product-content">상품의 상세정보를 입력해주세요.</p>
+                        <!-- <input type="text" class="product-info" placeholder="상세정보" maxlength="500" v-model="content" required /> -->
+                        <textarea class="product-info" placeholder="상품의 상세정보는 최대 500자까지 입력이 가능합니다." maxlength="500"
+                            v-model="content" required></textarea>
+                    </div>
+                    <div class="imageUpload">
+                        <input class="file-Btn" type="file" ref="imageInput" multiple @change="handleImageChange" />
+                        <div class="imagePreview" v-if="images2.length > 0">
+                            <div v-for="(image, index) in images2" :key="index" class="previewItem">
+                                <img :src="image" alt="Preview" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <button class="registBt">등록</button>
+                    </div>
                 </div>
-                <button class="registBt">
-                    등록
-                </button>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
+    </section>
 </template>
 
 <script>
@@ -107,14 +115,34 @@ export default {
     },
     methods: {
         registProduct() {
-            const formData = new FormData();
-            formData.append("title",this.title);
-            formData.append("content",this.content);
-            formData.append("priceCategory",this.priceCategory);
-            formData.append("price",this.price)
-            formData.append("startDate","2023-12-19");
-            formData.append("endDate","2023-12-20");
-            formData.append("postCategory",this.postCategory);
+            if (!this.dateRange || this.dateRange.length !== 2) {
+                this.isDateRangeValid = false
+                alert('대여기간을 선택해주세요')
+                return
+            } else {
+                this.isDateRangeValid = true
+            }
+
+            if (!this.postCategory) {
+                alert("빌려드립니다 빌려주세요 중에서 하나를 선택해주세요");
+                return;
+            }
+
+            const currentDate = new Date();
+            if(currentDate > this.dateRange[0]) {
+                alert("대여기간은 오늘 이후로 선택가능합니다")
+                return;
+            }
+            
+
+            const formData = new FormData()
+            formData.append('title', this.title)
+            formData.append('content', this.content)
+            formData.append('priceCategory', this.priceCategory)
+            formData.append('price', this.price)
+            formData.append('startDate', this.dateRange[0])
+            formData.append('endDate', this.dateRange[1])
+            formData.append('postCategory', this.postCategory)
 
             console.log(this.images)
             for (let i = 0; i <= this.images.length; i++) {
@@ -123,62 +151,61 @@ export default {
 
             const nickname = localStorage.getItem('nickname')
 
-            // 서버로 전송
-            axios.post(`http://192.168.1.86:9797/oio/product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/${nickname}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-                .then(response => {
-                    console.log(response.data);
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        },
-
-        handleImageChange(event) {
-            // Update the images array with selected image files
-            this.images2 = Array.from(event.target.files).map((file) => URL.createObjectURL(file))
-            const file = event.target.files
-            this.images = file
-        },
-
-        removeImage(index) {
-            // Remove the selected image from the images array
-            this.images.splice(index, 1);
-            this.images2.splice(index, 1);
-        },
-
-        getSiDo() {
-            axios.get('http://192.168.1.86:9797/oio/address/siDoList').then((result) => {
-                this.siDoList = result.data
-            })
-        },
-        getSiGunGu() {
-            axios.get(`http://192.168.1.86:9797/oio/address/siGunGuList/${this.selectedSido}`).then((result) => {
-                this.siGunGuList = result.data
-            })
-        },
-        getEupMyeonRo() {
             axios
-                .get(
-                    `http://192.168.1.86:9797/oio/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
+                .post(
+                    `http://192.168.1.86:9797/product-service/product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/셍나`,
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
                 )
-                .then((result) => {
-                    this.eupMyeonRoList = result.data
-                })
-        },
-        getCategory() {
-            axios.get('http://192.168.1.86:9797/oio/category/categoryList').then((result) => {
-                this.categoryList = result.data
+                .then((response) => {
+                console.log(response.data)
+                window.location = '/product/productList'
             })
-        }
+            .catch((error) => {
+                console.log(error)
+            })
     },
-    created() {
-        this.getCategory()
-        this.getSiDo()
+
+    handleImageChange(event) {
+        // Update the images array with selected image files
+        this.images2 = Array.from(event.target.files).map((file) => URL.createObjectURL(file))
+        const file = event.target.files
+        this.images = file
+    },
+
+    getSiDo() {
+        axios.get('http://192.168.1.86:9797/product-service/address/siDoList').then((result) => {
+            this.siDoList = result.data
+        })
+    },
+    getSiGunGu() {
+        axios.get(`http://192.168.1.86:9797/product-service/address/siGunGuList/${this.selectedSido}`).then((result) => {
+            this.siGunGuList = result.data
+        })
+    },
+    getEupMyeonRo() {
+        axios
+            .get(
+                `http://192.168.1.86:9797/product-service/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
+            )
+            .then((result) => {
+                this.eupMyeonRoList = result.data
+            })
+    },
+    getCategory() {
+        axios.get('http://192.168.1.86:9797/product-service/category/categoryList').then((result) => {
+            this.categoryList = result.data
+        })
     }
+},
+created() {
+    this.getCategory()
+    this.getSiDo()
+}
 }
 </script>
 
@@ -250,7 +277,7 @@ section {
     display: none;
 }
 
-.product input[type=radio]+label {
+.product input[type='radio']+label {
     display: inline-block;
     cursor: pointer;
     height: 40px;
@@ -263,9 +290,82 @@ section {
     color: #18b7be;
 }
 
-.product input[type=radio]:checked+label {
-    background-color: #18B7BE;
+.product input[type='radio']:checked+label {
+    background-color: #18b7be;
     color: #ffffff;
+}
+
+.category {
+    margin-top: 40px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.dropdown select,
+.dropdown input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.rent-date {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.product-info {
+    width: 100%;
+    height: 200px;
+}
+
+.product-info {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    resize: none;
+    /* 사용자가 크기 조절 못하게 함 */
+    text-align: left;
+    /* 텍스트 좌측 정렬 */
+    vertical-align: top;
+    /* 텍스트 상단 정렬 */
+}
+
+.product-content {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.button-container {
+    text-align: center;
+    /* 버튼을 중앙 정렬 */
+    margin-bottom: 20px;
+}
+
+.registBt {
+    display: inline-block;
+    margin-top: 60px;
+    background-color: #18b7be;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background-color 0.3s;
+}
+
+.registBt:hover {
+    background-color: #15a2b8;
+}
+
+.file-Btn {
+    margin-top: 30px;
 }
 
 .imageUpload {
@@ -301,4 +401,3 @@ section {
     cursor: pointer;
 }
 </style>
-  

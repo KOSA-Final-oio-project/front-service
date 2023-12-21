@@ -249,11 +249,21 @@ a {
     display: inline-block;
 }
 
+.topImg span {
+    margin-left: 5px;
+    color: #ffffff;
+    background-color: #178CA4;
+    padding: 3px 5px;
+    border-radius: 10px;
+    z-index: 1;
+
+}
+
 
 
 .rented {
-    background-color: #072a40;
-    border: 3px solid #072a40;
+    /* background-color: #072a40;
+    border: 3px solid #072a40; */
     border-radius: 20px;
     color: #ffffff;
 }
@@ -396,6 +406,10 @@ footer {
     overflow: hidden;
 }
 
+.product-img{
+    width: 100%;
+    height: 140px;
+}
 footer>p {
     margin-left: 10px;
 }

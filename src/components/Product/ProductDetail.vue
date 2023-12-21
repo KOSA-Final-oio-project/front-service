@@ -1,55 +1,49 @@
 <template>
-  <div class="container">
-    <div class="productContainer">
-      <div class="imageContainer">
-        <a class="prev" @click="prev" href="#">❮</a>
-        <transition-group>
-          <div v-for="(img, index) in productImages" :key="index">
-            <img class="slider-image" :src="img" alt="Slide Image" v-show="currentIndex === index" />
-          </div>
-        </transition-group>
-        <a class="next" @click="next" href="#">❯</a>
+  <div class="productContainer">
+    <div class="imageContainer">
+      <a class="prev" @click="prev" href="#">❮</a>
+      <transition-group>
+        <div v-for="(img, index) in productImages" :key="index">
+          <img class="slider-image" :src="img" alt="Slide Image" v-show="currentIndex === index" />
+        </div>
+      </transition-group>
+      <a class="next" @click="next" href="#">❯</a>
+    </div>
+
+    <div v-if="product" class="product">
+      <div class="productInfo">
+        <router-link v-if="status === 0 && product.status === 0" :to="`/product/modifyProduct/${product.productNo}`">
+          <p class="modify">수정</p>
+        </router-link>
+        <span>{{ product.postCategory === 0 ? '빌려드려요' : '빌려주세요' }}</span>
+        <span :class="{ 'rented': product.status === 1, 'expired': product.status === 2 }">
+          {{ product.status === 0 ? '미대여' : (product.status === 1 ? '대여중' : '기간만료') }}
+        </span>
+        <p>조회수:{{ product.viewCount }} 대여수:{{ product.rentCount }} 작성일:{{ formatDate(product.postDate) }}</p>
+        <h2>{{ product.title }}</h2>
+        <p>{{ product.address.siDo }} {{ product.address.siGunGu }} {{ product.address.eupMyeonRo }}</p>
+        <p>카테고리:{{ product.category.categoryName }}</p>
+        <p>{{ product.priceCategory }}: {{ product.price }}원</p>
+        <p>대여 기간: {{ formatDate(product.startDate) }} ~ {{ formatDate(product.endDate) }}</p>
+        <p>{{ product.content }}</p>
       </div>
 
-      <div v-if="product" class="product">
-        <div class="productInfo">
-          <li>
-            <a :href="getActionLink()" :class="{ 'report': status === 1 }">
-              {{ status === 1 ? '신고' : '수정' }}
-            </a>
-          </li>
-          <span>{{ product.postCategory === 0 ? '빌려드려요' : '빌려주세요' }}</span>
-          <span :class="{ 'rented': product.status === 1, 'expired': product.status === 2 }">
-            {{ product.status === 0 ? '미대여' : (product.status === 1 ? '대여중' : '기간만료') }}
-          </span>
-          <p>조회수:{{ product.viewCount }} 대여수:{{ product.rentCount }} 작성일:{{ formatDate(product.postDate) }}</p>
-          <h2>{{ product.title }}</h2>
-          <p>{{ product.address.siDo }} {{ product.address.siGunGu }} {{ product.address.eupMyeonRo }}</p>
-          <p>카테고리:{{ product.category.categoryName }}</p>
-          <p>{{ product.priceCategory }}: {{ product.price }}원</p>
-          <p>대여 기간: {{ formatDate(product.startDate) }} ~ {{ formatDate(product.endDate) }}</p>
-          <p class="content">{{ product.content }}</p>
-        </div>
-
-        <div class="userInfo">
-          <span>{{ product.nickname }}</span>
-          <button @click="createRoom">채팅하기</button>
-        </div>
+      <div class="userInfo">
+        <span>{{ product.nickname }}</span>
+        <button @click="createRoom">채팅하기</button>
       </div>
     </div>
-    <div class="reviewContainer">
-      <p>리뷰</p>
-      <div v-for="review in reviews" :key="review.id" class="review">
-        <div class="info">
-          <div class="writer">{{ review.writerNickname }}
-          </div>
-          <div class="reviewDate">{{ review.postDate }}
-            <span v-if="review.heart === 0"></span>
-            <span v-else-if="review.heart === 1"><i class="bi bi-heart-fill"></i></span>
-          </div>
-        </div>
-        <div class="reviewContent">{{ review.content }}</div>
+  </div>
+  <div class="reviewContainer">
+    <p>리뷰</p>
+    <div v-for="review in reviews" :key="review.id" class="review">
+      <div class="info">
+        <div class="writer">{{ review.writerNickname }}</div>
+        <div class="reviewDate">{{ review.postDate }}</div>
+        <span v-if="review.heart === 0"></span>
+        <span v-else-if="review.heart === 1"><i class="bi bi-heart-fill"></i></span>
       </div>
+      <div class="reviewContent">{{ review.postDate }}</div>
     </div>
   </div>
 </template>
@@ -119,19 +113,21 @@ export default {
     this.getProductDetail();
     this.getReviews();
   },
+
   created() {
     this.product2.productNo = this.$route.params.id
     this.product2.nickname = localStorage.getItem('nickname')
   },
 
   methods: {
-    //상품 디테일
     next() {
       this.currentIndex = (this.currentIndex + 1) % this.productImages.length;
     },
+
     prev() {
       this.currentIndex = (this.currentIndex - 1 + this.productImages.length) % this.productImages.length;
     },
+
     getProductDetail() {
       console.log(this.product2)
       console.log(this.ProductList)
@@ -184,17 +180,18 @@ export default {
       axios.get(url)
         .then(response => {
           const data = response.data;
-          console.log(data)
           this.reviews = data;
         })
         .catch(error => {
           console.error('리뷰를 불러오는데 실패했습니다.', error);
         });
     },
+
     formatDate(dateString) {
       const dateWithoutTime = dateString.split('T')[0];
       return dateWithoutTime;
     },
+
     getActionLink() {
       // status에 따라 다른 URL을 반환
       return this.status === 1 ? '신고 URL' : '수정 URL';
@@ -254,6 +251,7 @@ export default {
       // 채팅방 생성 요청
       axios
         .post('http://192.168.1.93:9712/chat/room', data)
+        console.log(data.toString())
 
         .then((response) => {
           console.log('response.data: ', response.data)
@@ -308,12 +306,12 @@ export default {
 
 <style scoped>
 @font-face {
-    font-family: 'NotoSansKR-VariableFont_wght';
-    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
+  font-family: 'NotoSansKR-VariableFont_wght';
+  src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
 }
 
 * {
-    font-family: 'NotoSansKR-VariableFont_wght';
+  font-family: 'NotoSansKR-VariableFont_wght';
 }
 
 a {
@@ -324,7 +322,7 @@ a {
   display: flex;
   justify-content: center;
   position: relative;
-  margin-top: 200px;
+  margin-top: 220px;
 }
 
 .imageContainer {
@@ -338,7 +336,7 @@ a {
 
 .slider-image {
   max-width: 450px;
-  max-height: 550px;
+  max-height: 450px;
 }
 
 .prev,
@@ -346,7 +344,7 @@ a {
   font-size: 24px;
   color: #18B7BE;
   /* border: 1px solid #18B7BE;
-    border-radius: 10px; */
+  border-radius: 10px; */
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -369,62 +367,23 @@ a {
   border-bottom: 5px solid #18B7BE;
   width: 800px;
   min-height: 570px;
-  padding-left: 10px;
 }
 
-li {
-  list-style-type: none;
+p.modify {
+  margin-left: auto;
+  margin-right: calc(1% + 70px);
+  margin-top: 10px;
+  width: 60px;
+  padding: 8px 15px;
+  background-color: #18b7be;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.productInfo a {
-  margin-left: 750px;
-  padding-bottom: 5px;
-  color: #178CA4;
-  display: inline-block;
-  vertical-align: middle;
-  transform: perspective(1px) translateZ(0);
-  -webkit-transition-property: color;
-  transition-property: color;
-  -webkit-transition-duration: 0.5s;
-  transition-duration: 0.5s;
-}
-
-.productInfo a.report {
-  color: red;
-}
-
-.productInfo a.report::before {
-  background-color: red;
-}
-
-.productInfo a:before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  height: 1px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #178CA4;
-  -webkit-transform: scaleX(0);
-  transform: scaleX(0);
-  -webkit-transform-origin: 0 50%;
-  transform-origin: 0 50%;
-  -webkit-transition-property: transform;
-  transition-property: transform;
-  -webkit-transition-duration: 0.5s;
-  transition-duration: 0.5s;
-  -webkit-transition-timing-function: ease-out;
-  transition-timing-function: ease-out;
-}
-
-.productInfo a:hover:before,
-.productInfo a:focus:before,
-.productInfo a:active:before {
-  -webkit-transform: scaleX(1);
-  transform: scaleX(1);
-  -webkit-transition-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
-  transition-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
+p.modify:hover {
+  background-color: #178ca4;
 }
 
 .productInfo span {

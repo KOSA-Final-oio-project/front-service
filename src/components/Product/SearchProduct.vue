@@ -4,7 +4,8 @@
             <div class="productContainer">
                 <p class="search">검색어 <span class="search">"{{ searchWord }}"</span>에 대한 대여상품의 평균시세는</p>
                 <p class="search"><span class="search">{{ avgPrice }}</span>원입니다</p>
-                <div class="dropdown category">
+                <div class="dropdown">
+                    <div class="dropdown category">
                     <select v-model="selectedCategory" name="category">
                         <option value="" selected disabled hidden>상품카테고리</option>
                         <option value="">전체</option>
@@ -13,7 +14,6 @@
                         </option>
                     </select>
                 </div>
-                <div class="dropdown">
                     <select v-model="selectedSido" name="region siDo" @change="resetSelections('siGunGuList', 'eupMyeonRoList')">
                         <option value="" selected disabled hidden>시/도</option>
                         <option value="">전체</option>
@@ -40,8 +40,8 @@
                         </option>
                     </select>
                     <button @click="selectProduct()" class="selectBt">조회</button>
+                    <router-link :to="'/product/writeProduct'"><p class="regist">상품등록</p></router-link>
                 </div>
-                <router-link :to="'/product/writeProduct'"><p class="regist">상품등록</p></router-link>
                 <div class="productList">
                     <div class="products">
                         <div class="product" v-for="(item, index) in products" :key="index">
@@ -92,7 +92,7 @@ export default {
             return dateWithoutTime;
         },
         getSearch() {
-            axios.get('http://192.168.1.86:9797/oio/product/productList/n', {
+            axios.get('http://192.168.1.86:9797/product-service/product/productList/n', {
                 params: {
                     searchWord: this.searchWord
                 }
@@ -105,7 +105,7 @@ export default {
             const sw = '니니';
             if (this.selectedCategory == '') {
                 if (this.selectedSido == '') {
-                    axios.get('http://192.168.1.86:9797/oio/product/productList/n', {
+                    axios.get('http://192.168.1.86:9797/product-service/product/productList/n', {
                         params: {
                             searchWord: this.searchWord
                         }
@@ -115,7 +115,7 @@ export default {
                     })
                 } else if (this.selectedSiGunGu == '') {
                     axios
-                        .get('http://192.168.1.86:9797/oio/product/productList/n', {
+                        .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                             params: {
                                 searchWord: this.searchWord,
                                 siDo: this.selectedSido
@@ -127,7 +127,7 @@ export default {
                         })
                 } else if (this.selectedEupMyeonRo == '') {
                     axios
-                        .get('http://192.168.1.86:9797/oio/product/productList/n', {
+                        .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                             params: {
                                 searchWord: this.searchWord,
                                 siDo: this.selectedSido,
@@ -140,7 +140,7 @@ export default {
                         })
                 } else {
                     axios
-                        .get('http://192.168.1.86:9797/oio/product/productList/n', {
+                        .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                             params: {
                                 searchWord: this.searchWord,
                                 siDo: this.selectedSido,
@@ -157,7 +157,7 @@ export default {
             else {
                 if (this.selectedSido == '') {
                     axios
-                        .get('http://192.168.1.86:9797/oio/product/productList/n', {
+                        .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                             params: {
                                 searchWord: this.searchWord,
                                 categoryName: this.selectedCategory
@@ -169,7 +169,7 @@ export default {
                         })
                 } else if (this.selectedSiGunGu == '') {
                     axios
-                        .get('http://192.168.1.86:9797/oio/product/productList/n', {
+                        .get('http://192.168.1.86:9797/product-service//product/productList/n', {
                             params: {
                                 searchWord: this.searchWord,
                                 siDo: this.selectedSido,
@@ -182,7 +182,7 @@ export default {
                         })
                 } else if (this.selectedEupMyeonRo == '') {
                     axios
-                        .get('http://192.168.1.86:9797/oio/product/productList/n', {
+                        .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                             params: {
                                 searchWord: this.searchWord,
                                 siDo: this.selectedSido,
@@ -196,7 +196,7 @@ export default {
                         })
                 } else {
                     axios
-                        .get('http://192.168.1.86:9797/oio/product/productList/n', {
+                        .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                             params: {
                                 searchWord: this.searchWord,
                                 siDo: this.selectedSido,
@@ -215,13 +215,13 @@ export default {
 
         },
         getSiDo() {
-            axios.get('http://192.168.1.86:9797/oio/address/siDoList').then((result) => {
+            axios.get('http://192.168.1.86:9797/product-service/address/siDoList').then((result) => {
                 this.siDoList = result.data
             })
         },
         getSiGunGu() {
             axios
-                .get(`http://192.168.1.86:9797/oio/address/siGunGuList/${this.selectedSido}`)
+                .get(`http://192.168.1.86:9797/product-service/address/siGunGuList/${this.selectedSido}`)
                 .then((result) => {
                     this.siGunGuList = result.data
                 })
@@ -229,19 +229,19 @@ export default {
         getEupMyeonRo() {
             axios
                 .get(
-                    `http://192.168.1.86:9797/oio/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
+                    `http://192.168.1.86:9797/product-service/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
                 )
                 .then((result) => {
                     this.eupMyeonRoList = result.data
                 })
         },
         getCategory() {
-            axios.get('http://192.168.1.86:9797/oio/category/categoryList').then((result) => {
+            axios.get('http://192.168.1.86:9797/product-service/category/categoryList').then((result) => {
                 this.categoryList = result.data
             })
         },
         get() {
-            axios.get('http://192.168.1.86:9797/oio/product/productList/n').then((result) => {
+            axios.get('http://192.168.1.86:9797/product-service/product/productList/n').then((result) => {
                 this.products = result.data.productList
             })
         },
@@ -291,15 +291,15 @@ body {
     /* position: relative; */
 }
 
-p.search{
+p.search {
     text-align: center;
     font-size: 30px;
-    color:#072a40;
-    
+    color: #072a40;
+
 }
 
 span.search {
-    color:#18b7be;
+    color: #18b7be;
     font-size: 40px;
 }
 
@@ -307,13 +307,15 @@ span.search {
 .dropdown {
     display: flex;
     align-items: center;
-    margin-top: 1%;
-    justify-content: right;
-    margin-right: 1%;
+    /* margin-top: 1%; */
+    justify-content: left;
+    /* margin-right: 1%; */
+    margin-left: 13%;
 }
 
+
 .dropdown.category {
-    margin-right: calc(1% + 60px);
+    /* margin-right: calc(1% + 60px); */
 }
 
 /* Styling for the individual selects */
@@ -342,10 +344,9 @@ select {
 }
 
 p.regist {
-    margin-left: auto;
-    margin-right: calc(1% + 70px);
-    margin-top: 10px;
-    width: 90px;
+    margin-top: 16px;
+    margin-left: 350px;
+    /* margin-right: 50px; */
     padding: 8px 15px;
     background-color: #18b7be;
     color: #fff;
@@ -357,6 +358,7 @@ p.regist {
 p.regist:hover {
     background-color: #178ca4;
 }
+
 
 /* Optional: Style the options within the dropdown */
 option {

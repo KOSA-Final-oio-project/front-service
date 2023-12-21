@@ -27,12 +27,12 @@
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">Title</span>
+              <span class="input-group-text">제목</span>
               <input type="text" v-model="setTitle" class="form-control" />
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">Content</span>
+              <span class="input-group-text">내용</span>
               <textarea class="form-control col-sm-5" rows="5" v-model="setContent"></textarea>
             </div>
 
@@ -207,15 +207,5 @@ const submitForm = async () => {
 </script>
 
 <style scoped>
-.select-check-wrapper {
-  display: flex;
-}
-.select-wrapper {
-  width: 120px;
-  margin-right: 40px;
-}
-.pwd-wrapper {
-  width: 150px;
-}
 @import './PostRegister.css';
 </style>

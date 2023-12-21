@@ -1,10 +1,10 @@
 <template>
-    <Header />
+    <Header v-if="!$route.meta.hideHeader" />
     <div>
         <router-view></router-view>
         <router-view name="AllProduct"></router-view>
     </div>
-    <!-- <Footer /> -->
+    <Footer v-if="!$route.meta.hideFooter" />
 </template>
 
 <script>

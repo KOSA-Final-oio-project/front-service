@@ -1,0 +1,10 @@
+.select-check-wrapper {
+  display: flex;
+}
+.select-wrapper {
+  width: 120px;
+  margin-right: 40px;
+}
+.pwd-wrapper {
+  width: 150px;
+}

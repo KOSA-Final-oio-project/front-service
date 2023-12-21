@@ -11,7 +11,7 @@
                     <button
                         class="btn deal-start-btn"
                         type="button"
-                        v-if="!isSender"
+                        v-if="!isSender && !isAlertReceived"
                         @click="openDateSelectionPopup"
                     >
                         거래하기
@@ -115,6 +115,7 @@ export default {
             chatStartDate: '',
             productName: '',
             productPrice: '',
+            isAlertReceived: false, 
         }
     },
 
@@ -167,7 +168,7 @@ export default {
     methods: {
         // 방 조회
         findRoom() {
-            console.log('http://192.168.1.93:9712/chat/room/' + this.roomId)
+            // console.log('http://192.168.1.93:9712/chat/room/' + this.roomId)
 
             axios
                 .get('http://192.168.1.93:9712/chat/room/' + this.roomId)
@@ -185,7 +186,8 @@ export default {
                 .get('http://192.168.1.93:9712/chat/room/enter/' + this.roomId)
                 .then((response) => {
                     if (Array.isArray(response.data)) {
-                        // 서버로부터 받은 데이터를 sendDate 기준으로 오름차순 정렬
+                        this.isAlertReceived = response.data.some(message => message.messageType === 'ALERT');
+
                         const sortedMessages = response.data.sort((a, b) => {
                             return new Date(a.sendDate) - new Date(b.sendDate)
                         })
@@ -384,7 +386,7 @@ export default {
 }
 
 section {
-    padding-top: 150px;
+    margin-top: 200px;
 }
 
 .title {

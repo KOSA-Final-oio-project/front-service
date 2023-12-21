@@ -8,12 +8,12 @@
           <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
         </div>
         <router-link :to="`/product/searchProduct/${searchValue}`">
-          <input type="text" class="search-input" v-model="searchValue" placeholder="Search..." />
+          <input type="text" class="search-input" v-model="searchValue" placeholder="Search..."  @keyup.enter="searchOnEnter"/>
         </router-link>
       </div>
 
       <div class="icons-container">
-        <router-link to="/member-service/signup" :class="{ icons: true, loginCheck: loginCheck }" v-if="!loginChk()">
+        <router-link to="/member/signup" :class="{ icons: true, loginCheck: loginCheck }" v-if="!loginChk()">
           <font-awesome-icon :icon="['fas', 'user-plus']" />
           <span>join</span>
         </router-link>
@@ -22,7 +22,7 @@
           <span>logout</span>
         </div>
 
-        <router-link :class="{ icons: true, loginCheck: loginCheck }" to="/member-service/login" v-if="!loginChk()">
+        <router-link :class="{ icons: true, loginCheck: loginCheck }" to="/member/login" v-if="!loginChk()">
           <font-awesome-icon :icon="['fas', 'right-to-bracket']" />
           <span>login</span>
         </router-link>
@@ -48,26 +48,35 @@
 </template>
 <script>
 export default {
+  
   data() {
-    return {
-      loginCheck: false,
-      nickname: localStorage.getItem('nickname')
-    }
+      return {
+          loginCheck: false,
+          searchValue: ''
+      }
   },
 
   methods: {
-    enterJoin() {
-      this.$router.push(`/member-service/signup`)
+    searchProducts() {
+      this.$router.push(`/product/searchProduct/${this.searchValue}`);
     },
-    loginChk() {
-      if (localStorage.getItem('nickname')) {
-        return true
-      }
+    // 엔터 키 입력 시 검색 기능이 동작하도록 하는 메소드입니다.
+    searchOnEnter() {
+      this.searchProducts();
     },
-    logout() {
-      localStorage.removeItem('nickname')
-      window.location = '/'
-    }
+      enterJoin() {
+          this.$router.push(`/member/signup`)
+      },
+      loginChk() {
+          if (localStorage.getItem('nickname')) {
+              return true
+          }
+      },
+      logout() {
+          localStorage.removeItem('nickname')
+          window.location = '/'
+      },
+      
   }
 }
 </script>
@@ -98,10 +107,10 @@ export default {
 }
 
 .header-container {
-  margin-top: 22px0px;
   position: fixed;
+  margin-bottom: 10px;
   width: 100%;
-  height: 20%;
+  height: 22.5%;
   top: 0;
   z-index: 1000;
   background-color: white;
@@ -193,7 +202,11 @@ nav {
   list-style-type: none;
 }
 
+.nav-container{
+  margin-bottom: 150px;
+}
 .nav>li>a {
+
   font-size: 22px;
   font-weight: 500;
 }

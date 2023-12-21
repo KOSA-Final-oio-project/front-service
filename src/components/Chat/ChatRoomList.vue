@@ -66,7 +66,7 @@ export default {
         findRoomByNickname() {
             this.getUserNickname()
 
-            alert('현재 닉네임은: ' + this.sender)
+            // alert('현재 닉네임은: ' + this.sender)
 
             axios
                 .get('http://192.168.1.93:9712/chat/rooms/' + this.sender)
@@ -89,10 +89,11 @@ export default {
                 localStorage.setItem('wschat.roomId', roomId)
             }
 
-            alert('전달하는 url은 ' + 'http://192.168.1.93:9712/chat/roominfo/' + roomId)
+            // alert('전달하는 url은 ' + 'http://192.168.1.93:9712/chat/roominfo/' + roomId)
+
             // API 호출하여 채팅방 정보 가져오기
             axios.get('http://192.168.1.93:9712/chat/roominfo/' + roomId).then((response) => {
-                alert(this.roomId)
+                // alert(this.roomId)
                 console.log('&&&&&&&&&&&&&&&&&&&&&&&&&7 ' + response.data)
                 localStorage.setItem(
                     'roomData',
