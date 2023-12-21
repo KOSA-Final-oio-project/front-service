@@ -254,6 +254,10 @@ export default {
     font-family: 'NotoSansKR-VariableFont_wght';
 }
 
+section {
+    padding-top: 80px;
+}
+
 body {
     margin: 0px;
     /* overflow-x: hidden; */
