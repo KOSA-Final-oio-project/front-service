@@ -184,7 +184,7 @@ export default {
                     })
                 )
 
-                // refer.closePopup()
+                refer.closePopup()
             })
         },
         closePopup() {
