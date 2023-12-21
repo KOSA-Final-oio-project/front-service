@@ -46,6 +46,10 @@ import PostView from '@/components/Post/PostView.vue'
 import PostRegister from '@/components/Post/PostRegister.vue'
 import PostModify from '@/components/POST/PostModify.vue'
 
+//ADMIN
+import AdminList from '@/components/ADMIN/AdminList.vue'
+import AdminView from '@/components/ADMIN/AdminView.vue'
+
 const router = createRouter({
   history: createWebHistory(),
 
@@ -115,7 +119,10 @@ const router = createRouter({
         { path: 'modify/:id', component: PostModify },
         { path: 'register', component: PostRegister }
       ]
-    }
+    },
+
+    { path: '/admin', component: AdminList },
+    { path: '/admin/view/:id', component: AdminView }
   ]
 })
 
