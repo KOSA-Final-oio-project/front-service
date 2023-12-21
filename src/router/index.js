@@ -82,7 +82,7 @@ const router = createRouter({
         {path: '/product/productList', component: ProductList},
         {path: '/product/searchProduct/:searchWord', component: SearchProduct},
         {path: '/product/writeProduct', component: WriteProduct},
-        {path: '/product/modifyProduct', component: ModifyProduct}
+        {path: '/product/modifyProduct/:id', component: ModifyProduct}
     ]
 })
 

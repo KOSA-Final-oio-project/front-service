@@ -128,6 +128,12 @@ export default {
                 return;
             }
 
+            const currentDate = new Date();
+            if(currentDate > this.dateRange[0]) {
+                alert("대여기간은 오늘 이후로 선택가능합니다")
+            }
+            
+
             const formData = new FormData()
             formData.append('title', this.title)
             formData.append('content', this.content)
@@ -144,10 +150,9 @@ export default {
 
             const nickname = localStorage.getItem('nickname')
 
-            // 서버로 전송
             axios
                 .post(
-                    `http://127.0.0.1:8889/product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/주소수`,
+                    `http://192.168.1.86:9797/product-service/product/writeProduct/${this.selectedSido}/${this.selectedSiGunGu}/${this.selectedEupMyeonRo}/${this.selectedCategory}/주소수`,
                     formData,
                     {
                         headers: {
@@ -156,50 +161,50 @@ export default {
                     }
                 )
                 .then((response) => {
-                    console.log(response.data)
-                    window.location = '/product/productList'
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        },
-
-        handleImageChange(event) {
-            // Update the images array with selected image files
-            this.images2 = Array.from(event.target.files).map((file) => URL.createObjectURL(file))
-            const file = event.target.files
-            this.images = file
-        },
-
-        getSiDo() {
-            axios.get('http://localhost:8889/address/siDoList').then((result) => {
-                this.siDoList = result.data
+                console.log(response.data)
+                window.location = '/product/productList'
             })
-        },
-        getSiGunGu() {
-            axios.get(`http://localhost:8889/address/siGunGuList/${this.selectedSido}`).then((result) => {
-                this.siGunGuList = result.data
+            .catch((error) => {
+                console.log(error)
             })
-        },
-        getEupMyeonRo() {
-            axios
-                .get(
-                    `http://localhost:8889/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
-                )
-                .then((result) => {
-                    this.eupMyeonRoList = result.data
-                })
-        },
-        getCategory() {
-            axios.get('http://localhost:8889/category/categoryList').then((result) => {
-                this.categoryList = result.data
-            })
-        }
     },
-    created() {
-        this.getCategory()
-        this.getSiDo()
+
+    handleImageChange(event) {
+        // Update the images array with selected image files
+        this.images2 = Array.from(event.target.files).map((file) => URL.createObjectURL(file))
+        const file = event.target.files
+        this.images = file
+    },
+
+    getSiDo() {
+        axios.get('http://192.168.1.86:9797/product-service/address/siDoList').then((result) => {
+            this.siDoList = result.data
+        })
+    },
+    getSiGunGu() {
+        axios.get(`http://192.168.1.86:9797/product-service/address/siGunGuList/${this.selectedSido}`).then((result) => {
+            this.siGunGuList = result.data
+        })
+    },
+    getEupMyeonRo() {
+        axios
+            .get(
+                `http://192.168.1.86:9797/product-service/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
+            )
+            .then((result) => {
+                this.eupMyeonRoList = result.data
+            })
+    },
+    getCategory() {
+        axios.get('http://192.168.1.86:9797/product-service/category/categoryList').then((result) => {
+            this.categoryList = result.data
+        })
     }
+},
+created() {
+    this.getCategory()
+    this.getSiDo()
+}
 }
 </script>
 
@@ -393,4 +398,5 @@ section {
     color: #fff;
     border: none;
     cursor: pointer;
-}</style>
+}
+</style>

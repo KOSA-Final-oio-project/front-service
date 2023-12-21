@@ -12,11 +12,9 @@
 
     <div v-if="product" class="product">
       <div class="productInfo">
-        <li>
-          <a :href="getActionLink()" :class="{ 'report': status === 1 }">
-            {{ status === 1 ? '신고' : '수정' }}
-          </a>
-        </li>
+        <router-link v-if="status === 0 && product.status === 0" :to="`/product/modifyProduct/${product.productNo}`">
+          <p class="modify">수정</p>
+        </router-link>
         <span>{{ product.postCategory === 0 ? '빌려드려요' : '빌려주세요' }}</span>
         <span :class="{ 'rented': product.status === 1, 'expired': product.status === 2 }">
           {{ product.status === 0 ? '미대여' : (product.status === 1 ? '대여중' : '기간만료') }}
@@ -102,7 +100,7 @@ export default {
     getProductDetail(productNo) {
       const nickname = localStorage.getItem('nickname');
       const pno = this.$route.params.id
-      const url = `http://localhost:8889/product/productDetail/${pno}/닉네임이다`;
+      const url = `http://192.168.1.86:9797/product-service/product/productDetail/${pno}/주소수`;
 
       axios.get(url)
         .then(response => {
@@ -130,20 +128,16 @@ export default {
     formatDate(dateString) {
       const dateWithoutTime = dateString.split('T')[0];
       return dateWithoutTime;
-    },
-    getActionLink() {
-      // status에 따라 다른 URL을 반환
-      return this.status === 1 ? '신고 URL' : '수정 URL';
-    },
+    }
   },
   computed: {
     productImages() {
       if (this.product.thumbnail === null) {
-            return[sampleImage]
-          } else {
-            return [this.product.thumbnail, ...this.productImgs];
-          }
-      
+        return [sampleImage]
+      } else {
+        return [this.product.thumbnail, ...this.productImgs];
+      }
+
     },
     currentImage() {
       return this.productImages[this.currentIndex];
@@ -154,12 +148,12 @@ export default {
 
 <style scoped>
 @font-face {
-    font-family: 'NotoSansKR-VariableFont_wght';
-    src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
+  font-family: 'NotoSansKR-VariableFont_wght';
+  src: url(/fonts/NotoSansKR-VariableFont_wght.ttf);
 }
 
 * {
-    font-family: 'NotoSansKR-VariableFont_wght';
+  font-family: 'NotoSansKR-VariableFont_wght';
 }
 
 a {
@@ -217,59 +211,21 @@ a {
   min-height: 570px;
 }
 
-li {
-  list-style-type: none;
+p.modify {
+  margin-left: auto;
+  margin-right: calc(1% + 70px);
+  margin-top: 10px;
+  width: 60px;
+  padding: 8px 15px;
+  background-color: #18b7be;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.productInfo a {
-  margin-left: 750px;
-  padding-bottom: 5px;
-  color: #178CA4;
-  display: inline-block;
-  vertical-align: middle;
-  transform: perspective(1px) translateZ(0);
-  -webkit-transition-property: color;
-  transition-property: color;
-  -webkit-transition-duration: 0.5s;
-  transition-duration: 0.5s;
-}
-
-.productInfo a.report {
-  color: red;
-}
-
-.productInfo a.report::before {
-  background-color: red;
-}
-
-.productInfo a:before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  height: 1px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #178CA4;
-  -webkit-transform: scaleX(0);
-  transform: scaleX(0);
-  -webkit-transform-origin: 0 50%;
-  transform-origin: 0 50%;
-  -webkit-transition-property: transform;
-  transition-property: transform;
-  -webkit-transition-duration: 0.5s;
-  transition-duration: 0.5s;
-  -webkit-transition-timing-function: ease-out;
-  transition-timing-function: ease-out;
-}
-
-.productInfo a:hover:before,
-.productInfo a:focus:before,
-.productInfo a:active:before {
-  -webkit-transform: scaleX(1);
-  transform: scaleX(1);
-  -webkit-transition-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
-  transition-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
+p.modify:hover {
+  background-color: #178ca4;
 }
 
 .productInfo span {

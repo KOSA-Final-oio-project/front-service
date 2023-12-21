@@ -90,13 +90,13 @@ export default {
         selectProduct() {
             if (this.selectedCategory == '') {
                 if (this.selectedSido == '') {
-                    axios.get('http://localhost:8889/product/productList/n').then((result) => {
+                    axios.get('http://192.168.1.86:9797/product-service/product/productList/n').then((result) => {
                         this.products = result.data.productList
                         console.log(result.data)
                     })
                 } else if (this.selectedSiGunGu == '') {
                     axios
-                        .get('http://localhost:8889/product/productList/n', {
+                        .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                             params: {
                                 siDo: this.selectedSido
 
@@ -107,7 +107,7 @@ export default {
                         })
                 } else if (this.selectedEupMyeonRo == '') {
                     axios
-                        .get('http://localhost:8889/product/productList/n', {
+                        .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                             params: {
                                 siDo: this.selectedSido,
                                 siGunGu: this.selectedSiGunGu
@@ -118,7 +118,7 @@ export default {
                         })
                 } else {
                     axios
-                        .get('http://localhost:8889/product/productList/n', {
+                        .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                             params: {
                                 siDo: this.selectedSido,
                                 siGunGu: this.selectedSiGunGu,
@@ -133,7 +133,7 @@ export default {
             else {
                 if (this.selectedSido == '') {
                     axios
-                        .get('http://localhost:8889/product/productList/n', {
+                        .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                             params: {
                                 categoryName: this.selectedCategory
                             }
@@ -144,7 +144,7 @@ export default {
                         })
                 } else if (this.selectedSiGunGu == '') {
                     axios
-                        .get('http://localhost:8889/product/productList/n', {
+                        .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                             params: {
                                 siDo: this.selectedSido,
                                 categoryName: this.selectedCategory
@@ -156,7 +156,7 @@ export default {
                         })
                 } else if (this.selectedEupMyeonRo == '') {
                     axios
-                        .get('http://localhost:8889/product/productList/n', {
+                        .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                             params: {
                                 siDo: this.selectedSido,
                                 siGunGu: this.selectedSiGunGu,
@@ -168,7 +168,7 @@ export default {
                         })
                 } else {
                     axios
-                        .get('http://localhost:8889/product/productList/n', {
+                        .get('http://192.168.1.86:9797/product-service/product/productList/n', {
                             params: {
                                 siDo: this.selectedSido,
                                 siGunGu: this.selectedSiGunGu,
@@ -185,13 +185,13 @@ export default {
 
         },
         getSiDo() {
-            axios.get('http://localhost:8889/address/siDoList').then((result) => {
+            axios.get('http://192.168.1.86:9797/product-service/address/siDoList').then((result) => {
                 this.siDoList = result.data
             })
         },
         getSiGunGu() {
             axios
-                .get(`http://localhost:8889/address/siGunGuList/${this.selectedSido}`)
+                .get(`http://192.168.1.86:9797/product-service/address/siGunGuList/${this.selectedSido}`)
                 .then((result) => {
                     this.siGunGuList = result.data
                 })
@@ -199,19 +199,19 @@ export default {
         getEupMyeonRo() {
             axios
                 .get(
-                    `http://localhost:8889/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
+                    `http://192.168.1.86:9797/product-service/address/eupMyeonRoList/${this.selectedSido}/${this.selectedSiGunGu}`
                 )
                 .then((result) => {
                     this.eupMyeonRoList = result.data
                 })
         },
         getCategory() {
-            axios.get('http://localhost:8889/category/categoryList').then((result) => {
+            axios.get('http://192.168.1.86:9797/product-service/category/categoryList').then((result) => {
                 this.categoryList = result.data
             })
         },
         get() {
-            axios.get('http://localhost:8889/product/productList/n').then((result) => {
+            axios.get('http://192.168.1.86:9797/product-service/product/productList/n').then((result) => {
                 this.products = result.data.productList
             })
         },

@@ -1,6 +1,7 @@
 <template>
     <section>
         <div class="productContainer">
+            <button class="deleteBt" @click="deleteProduct">삭제</button>
             <form @submit.prevent="registProduct">
                 <div class="product">
                     <div class="flex-container">
@@ -39,8 +40,9 @@
                         <input type="text" placeholder="가격" v-model="price" required />
                     </div>
                     <div class="datePicker">
-                        <p class="rent-date">대여기간을 선택해주세요.</p>
-                        <VueDatePicker v-model="dateRange" type="date" range placeholder="YYYY-MM-DD"></VueDatePicker>
+                        <p class="rent-date">대여기간 : {{ formatDate(startDate) }} ~ {{ formatDate(originEndDate) }}</p>
+                        <p>기간은 종료일만 수정가능합니다</p>
+                        <VueDatePicker v-model="newEndDate" type="date" placeholder="YYYY-MM-DD"></VueDatePicker>
                     </div>
                     <div class="content">
                         <p class="product-content">상품의 상세정보를 입력해주세요.</p>
@@ -50,7 +52,7 @@
                     </div>
 
                     <div class="button-container">
-                        <button class="registBt">등록</button>
+                        <button class="registBt">수정</button>
                     </div>
                 </div>
             </form>
@@ -70,21 +72,17 @@ export default {
     data() {
         return {
             title: '',
-            postCategory: 0,
-            siDo: '',
-            siGunGu: '',
-            eupMyeonRo: '',
-            category: '',
-            startDate: null,
-            endDate: null,
-            dateRange: null,
+            priceCategory: '',
+            price: 0,
+            newEndDate: null,
+            content: ''
         }
     },
     methods: {
         getProductDetail(productNo) {
             const nickname = localStorage.getItem('nickname');
             const pno = this.$route.params.id
-            const url = `http://localhost:8889/product/productDetail/103/닉네임이다`;
+            const url = `http://192.168.1.86:9797/product-service/product/productDetail/${pno}/닉네임이다`;
 
             axios.get(url)
                 .then(response => {
@@ -96,45 +94,65 @@ export default {
                     this.price = data.product.price;
                     this.startDate = data.product.startDate;
                     this.endDate = data.product.endDate;
+                    this.originEndDate = data.product.endDate;
                     this.category = data.product.category.categoryName;
                     this.siDo = data.product.address.siDo;
                     this.siGunGu = data.product.address.siGunGu;
                     this.eupMyeonRo = data.product.address.eupMyeonRo;
-
-                    console.log('eupMyeonRo 값:', data.product.address.eupMyeonRo);
-
                 })
                 .catch(error => {
                     console.error('상품 정보를 불러오는데 실패했습니다.', error);
                 });
         },
         registProduct() {
+            if (this.newEndDate !== null) {
+                const currentDate = new Date();
+                if (currentDate > this.newEndDate) {
+                    alert("종료일은 오늘 이후로 선택가능합니다")
+                }
 
-            const formData = new FormData()
-            formData.append('title', this.title)
-            formData.append('content', this.content)
-            formData.append('priceCategory', this.priceCategory)
-            formData.append('price', this.price)
-            formData.append('endDate', this.dateRange[1])
+                this.endDate = this.newEndDate
+            }
 
-            // 서버로 전송
+            const pno = this.$route.params.id
+
             axios
-                .post(
-                    `http://127.0.0.1:8889/product/writeProduct/${this.siDo}/${this.siGunGu}/${this.eupMyeonRo}/${this.category}/주소수`,
-                    formData,
+                .put(
+                    `http://192.168.1.86:9797/product-service/product/modifyProduct/${pno}`,
                     {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    }
+                        'title': this.title,
+                        'content': this.content,
+                        'priceCategory': this.priceCategory,
+                        'price': this.price,
+                        'endDate': this.endDate
+                    },
                 )
                 .then((response) => {
                     console.log(response.data)
-                    window.location = '/product/productList'
+                    window.location = `/product/productDetail${pno}`
                 })
                 .catch((error) => {
                     console.log(error)
                 })
+        },
+
+        deleteProduct() {
+            const pno = this.$route.params.id;
+
+            axios
+                .delete(`http://192.168.1.86:9797/product-service/product/delete/${pno}`)
+                .then((response) => {
+                    console.log(response.data);
+                    window.location = '/product/productList'
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+
+        formatDate(dateString) {
+            const dateWithoutTime = dateString.split('T')[0];
+            return dateWithoutTime;
         },
     },
     created() {
@@ -151,6 +169,25 @@ export default {
 
 * {
     font-family: 'NotoSansKR-VariableFont_wght';
+}
+
+.deleteBt {
+  display: inline-block;
+  margin-top: 60px;
+  background-color: #ff4d4d; /* 빨간색 배경 */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background-color 0.3s;
+}
+
+.deleteBt:hover {
+  background-color: #e60000; /* 빨간색으로 hover 시 밝아짐 */
 }
 
 section {
