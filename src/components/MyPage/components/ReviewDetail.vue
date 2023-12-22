@@ -6,7 +6,7 @@
                     <img alt="대여 물품 사진" :src="thumbnail" />
                 </router-link>
                 <div class="product-text">
-                    <span v-if="review.heart === 0"><i class="bi bi-heart"></i></span>
+                    <span v-if="review.heart === 0"></span>
                     <span v-else-if="review.heart === 1"><i class="bi bi-heart-fill"></i></span>
                     <p><img src="../../../assets/package.png" />{{ title }}</p>
                     <p>
@@ -254,11 +254,11 @@ export default {
 .bi-heart-fill {
     color: red;
     float: right;
-    margin-right: 20px;
+    /* margin-right: 10px; */
 }
 
 .bi-heart {
     float: right;
-    margin-right: 20px;
+    /* margin-right: 10px; */
 }
 </style>

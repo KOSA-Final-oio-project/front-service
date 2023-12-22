@@ -43,7 +43,7 @@ export default {
         findPassword() {
             axios
                 // .post(this.$backURL + `member/${this.email}`, {
-                    .post(`http://192.168.1.86:9797/oio/member/member/${this.email}`, {
+                    .post(`http://192.168.1.86:9797/oio/member/${this.email}`, {
                     email: this.email
                 })
                 .then((result) => {

@@ -277,6 +277,9 @@ export default {
             if (this.ws) {
                 this.ws.disconnect()
             }
+            localStorage.removeItem('roomData')
+            localStorage.removeItem('wschat.sender')
+            localStorage.removeItem('wschat.roomId')
         },
 
         // 메시지 발신

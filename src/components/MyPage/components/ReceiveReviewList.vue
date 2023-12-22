@@ -5,7 +5,7 @@
                 <ul class="reviews-list-ul">
                     <li v-for="review in reviews" :key="review.id" class="review-item"
                         @click="openReviewDetailModal(review)">
-                        <span v-if="review.heart === 0"><i class="bi bi-heart"></i></span>
+                        <span v-if="review.heart === 0"></span>
                         <span v-else-if="review.heart === 1"><i class="bi bi-heart-fill"></i></span>
                         <p>
                             <img src="../../../assets/package.png" />

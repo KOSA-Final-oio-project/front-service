@@ -402,7 +402,9 @@ export default {
     padding: 20px;
     width: 80%;
     /* 수정: 모달의 너비 조정 */
-    height: 80%;
+    /* height: 80%; */
+    height: 80;
+    /* margin-bottom: 100px; */
 
     overflow-y: auto;
     /* 내용이 모달 밖으로 넘칠 경우 스크롤 표시 */

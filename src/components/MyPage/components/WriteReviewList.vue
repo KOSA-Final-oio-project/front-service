@@ -3,15 +3,13 @@
         <div class="reviews-container">
             <div class="review-list">
                 <ul class="reviews-list-ul">
-                    <li
-                        v-for="review in reviews"
-                        :key="review.id"
-                        class="review-item"
-                        @click="openReviewDetailModal(review)"
-                    >
+                    <li v-for="review in reviews" :key="review.id" class="review-item"
+                        @click="openReviewDetailModal(review)">
+                        <span v-if="review.heart === 0"></span>
+                        <span v-else-if="review.heart === 1"><i class="bi bi-heart-fill"></i></span>
                         <p>
                             <img src="../../../assets/package.png" />
-                            {{ truncateText(review.rentedProduct.product.title, 10 ) }}<br />
+                            {{ truncateText(review.rentedProduct.product.title, 10) }}<br />
                         </p>
                         <p>
                             <img src="../../../assets/user-profile.png" />
@@ -25,12 +23,8 @@
                     </li>
                 </ul>
                 <transition name="modal-fade">
-                    <ReviewDetail
-                        v-if="showModal"
-                        :ReviewData="ReviewData"
-                        class="modal-wrapper"
-                        @close-modal="closeModal"
-                    />
+                    <ReviewDetail v-if="showModal" :ReviewData="ReviewData" class="modal-wrapper"
+                        @close-modal="closeModal" />
                 </transition>
             </div>
         </div>
@@ -68,7 +62,7 @@ export default {
                     const rentedProductNo = review.rentedProductNo
                     const url2 = `http://192.168.1.86:9797/oio/rentedProduct/${rentedProductNo}`
 
-                    
+
                     const responseRentedProduct = await axios.get(url2)
                     const ownerNickname = responseRentedProduct.data.ownerNickname
 
@@ -133,7 +127,7 @@ export default {
             this.showModal = false // 모달 창을 닫습니다.
         },
 
-        
+
     },
 
     mounted() {
@@ -201,5 +195,10 @@ export default {
     transform: translate(-50%, -50%);
     z-index: 999;
     /* 배경 오버레이보다 더 앞에 표시되도록 설정 */
+}
+
+.bi-heart-fill {
+    color: red;
+    float: right;
 }
 </style>

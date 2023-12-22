@@ -27,8 +27,11 @@
   
   <style scoped>
   .footer_container {
-    min-height: 30vh; /* 화면 높이의 최소 30%를 차지하도록 설정 */
+    /* 화면 높이의 최소 30%를 차지하도록 설정 */
+    min-height: 30vh;
     position: relative;
+    /* height: 25vh; */
+    z-index: -1;
   }
   
   .footer {

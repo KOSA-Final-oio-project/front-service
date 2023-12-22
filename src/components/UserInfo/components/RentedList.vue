@@ -10,7 +10,7 @@
                     <div class="right">
                         <p>
                             <img src="../../../assets/package.png" />
-                            {{ truncateText(getProductTitle(item.productNo), 10) }}<br />
+                            {{ getProductTitle(item.productNo) }}<br />
                         </p>
                         <p>
                             <img src="../../../assets/user-profile.png" /> {{ item.borrowerNickname

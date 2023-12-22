@@ -444,6 +444,7 @@ a {
     background-color: #178CA4;
     padding: 3px 5px;
     border-radius: 10px;
+    z-index: 1;
 }
 
 .productImg span.rented {

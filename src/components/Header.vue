@@ -73,7 +73,7 @@ export default {
           }
       },
       logout() {
-          localStorage.removeItem('nickname')
+          localStorage.clear()
           window.location = '/'
       },
       

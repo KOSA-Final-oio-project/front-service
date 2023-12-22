@@ -162,7 +162,7 @@ export default {
                 this.productPrice = roomData.productPrice
             }
 
-            alert(rentData.rentStartDate + ' + ' + rentData.rentEndDate)
+            // alert(rentData.rentStartDate + ' + ' + rentData.rentEndDate)
 
             ws.connect({}, function () {
                 // 전송할 때 시간도 같이 보내기

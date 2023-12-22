@@ -136,7 +136,9 @@ const router = createRouter({
         }
       }
     },
-    { path: '/product/searchProduct/:searchWord', component: SearchProduct },
+    {
+      path: '/product/searchProduct/:searchWord', component: SearchProduct,
+    },
     { path: '/product/writeProduct', component: WriteProduct },
     { path: '/product/modifyProduct/:id', component: ModifyProduct },
     {

@@ -7,8 +7,7 @@
                         <img class="product-img" :src="findThumbnail(item.productNo)">
                     </div>
                     <div class="right">
-                        <p><img src="../../../assets/package.png"> {{ truncateText(getProductTitle(item.productNo), 10)
-                        }}<br>
+                        <p><img src="../../../assets/package.png"> {{ getProductTitle(item.productNo)}}<br>
                         </p>
                         <p><img src="../../../assets/user-profile.png"> {{ item.ownerNickname }}<br></p>
                         <p><img src="../../../assets/calendar.png"> {{ item.rentStartDate }} ~ {{ item.rentEndDate }}<br>

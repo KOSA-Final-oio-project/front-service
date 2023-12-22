@@ -3,6 +3,7 @@ import axios from 'axios'
 // const apiUrl = axios.create({
 //   baseURL: 'http://127.0.0.1:8889'
 // });
+const nickname =  localStorage.getItem('nickname')
 
 const apiUrl = 'http://192.168.1.86:9797/content-service'
 
@@ -27,7 +28,7 @@ export function removeImage(uuid, fileName) {
 }
 
 export function postRegister(formdata) {
-  return axios.post(apiUrl + '/post/register/테스트', formdata, {
+  return axios.post(apiUrl + `/post/register/${nickname}`, formdata, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -36,7 +37,7 @@ export function postRegister(formdata) {
 
 // composition 에서는 nickname 제거
 export function getPost(postId) {
-  return axios.get(apiUrl + `/post/${postId}/테스트`)
+  return axios.get(apiUrl + `/post/${postId}/${nickname}`)
 }
 
 export function deletePost(postId, fileNames) {
@@ -66,4 +67,8 @@ export function deleteReply(replyId, postId) {
 
 export function putReply(rno, formdata) {
   return axios.put(apiUrl + `/reply/${rno}`, formdata)
+}
+
+export function getMyPost(nickName){
+  return axios.get(apiUrl + `/posts/member/${nickName}`)
 }
